@@ -1,0 +1,152 @@
+# API Documentation for the Simulation Code
+
+## Libraries
+### pychrono.core
+- **Description**: Provides classes and functions for physics-based simulation.
+- **Usage**: Creating and managing physical bodies, joints, collisions, and dynamics within the simulation.
+
+### pychrono.irrlicht
+- **Description**: Provides classes and functions for visualization using the Irrlicht engine.
+- **Usage**: Setting up and managing the graphical user interface for the simulation.
+
+## Contact and Collision Setting
+### chrono.ChSystemNSC
+- **Arguments**: None.
+- **Usage**: Creates a new non-smooth contact system. It manages all rigid bodies, constraints, and other components of the simulation.
+
+### chrono.ChBodyEasyBox
+- **Arguments**: 
+  - `(x, y, z, density, visual, collide)`
+    - `x, y, z (float)`: Dimensions of the box.
+    - `density (float)`: Density of the box material.
+    - `visual (bool)`: Enable/disable visualization.
+    - `collide (bool)`: Enable/disable collision detection.
+- **Usage**: Quickly creates a box-shaped body with visual and collision properties.
+
+### chrono.ChBodyEasyCylinder
+- **Arguments**: 
+  - `(height, radius, density, visual, collide)`
+    - `height (float)`: Height of the cylinder.
+    - `radius (float)`: Radius of the cylinder.
+    - `density (float)`: Density of the cylinder material.
+    - `visual (bool)`: Enable/disable visualization.
+    - `collide (bool)`: Enable/disable collision detection.
+- **Usage**: Quickly creates a cylinder-shaped body with visual and collision properties.
+
+### chrono.ChLinkDistance
+- **Arguments**: None.
+- **Usage**: Creates a distance constraint between two bodies, keeping them at a fixed distance from each other.
+
+### chrono.ChLinkBushing
+- **Arguments**: None.
+- **Usage**: Creates a bushing joint, which can simulate elastic and damping effects between two connected bodies.
+
+### chrono.ChMatrix66d
+- **Arguments**: None.
+- **Usage**: Creates a 6x6 matrix, typically used to set stiffness and damping properties in bushing joints.
+
+## Visualization Setting
+### chrono.ChVisualShapeLine
+- **Arguments**: None.
+- **Usage**: Creates a visual representation of a line, which can be used to visualize constraints like distance links.
+
+### chrono.ChVector3d
+- **Arguments**: 
+  - `(x, y, z)`
+    - `x, y, z (float)`: Coordinates in 3D space.
+- **Usage**: Represents a 3D vector, typically used for positions or directions.
+
+### chrono.ChColor
+- **Arguments**: 
+  - `(r, g, b)`
+    - `r, g, b (float)`: RGB color values.
+- **Usage**: Represents color in RGB format, used for visual appearance of shapes.
+
+### chronoirr.ChVisualSystemIrrlicht
+- **Arguments**: None.
+- **Usage**: Manages visualization using the Irrlicht engine. Controls the window, camera, lights, and other graphical elements.
+
+## Initialize Body
+### chrono.ChBodyEasyBox (again)
+- **Arguments**: 
+  - `(x, y, z, density, visual, collide)`
+- **Usage**: Creates a box-shaped body for the simulation.
+
+### chrono.ChBodyEasyCylinder (again)
+- **Arguments**: 
+  - `(height, radius, density, visual, collide)`
+- **Usage**: Creates a cylinder-shaped body for the simulation.
+
+### chrono.ChBodyEasyBox (as weight)
+- **Arguments**: 
+  - `(x, y, z, density, visual, collide)`
+- **Usage**: Creates a small, non-fixed weight that interacts with other bodies in the simulation.
+
+### chrono.ChLinkDistance (again)
+- **Arguments**: None.
+- **Usage**: Initializes a distance link between the weight and the cylinder, maintaining a fixed distance in absolute coordinates.
+
+### chrono.ChLinkBushing (again)
+- **Arguments**: None.
+- **Usage**: Initializes a bushing joint between the fixed cube and the cylinder, with specified stiffness and damping.
+
+## Setting Parameters
+- **cube dimensions**: `0.5, 0.5, 0.5` (m)
+- **cube density**: `100` (kg/m^3)
+- **cube initial position**: `(0, 0, 0)` (m)
+- **cube color**: `0, 0, 0` (RGB)
+
+- **cylinder dimensions**: `2 (height), 0.2 (radius)` (m)
+- **cylinder density**: `200` (kg/m^3)
+- **cylinder initial position**: `(0, 0, 0)` (m)
+
+- **weight dimensions**: `0.2, 0.2, 0.2` (m)
+- **weight density**: `1000` (kg/m^3)
+- **weight initial position**: `(0, -1, 0.5)` (m)
+- **weight mass**: `50` (kg)
+- **weight color**: `0.1, 0.9, 0.1` (RGB)
+
+- **bushing stiffness and damping**:
+  - Translational stiffness: `50000` (N/m)
+  - Translational damping: `1000` (N·s/m)
+  - Rotational stiffness: `3000` (N·m/rad)
+  - Rotational damping: `20` (N·m·s/rad)
+
+## Simulation Loop
+### vis.Run
+- **Arguments**: None.
+- **Usage**: Runs the visualization system’s main loop. Continues the simulation until the window is closed.
+
+### vis.BeginScene
+- **Arguments**: None.
+- **Usage**: Begins the rendering of a new frame. Prepares the scene for drawing.
+
+### link.GetEndPoint1Abs
+- **Arguments**: None.
+- **Usage**: Gets the absolute coordinates of the first endpoint of the distance link.
+
+### link.GetEndPoint2Abs
+- **Arguments**: None.
+- **Usage**: Gets the absolute coordinates of the second endpoint of the distance link.
+
+### line_visual.SetLineGeometry
+- **Arguments**:
+  - `(chrono.ChLineSegment(start, end))`
+    - `start, end (chrono.ChVector3d)`: Endpoints of the line segment.
+- **Usage**: Updates the geometry of the visual line to reflect the current positions of the link endpoints.
+
+### vis.Render
+- **Arguments**: None.
+- **Usage**: Renders the current scene.
+
+### vis.EndScene
+- **Arguments**: None.
+- **Usage**: Ends the rendering of the current frame and displays it.
+
+### sys.DoStepDynamics
+- **Arguments**:
+  - `(time_step)`
+    - `time_step (float)`: The duration of the time step for the simulation dynamics.
+- **Usage**: Advances the simulation by the given time step.
+
+By providing this detailed documentation for each section and function, users will have a better understanding of how to utilize the provided code effectively for their simulation needs. Each API and function is described with its purpose, arguments, and usage to ensure clarity and comprehensibility.

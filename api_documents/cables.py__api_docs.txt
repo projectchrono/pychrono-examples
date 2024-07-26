@@ -1,0 +1,195 @@
+# Project Chrono API Documentation
+
+## Table of Contents
+
+1. [Library](#library)
+2. [Contact and Collision Setting](#contact-and-collision-setting)
+3. [Visualization Setting](#visualization-setting)
+4. [Initialize Body](#initialize-body)
+5. [Setting Parameters](#setting-parameters)
+6. [Simulation Loop](#simulation-loop)
+
+## Library
+
+### Libraries and Modules Imported
+
+1. **math as m**
+   - Standard Python library used for mathematical operations.
+
+2. **pychrono as chrono**
+   - Main library for physical simulation.
+
+3. **pychrono.fea as fea**
+   - Module specifically for Finite Element Analysis (FEA).
+
+4. **pychrono.irrlicht as chronoirr**
+   - Module for rendering and visualization using Irrlicht engine.
+
+## Contact and Collision Setting
+
+This section describes APIs and functions related to setting up contact materials, collision shapes, and collision settings. However, this particular script does not directly address contact and collision settings explicitly.
+
+## Visualization Setting
+
+### APIs and Functions
+
+1. **chrono.ChVisualShapeSphere** 
+
+   **Arguments**: 
+   - `float radius`: Radius of the visual sphere.
+
+   **Usage**: 
+   This function is used to create a visual representation of a sphere, useful for visual debugging and rendering purposes.
+
+```python
+msphere = chrono.ChVisualShapeSphere(0.02) # Creates a sphere with radius 0.02
+constraint_hinge.AddVisualShape(msphere)  # Adds the visual shape to a hinge constraint
+```
+
+## Initialize Body
+
+### APIs and Functions
+
+1. **chrono.ChBody**
+
+   **Arguments**: None
+
+   **Usage**: 
+   This class creates a body in the simulation. It is the base class for all physical objects.
+
+```python
+mtruss = chrono.ChBody()  # Creates a truss body
+mtruss.SetFixed(True)     # Fixes the truss so it doesn't move
+```
+
+2. **chrono.ChBodyEasyBox**
+
+   **Arguments**: 
+   - `float x`: Length in x-direction.
+   - `float y`: Length in y-direction.
+   - `float z`: Length in z-direction.
+   - `float density`: Density of the box material.
+
+   **Usage**: 
+   This function creates a box-shaped rigid body, useful for quick simulations.
+
+```python
+self.body = chrono.ChBodyEasyBox(0.1, 0.02, 0.02, 1000)  # Creates a box body 
+self.body.SetPos(hnodeancf2.GetPos() + chrono.ChVector3d(0.05, 0, 0))  # Sets initial position
+system.Add(self.body)  # Adds the body to the system
+```
+
+### Constraints and Links
+
+1. **fea.ChLinkNodeFrame**
+
+   **Arguments**: None
+
+   **Usage**: 
+   This class is used to create a constraint that links a node to a frame (body).
+
+```python
+constraint_hinge = fea.ChLinkNodeFrame()  # Creates a new hinge constraint
+constraint_hinge.Initialize(builder.GetLastBeamNodes().back(), mtruss)  # Initializes the constraint
+system.Add(constraint_hinge)  # Adds the constraint to the system
+```
+
+2. **fea.ChLinkNodeSlopeFrame**
+
+   **Arguments**: None
+
+   **Usage**: 
+   This class is used to create a constraint that maintains the relative direction between a node and a frame.
+
+```python
+constraint_dir = fea.ChLinkNodeSlopeFrame()  # Creates a directional constraint
+constraint_dir.Initialize(hnodeancf2, self.body)  # Initializes it
+constraint_dir.SetDirectionInAbsoluteCoords(chrono.ChVector3d(1, 0, 0))  # Sets the absolute direction
+system.Add(constraint_dir)  # Adds to the system
+```
+
+## Setting Parameters
+
+### Beam Section Properties
+
+1. **fea.ChBeamSectionCable**
+
+   **Arguments**: None
+
+   **Usage**: 
+   This function creates a beam section for cable elements, setting properties like diameter and Young's modulus.
+
+```python
+msection_cable = fea.ChBeamSectionCable()
+msection_cable.SetDiameter(0.015)  # Sets the diameter of the cable section
+msection_cable.SetYoungModulus(0.01e9)  # Sets the Young's Modulus
+msection_cable.SetRayleighDamping(0.000)  # Sets the Rayleigh damping factor
+```
+
+### Forces and Moments
+
+1. **SetForce**
+
+   **Arguments**: 
+   - `chrono.ChVector3d force`: 3D vector representing applied force.
+
+   **Usage**: 
+   This function is used to apply a force to a node.
+
+```python
+hnodeancf2.SetForce(chrono.ChVector3d(0, 3, 0))  # Applies a force to the node in the y-direction
+```
+
+### Fixed Nodes
+
+1. **SetFixed**
+
+   **Arguments**: 
+   - `bool fixed`: Whether the node is fixed or not.
+
+   **Usage**: 
+   This function fixes or unfixes a node.
+
+```python
+hnodeancf1.SetFixed(True)  # Fixes node 1
+```
+
+## Simulation Loop
+
+### APIs and Functions
+
+This section would typically include solver settings and rendering steps; however, this specific code sample does not explicitly define a simulation loop. Normally, you would use classes and functions within `pychrono` to perform these tasks.
+
+### Print Functions
+
+1. **PrintBodyPosition**
+
+   **Arguments**: None
+
+   **Usage**: 
+   This method prints the current position of the end body in the simulation time.
+
+```python
+def PrintBodyPosition(self):
+    print("Time: " + str(self.body.GetChTime()))
+    print("  " + str(self.body.GetPos()))
+```
+
+### Multiple Body Positions
+
+1. **PrintBodyPositions**
+
+   **Arguments**: None
+
+   **Usage**: 
+   This method prints the current positions of all the bodies in the system at the simulation time.
+
+```python
+def PrintBodyPositions(self):
+    print("Time: " + str(self.bodies[0].GetChTime()))
+    for body in self.bodies:
+        print("  " + str(body.GetPos()))
+```
+
+---
+This concludes the detailed API documentation for the provided code example. If there are further aspects to discuss or if you need additional details, feel free to ask!

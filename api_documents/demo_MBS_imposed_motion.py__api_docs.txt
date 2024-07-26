@@ -1,0 +1,213 @@
+# Detailed API Documentation for Motion and Rotation Imposition Demo in Project Chrono
+
+## Library
+
+### Libraries and Modules
+
+- `pychrono as chrono`: The main Chrono library, providing physics simulation components including body creation, collisions, visualization, etc.
+- `pychrono.irrlicht as irr`: The Chrono Irrlicht module, used for visualization.
+- `math as m`: Python standard math library, used for mathematical functions.
+
+## Contact and Collision Setting
+
+### No contact or collision specific settings used in this code example.
+
+## Visualization Setting
+
+### APIs and Functions
+
+#### Name: `ChVisualSystemIrrlicht`
+Arguments: None
+Usage: Creates an Irrlicht visualization system to render the simulation.
+```python
+vis = irr.ChVisualSystemIrrlicht()
+```
+
+#### Name: `AttachSystem`
+Arguments: `sys`, the Chrono physical system that you want to visualize.
+Usage: Attaches the physical system to the visualization system.
+```python
+vis.AttachSystem(sys)
+```
+
+#### Name: `SetWindowSize`
+Arguments: `width`, `height` - dimensions of the window.
+Usage: Sets the size of the visualization window.
+```python
+vis.SetWindowSize(1024,768)
+```
+
+#### Name: `SetWindowTitle`
+Arguments: `title` - title of the window.
+Usage: Sets the title of the visualization window.
+```python
+vis.SetWindowTitle('Imposing rotation and position to bodies')
+```
+
+#### Name: `Initialize`
+Arguments: None
+Usage: Initializes the visualization.
+```python
+vis.Initialize()
+```
+
+#### Name: `AddLogo`
+Arguments: `path` - path to the logo image.
+Usage: Adds a logo to the visualization window.
+```python
+vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))
+```
+
+#### Name: `AddSkyBox`
+Arguments: None
+Usage: Adds a skybox to the visualization environment.
+```python
+vis.AddSkyBox()
+```
+
+#### Name: `AddCamera`
+Arguments: `position` - position of the camera in the 3D space.
+Usage: Adds a camera to the visualization environment at the specified position.
+```python
+vis.AddCamera(chrono.ChVector3d(0, 2, -3))
+```
+
+#### Name: `AddTypicalLights`
+Arguments: None
+Usage: Adds typical lighting to the visualization environment.
+```python
+vis.AddTypicalLights()
+```
+
+## Initialize Body
+
+### APIs and Functions
+
+#### Name: `ChBodyEasyBox`
+Arguments: `lengthX`, `lengthY`, `lengthZ`, `density`, `collidable`, `visualize`
+Usage: Creates an easy box with specified dimensions and properties.
+```python
+mfloor = chrono.ChBodyEasyBox(3, 0.2, 3, 1000, False, False)
+```
+
+#### Name: `ChBodyEasyMesh`
+Arguments: `mesh_file`, `density`, `computeInertia`, `visualize`, `collide`
+Usage: Loads a body from a mesh file and applies properties.
+```python
+mmoved_1 = chrono.ChBodyEasyMesh(chrono.GetChronoDataFile("models/support.obj"), 1000, True, True, False)
+```
+
+#### Name: `SetFixed`
+Arguments: `fixed` - boolean indicating whether the body should be fixed in space.
+Usage: Sets the body as fixed in space.
+```python
+mfloor.SetFixed(True)
+```
+
+#### Name: `Add`
+Arguments: `body` - the body to add to the system.
+Usage: Adds a body to the physical system.
+```python
+sys.Add(mfloor)
+```
+
+#### Name: `SetPos`
+Arguments: `position` - the position vector to set.
+Usage: Sets the initial position of the body.
+```python
+mmoved_1.SetPos(chrono.ChVector3d(-0.5, 0, 0))
+```
+
+## Setting Parameters
+
+### Parameters
+
+- **Mesh file**: Path to the mesh file for visualization.
+- **Dimensions**: For boxes, the dimensions in x, y, z directions.
+- **Density**: Density of the bodies for mass and inertia calculation.
+- **Initial Position**: Initial position vectors for the bodies.
+- **Rotation Functions**: Various ChFunction classes (`ChFunctionSine`, `ChFunctionRamp`, etc.) used to impose specific rotations.
+- **Visual Assets**: Paths to visual assets for rendering (e.g., `chrono.GetChronoDataFile('logo_pychrono_alpha.png')`).
+
+## Simulation Loop
+
+### APIs and Functions
+
+#### Name: `Run`
+Arguments: None
+Usage: Checks if the visualization system should continue running.
+```python
+while vis.Run():
+```
+
+#### Name: `BeginScene`
+Arguments: None
+Usage: Begins rendering a new scene.
+```python
+vis.BeginScene()
+```
+
+#### Name: `Render`
+Arguments: None
+Usage: Renders the scene.
+```python
+vis.Render()
+```
+
+#### Name: `EndScene`
+Arguments: None
+Usage: Ends the rendering of the current scene.
+```python
+vis.EndScene()
+```
+
+#### Name: `DoStepDynamics`
+Arguments: `timeStep` - the time step for the simulation.
+Usage: Advances the simulation by a specified time step.
+```python
+sys.DoStepDynamics(1e-3)
+```
+
+#### Name: `GetChTime`
+Arguments: None
+Usage: Retrieves the current time in the simulation.
+```python
+t = sys.GetChTime()
+```
+
+#### Name: `SetSetpoint`
+Arguments: `vector`, `time` - the new target position at the given simulation time.
+Usage: Updates the position setpoint for the predefined function.
+```python
+f_pos_setpoint.SetSetpoint(chrono.ChVector3d(0.2 * m.cos(t * 12), 0.2 * m.sin(t * 12), 0), t)
+```
+
+## Examples in Code
+
+### Example 1
+
+#### Position Functions
+- **Function**: `ChFunctionPositionXYZFunctions`
+- **Usage**: Specifies separate X, Y, Z functions for position.
+```python
+f_xyz.SetFunctionY(chrono.ChFunctionSine(0.5, 0.5))
+f_xyz.SetFunctionZ(chrono.ChFunctionSine(0.5, 0.5))
+```
+
+#### Rotation Functions
+- **Function**: `ChFunctionRotationAxis`
+- **Usage**: Specifies a rotational axis and angle function.
+```python
+f_rot_axis.SetFunctionAngle(chrono.ChFunctionSine(chrono.CH_PI, 0.15))
+```
+
+#### Constraints
+- **Function**: `ChLinkMotionImposed`
+- **Usage**: Adds constraints to impose motion.
+```python
+impose_1 = chrono.ChLinkMotionImposed()
+sys.Add(impose_1)
+impose_1.Initialize(mmoved_1, mfloor, chrono.ChFramed(mmoved_1.GetPos()))
+impose_1.SetPositionFunction(f_xyz)
+impose_1.SetRotationFunction(f_rot_axis)
+```

@@ -1,0 +1,551 @@
+# API Documentation for Example Code
+
+This documentation provides detailed information on the APIs and functions used in the given code, which is based on the Project Chrono framework. The code focuses on finite element analysis (FEA) and handling loads and constraints in a physical simulation environment.
+
+## Library
+
+### Libraries and Modules Imported
+- `pychrono`:
+  - This is the main Project Chrono module for handling physics simulations.
+- `pychrono.fea`:
+  - A submodule of Project Chrono for finite element analysis.
+- `copy`:
+  - A standard Python library used for deep-copying objects.
+
+## Contact and Collision Setting
+
+The provided code does not specifically set up contact materials or collision settings as it primarily focuses on finite element analysis and load applications.
+
+## Visualization Setting
+
+The provided code does not include specific APIs or functions related to visualization settings, materials, shapes, or visualization systems.
+
+## Initialize Body
+
+### Initializing the Physical System
+
+**Name**: `chrono.ChSystemSMC`
+
+**Arguments**: None
+
+**Usage**: Creates the physical system using a smooth contact model.
+
+```python
+sys = chrono.ChSystemSMC()
+```
+
+### Creating Nodes and Adding to Mesh
+
+**Name**: `fea.ChNodeFEAxyzrot`
+
+**Arguments**:
+- `chrono.ChFramed(position: chrono.ChVector3d)`
+
+**Usage**: Defines a finite element node with rotational degrees of freedom at a specified position.
+
+```python
+nodeA = fea.ChNodeFEAxyzrot(chrono.ChFramed(chrono.ChVector3d(0, 0, 0)))
+nodeB = fea.ChNodeFEAxyzrot(chrono.ChFramed(chrono.ChVector3d(2, 0, 0)))
+```
+
+**Name**: `fea.ChMesh().AddNode`
+
+**Arguments**:
+- `node`: The node to add.
+
+**Usage**: Adds a finite element node to the mesh.
+
+```python
+mesh.AddNode(nodeA)
+mesh.AddNode(nodeB)
+```
+
+### Creating and Adding Elements
+
+**Name**: `fea.ChElementBeamEuler`
+
+**Arguments**: None
+
+**Usage**: Creates an Euler-Bernoulli beam element.
+
+```python
+elementA = fea.ChElementBeamEuler()
+```
+
+**Name**: `elementA.SetNodes`
+
+**Arguments**:
+- `nodeA`, `nodeB`: The nodes to which the element is connected.
+
+**Usage**: Sets the nodes for the beam element.
+
+```python
+elementA.SetNodes(nodeA, nodeB)
+```
+
+**Name**: `elementA.SetSection`
+
+**Arguments**:
+- `section`: The beam section to be used.
+
+**Usage**: Assigns a section to the beam element.
+
+```python
+elementA.SetSection(beam_section)
+```
+
+**Name**: `fea.ChMesh().AddElement`
+
+**Arguments**:
+- `element`: The element to add.
+
+**Usage**: Adds a finite element to the mesh.
+
+```python
+mesh.AddElement(elementA)
+```
+
+### Creating and Adding Truss
+
+**Name**: `chrono.ChBody`
+
+**Arguments**: None
+
+**Usage**: Creates a rigid body.
+
+```python
+truss = chrono.ChBody()
+```
+
+**Name**: `truss.SetFixed`
+
+**Arguments**:
+- `is_fixed`: Boolean indicating if the truss is fixed.
+
+**Usage**: Fixes the truss in space.
+
+```python
+truss.SetFixed(True)
+```
+
+**Name**: `sys.Add`
+
+**Arguments**:
+- `body`: The body or mesh to add to the system.
+
+**Usage**: Adds a body or mesh to the system.
+
+```python
+sys.Add(truss)
+sys.Add(mesh)
+```
+
+### Adding Constraints
+
+**Name**: `chrono.ChLinkMateGeneric`
+
+**Arguments**: None
+
+**Usage**: Creates a generic mate (constraint).
+
+```python
+constraintA = chrono.ChLinkMateGeneric()
+```
+
+**Name**: `constraintA.Initialize`
+
+**Arguments**:
+- `bodyA`: The first body.
+- `bodyB`: The second body.
+- `pos_are_relative`: Boolean indicating if positions are relative.
+- `frameA`: The initial frame of `bodyA`.
+- `frameB`: The initial frame of `bodyB`.
+
+**Usage**: Initializes the mate constraint between two bodies.
+
+```python
+constraintA.Initialize(nodeA, truss, False, nodeA.Frame(), nodeA.Frame())
+```
+
+**Name**: `constraintA.SetConstrainedCoords`
+
+**Arguments**:
+- `x`, `y`, `z`: Booleans indicating constrained translations.
+- `Rx`, `Ry`, `Rz`: Booleans indicating constrained rotations.
+
+**Usage**: Sets the constrained coordinates for the mate.
+
+```python
+constraintA.SetConstrainedCoords(True, True, True, True, True, True)
+```
+
+## Setting Parameters
+
+### Beam Section Parameters
+
+**Name**: `fea.ChBeamSectionEulerAdvanced`
+
+**Arguments**: None
+
+**Usage**: Creates an advanced Euler-Bernoulli beam section.
+
+```python
+beam_section = fea.ChBeamSectionEulerAdvanced()
+```
+
+**Name**: `beam_section.SetAsRectangularSection`
+
+**Arguments**:
+- `width_y`: Width of the section in the y direction.
+- `width_z`: Width of the section in the z direction.
+
+**Usage**: Sets the rectangular section dimensions for the beam.
+
+```python
+beam_wy = 0.1
+beam_wz = 0.2
+beam_section.SetAsRectangularSection(beam_wy, beam_wz)
+```
+
+**Name**: `beam_section.SetYoungModulus`
+
+**Arguments**:
+- `E`: Young's modulus.
+
+**Usage**: Sets the Young’s modulus of the beam section.
+
+```python
+beam_section.SetYoungModulus(0.01e9)
+```
+
+**Name**: `beam_section.SetShearModulus`
+
+**Arguments**:
+- `G`: Shear modulus.
+
+**Usage**: Sets the shear modulus of the beam section.
+
+```python
+beam_section.SetShearModulus(0.01e9 * 0.3)
+```
+
+**Name**: `beam_section.SetRayleighDamping`
+
+**Arguments**:
+- `damping`: Rayleigh damping factor.
+
+**Usage**: Sets the Rayleigh damping of the beam section.
+
+```python
+beam_section.SetRayleighDamping(0.200)
+```
+
+**Name**: `beam_section.SetDensity`
+
+**Arguments**:
+- `density`: Density of the beam section.
+
+**Usage**: Sets the density of the beam section.
+
+```python
+beam_section.SetDensity(1500)
+```
+
+## Simulation Loop
+
+### Load Containers
+
+**Name**: `chrono.ChLoadContainer`
+
+**Arguments**: None
+
+**Usage**: Creates a container to hold various loads.
+
+```python
+load_container = chrono.ChLoadContainer()
+```
+
+**Name**: `load_container.Add`
+
+**Arguments**:
+- `load`: The load to add to the container.
+
+**Usage**: Adds a load to the load container.
+
+```python
+load_container.Add(wrench_load)
+```
+
+### Applying Loads
+
+**Name**: `fea.ChLoadBeamWrench`
+
+**Arguments**:
+- `element`: The beam element to which the load is applied.
+
+**Usage**: Creates a wrench load on a beam element.
+
+```python
+wrench_load = fea.ChLoadBeamWrench(elementA)
+```
+
+**Name**: `wrench_load.GetLoader().SetApplication`
+
+**Arguments**:
+- `position`: Position along the beam element in the range -1 to +1.
+
+**Usage**: Sets the application point of the wrench load.
+
+```python
+wrench_load.GetLoader().SetApplication(1.0)
+```
+
+**Name**: `wrench_load.GetLoader().SetForce`
+
+**Arguments**:
+- `force`: The force vector to apply.
+
+**Usage**: Sets the force vector for the wrench load.
+
+```python
+wrench_load.GetLoader().SetForce(chrono.ChVector3d(0, -0.2, 0))
+```
+
+### Solver Settings
+
+**Name**: `chrono.ChSolverMINRES`
+
+**Arguments**: None
+
+**Usage**: Creates a MINRES solver for the system.
+
+```python
+solver = chrono.ChSolverMINRES()
+```
+
+**Name**: `solver.SetMaxIterations`
+
+**Arguments**:
+- `iterations`: Maximum number of iterations.
+
+**Usage**: Sets the maximum number of iterations for the solver.
+
+```python
+solver.SetMaxIterations(100)
+```
+
+**Name**: `solver.SetTolerance`
+
+**Arguments**:
+- `tolerance`: The tolerance for the solver.
+
+**Usage**: Sets the tolerance for the solver.
+
+```python
+solver.SetTolerance(1e-10)
+```
+
+**Name**: `solver.EnableDiagonalPreconditioner`
+
+**Arguments**:
+- `enable`: Boolean to enable/disable the diagonal preconditioner.
+
+**Usage**: Enables the diagonal preconditioner for the solver.
+
+```python
+solver.EnableDiagonalPreconditioner(True)
+```
+
+**Name**: `solver.SetVerbose`
+
+**Arguments**:
+- `verbose`: Boolean to enable/disable verbose output.
+
+**Usage**: Sets the verbosity of the solver.
+
+```python
+solver.SetVerbose(True)
+```
+
+**Name**: `sys.SetSolver`
+
+**Arguments**:
+- `solver`: The solver to be used by the system.
+
+**Usage**: Assigns the solver to the system.
+
+```python
+sys.SetSolver(solver)
+```
+
+### Performing Static Analysis
+
+**Name**: `sys.DoStaticLinear`
+
+**Arguments**: None
+
+**Usage**: Performs linear static analysis on the system.
+
+```python
+sys.DoStaticLinear()
+```
+
+### Getting Reactions
+
+**Name**: `constraintA.GetReaction2`
+
+**Arguments**: None
+
+**Usage**: Retrieves the reaction forces and torques at the constraint.
+
+```python
+reaction = constraintA.GetReaction2()
+```
+
+### Printing Positions and Jacobians
+
+**Name**: `nodeD.GetPos`
+
+**Arguments**: None
+
+**Usage**: Gets the position of the node `nodeD`.
+
+```python
+nodeD.GetPos()
+```
+
+**Name**: `custom_load.GetJacobians().K.GetMatr`
+
+**Arguments**: None
+
+**Usage**: Gets the stiffness matrix `K` associated with `custom_load`.
+
+```python
+custom_load.GetJacobians().K.GetMatr()
+```
+
+## Custom and Multiple Loads
+
+### Custom Load Class
+
+**Name**: `chron.ChLoadCustom`
+
+**Arguments**:
+- `loadable`: The loadable object to which the custom load is applied.
+
+**Usage**: Base class for custom loads.
+
+```python
+class MyLoadCustom(chrono.ChLoadCustom):
+    def __init__(self, loadable):
+        chrono.ChLoadCustom.__init__(self, loadable)
+```
+
+**Name**: `MyLoadCustom.ComputeQ`
+
+**Arguments**:
+- `state_x`: The state position to evaluate Q.
+- `state_w`: The state speed to evaluate Q.
+
+**Usage**: Method to compute the generalized load vector Q.
+
+```python
+def ComputeQ(self, state_x, state_w):
+    node_pos = chrono.ChVector3d(state_x.GetItem(0), state_x.GetItem(1), state_x.GetItem(2))
+    node_vel = chrono.ChVector3d(state_w.GetItem(0), state_w.GetItem(1), state_w.GetItem(2))
+    self.load_Q.SetItem(0, x_force - Kx * (node_pos.x - x_offset) - Dx * node_vel.x)
+    self.load_Q.SetItem(1, y_force - Ky * (node_pos.y - y_offset) - Dy * node_vel.y)
+    self.load_Q.SetItem(2, 0.0)
+```
+
+**Name**: `MyLoadCustom.IsStiff`
+
+**Arguments**: None
+
+**Usage**: Indicates whether the custom load is stiff, enabling Jacobian computation.
+
+```python
+def IsStiff(self):
+    return True
+```
+
+### Instantiating Custom Load
+
+**Name**: `MyLoadCustom(nodeD)`
+
+**Arguments**:
+- `nodeD`: The node to which the custom load is applied.
+
+**Usage**: Creates an instance of the custom load and adds it to the load container.
+
+```python
+custom_load = MyLoadCustom(nodeD)
+load_container.Add(custom_load)
+```
+
+### Multiple Node Custom Load Class
+
+**Name**: `chrono.ChLoadCustomMultiple`
+
+**Arguments**:
+- `loadables`: The list of loadable objects.
+
+**Usage**: Base class for custom loads applied to multiple nodes.
+
+```python
+class MyLoadCustomMultiple(chrono.ChLoadCustomMultiple):
+    def __init__(self, loadables):
+        chrono.ChLoadCustomMultiple.__init__(self, loadables)
+```
+
+**Name**: `MyLoadCustomMultiple.ComputeQ`
+
+**Arguments**:
+- `state_x`: The state position to evaluate Q.
+- `state_w`: The state speed to evaluate Q.
+
+**Usage**: Method to compute the generalized load vector Q for multiple nodes.
+
+```python
+def ComputeQ(self, state_x, state_w):
+    Enode_pos = chrono.ChVector3d(state_x.GetItem(0), state_x.GetItem(1), state_x.GetItem(2))
+    Enode_vel = chrono.ChVector3d(state_w.GetItem(0), state_w.GetItem(1), state_w.GetItem(2))
+    Fnode_pos = chrono.ChVector3d(state_x.GetItem(3), state_x.GetItem(4), state_x.GetItem(5))
+    Fnode_vel = chrono.ChVector3d(state_w.GetItem(3), state_w.GetItem(4), state_w.GetItem(5))
+    spring1 = chrono.ChVector3d(-Kx1 * (Enode_pos.x - E_x_offset) - Dx1 * Enode_vel.x,
+                                -Ky1 * (Enode_pos.y - E_y_offset) - Dy1 * Enode_vel.y, 0)
+    spring2 = chrono.ChVector3d(0, -Ky2 * (Fnode_pos.y - Enode_pos.y - EF_dist) - Dy2 * (Enode_vel.y - Fnode_vel.y), 0)
+    self.load_Q.SetItem(0, spring1.x - spring2.x)
+    self.load_Q.SetItem(1, spring1.y - spring2.y)
+    self.load_Q.SetItem(2, spring1.z - spring2.z)
+    self.load_Q.SetItem(3, spring2.x)
+    self.load_Q.SetItem(4, spring2.y + Fforcey)
+    self.load_Q.SetItem(5, spring2.z)
+```
+
+**Name**: `MyLoadCustomMultiple.IsStiff`
+
+**Arguments**: None
+
+**Usage**: Indicates whether the custom load is stiff, enabling Jacobian computation.
+
+```python
+def IsStiff(self):
+    return True
+```
+
+### Instantiating Multiple Node Custom Load
+
+**Name**: `MyLoadCustomMultiple(node_list)`
+
+**Arguments**:
+- `node_list`: The list of nodes to which the custom load is applied.
+
+**Usage**: Creates an instance of the custom load for multiple nodes and adds it to the load container.
+
+```python
+custom_multi_load = MyLoadCustomMultiple(node_list)
+load_container.Add(custom_multi_load)
+```
+
+By following this documentation, one can understand the components and setup required to create and analyze a finite element simulation using Project Chrono. The code demonstrates setting up the physical environment, creating nodes and elements, applying various loads, and performing static analysis.

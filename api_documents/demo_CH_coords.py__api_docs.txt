@@ -1,0 +1,173 @@
+# PyChrono Documentation
+
+## Table of Contents
+1. [Library](#library)
+2. [Contact and Collision Setting](#contact-and-collision-setting)
+3. [Visualization Setting](#visualization-setting)
+4. [Initialize Body](#initialize-body)
+5. [Setting Parameters](#setting-parameters)
+6. [Simulation Loop](#simulation-loop)
+
+### Library
+The code uses the following libraries and modules:
+- **pychrono**: The main library for physical simulations.
+- **numpy**: A fundamental package for scientific computing.
+- **numpy.linalg (LA)**: A submodule of numpy for linear algebra operations.
+  
+### Contact and Collision Setting
+*Note: This specific example does not contain any APIs for setting up contact materials, collision shapes, and collision settings directly. Future examples might include classes such as `chrono.ChMaterialSurface` or collision shapes like `chrono.ChCollisionShape`. Make sure to check relevant documentation.*
+
+### Visualization Setting
+*Note: This specific example does not deal with setting up visualization. Visualization setup typically involves classes like `chrono.ChVisualShape`, `chrono.ChVisualMaterial`, and visualization systems like `chrono.ChIrrApp`. Please refer to PyChrono documentation for detailed usage in visualization.*
+
+### Initialize Body
+*Note: There are no bodies initialized in this specific example. Usually, constructing bodies for simulation involves creating instances of `chrono.ChBody` and adding them to the `chrono.ChSystem`.*
+
+### Setting Parameters
+The code does not explicitly define many parameters typically used in simulations but primarily shows the setup and operations on mathematical entities. Below are the key parameters and their descriptions:
+
+- **Vectors**: `chrono.ChVector3d`
+  - **Arguments**: Float values for x, y, and z.
+  - **Usage**: Represents 3D vectors. Operations include addition, dot product, cross product, and scaling.
+
+- **Quaternions**: `chrono.ChQuaterniond`
+  - **Arguments**: Float values representing the components of the quaternion.
+  - **Usage**: Represents rotations in 3D.
+
+- **Matrices**: `chrono.ChMatrixDynamicd, chrono.ChMatrix33d`
+  - **Arguments**: Lists or other matrix types.
+  - **Usage**: Dynamic matrices for various linear algebra operations.
+
+### Simulation Loop
+*Note: The example provided does not contain a simulation loop but rather focuses on basic manipulations of vectors, quaternions, and matrices.*
+
+### Detailed API Documentation
+
+#### Vectors and Operations
+
+1. **chrono.ChVector3d**:
+   - **Arguments**: `x=0.0, y=0.0, z=0.0`
+   - **Usage**: Represents a 3D vector.
+   - **Example**:
+     ```python
+     my_vect1 = chrono.ChVector3d(5, 2, 3)
+     ```
+
+2. **Addition**:
+   - **Arguments**: Two `ChVector3d` objects.
+   - **Usage**: Adds two 3D vectors.
+   - **Example**:
+     ```python
+     result = my_vect1 + my_vect2
+     ```
+
+3. **Cross Product**:
+   - **Arguments**: Two `ChVector3d` objects.
+   - **Usage**: Computes the cross product of two 3D vectors.
+   - **Example**:
+     ```python
+     cross_product = my_vect1 % my_vect2
+     ```
+
+4. **Dot Product**:
+   - **Arguments**: Two `ChVector3d` objects.
+   - **Usage**: Computes the dot product of two 3D vectors.
+   - **Example**:
+     ```python
+     dot_product = my_vect1 ^ my_vect2
+     ```
+
+#### Quaternions and Operations
+
+1. **chrono.ChQuaterniond**:
+   - **Arguments**: `e0, e1, e2, e3` representing the quaternion components.
+   - **Usage**: Represents a quaternion.
+   - **Example**:
+     ```python
+     my_quat = chrono.ChQuaterniond(1, 2, 3, 4)
+     ```
+
+2. **Conjugate**:
+   - **Arguments**: A `ChQuaterniond` object.
+   - **Usage**: Computes the conjugate of the quaternion.
+   - **Example**:
+     ```python
+     my_qconjugate = ~my_quat
+     ```
+
+3. **Dot Product**:
+   - **Arguments**: Two `ChQuaterniond` objects.
+   - **Usage**: Computes the dot product of two quaternions.
+   - **Example**:
+     ```python
+     dot_product = my_qconjugate ^ my_quat
+     ```
+
+4. **Multiplication**:
+   - **Arguments**: Two `ChQuaterniond` objects.
+   - **Usage**: Multiplies two quaternions.
+   - **Example**:
+     ```python
+     product = my_qconjugate * my_quat
+     ```
+
+#### Matrices and Operations
+
+1. **chrono.ChMatrixDynamicd**:
+   - **Arguments**: `rows=0, cols=0` (optional)
+   - **Usage**: Represents a dynamic matrix.
+   - **Example**:
+     ```python
+     ma = chrono.ChMatrixDynamicd()
+     ma.SetMatr([[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,16]])
+     ```
+
+2. **Matrix Multiplication**:
+   - **Arguments**: Matrix and Vector objects.
+   - **Usage**: Perform matrix-vector multiplication.
+   - **Example**:
+     ```python
+     result = mr * my_vect1
+     ```
+
+#### Frames and Functions
+
+1. **chrono.ChFramed**:
+   - **Arguments**: `ChVector3d` for translation and `ChQuaterniond` for rotation.
+   - **Usage**: Represents a coordinate frame.
+   - **Example**:
+     ```python
+     my_frame = chrono.ChFramed(my_vect2, chrono.QuatFromAngleAxis(20 * chrono.CH_DEG_TO_RAD, chrono.ChVector3d(1, 0, 0)))
+     ```
+
+2. **chrono.ChFunctionSine**:
+   - **Arguments**: `amp=1.0`, `freq=1.0`, `phase=0.0`
+   - **Usage**: Represents a sine wave function.
+   - **Example**:
+     ```python
+     my_funct = chrono.ChFunctionSine(3.0, 0.5)
+     ```
+
+3. **GetVal**:
+   - **Arguments**: `x` (input value)
+   - **Usage**: Returns the function's value at the given x.
+   - **Example**:
+     ```python
+     value = my_funct.GetVal(0.2)
+     ```
+
+4. **Custom Function Class**:
+   - **Arguments**: None
+   - **Usage**: Inherit and create custom function types.
+   - **Example**:
+     ```python
+     class MySquareFunct (chrono.ChFunction):
+         def __init__(self):
+              chrono.ChFunction.__init__(self)
+         def GetVal(self, x):
+              return x*x
+
+     my_funct2 = MySquareFunct()
+     ```
+
+This documentation covers the elements present in the provided code. For further details and more complex examples, refer to the official PyChrono documentation and tutorials.

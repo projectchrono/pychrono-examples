@@ -1,0 +1,311 @@
+---
+
+# PyChrono API Prompt Engineering Guide for MBS (Multibody System) Simulations
+
+## Overview
+This guide provides structured prompts for generating PyChrono simulations using the updated API for multibody system dynamics. The focus is on utilizing the new class names, methods, and parameter changes.
+
+## Context
+Provide the AI with context about the task. Here is a standard system message to initialize the conversation:
+
+```plaintext
+You are an expert in generating PyChrono simulations for multibody systems. You have been updated with the latest PyChrono API changes, including new class names, methods, and parameter updates. Your task is to generate accurate PyChrono simulation code using the new API conventions.
+```
+
+## Key API Changes
+
+1. **Collision System Type**
+   - `sys.SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)`
+
+2. **Material Class**
+   - `chrono.ChMaterialSurfaceNSC()` -> `chrono.ChContactMaterialNSC()`
+   - `chrono.ChMaterialSurfaceSMC()` -> `chrono.ChContactMaterialSMC()`
+
+3. **Vector Class**
+   - `chrono.ChVectorD` -> `chrono.ChVector3d`
+
+4. **Quaternion Class**
+   - `chrono.ChQuaternionD` -> `chrono.ChQuaterniond`
+
+5. **Set Fixed**
+   - `SetBodyFixed(True)` -> `SetFixed(True)`
+
+6. **Degree to Radian Conversion**
+   - `CH_C_DEG_TO_RAD` -> `CH_DEG_TO_RAD`
+
+7. **Quaternion Functions**
+   - `Q_from_AngX(angle)` -> `QuatFromAngleX(angle)`
+   - `Q_from_AngAxis(angle, axis)` -> `QuatFromAngleAxis(angle, axis)`
+
+8. **Frame Class**
+   - `chrono.ChFrameD` -> `chrono.ChFramed`
+
+9. **Gravity Setting**
+   - `sys.Set_G_acc(chrono.ChVectorD(...))` -> `sys.SetGravitationalAcceleration(chrono.ChVector3d(...))`
+
+10. **Set Position**
+    - `SetPos(chrono.ChVectorD(...))` -> `SetPos(chrono.ChVector3d(...))`
+
+11. **Set Rotation**
+    - `SetRot(chrono.Q_from_AngX(...))` -> `SetRot(chrono.QuatFromAngleX(...))`
+
+12. **Set Inertia**
+    - `SetInertiaXX(chrono.ChVectorD(...))` -> `SetInertiaXX(chrono.ChVector3d(...))`
+
+13. **Visual Shape for Box**
+    - `chrono.ChBoxShape()` -> `chrono.ChVisualShapeBox(...)`
+
+14. **Visual Shape for Cylinder**
+    - `chrono.ChCylinderShape()` -> `chrono.ChVisualShapeCylinder(...)`
+
+15. **Collision Shape for Box**
+    - `AddBox(...)` -> `chrono.ChCollisionShapeBox(...)`
+
+16. **Collision Shape for Sphere**
+    - `AddSphere(...)` -> `chrono.ChCollisionShapeSphere(...)`
+
+17. **Collision Shape for Triangle Mesh**
+    - `AddTriangleMesh(...)` -> `chrono.ChCollisionShapeTriangleMesh(...)`
+
+18. **Enable Collision**
+    - `SetCollide(True)` -> `EnableCollision(True)`
+
+19. **Motor Angle Retrieval**
+    - `GetMotorRot()` -> `GetMotorAngle()`
+
+20. **Revolute Joint Initialization**
+    - `Initialize(..., chrono.ChCoordsysD(...))` -> `Initialize(..., chrono.ChFramed(...))`
+
+21. **Sine Function**
+    - `chrono.ChFunction_Sine(...)` -> `chrono.ChFunctionSine(...)`
+
+22. **Set Transmission Ratio**
+    - `Set_tau(...)` -> `SetTransmissionRatio(...)`
+
+23. **Set Enforce Phase**
+    - `Set_checkphase(True)` -> `SetEnforcePhase(True)`
+
+24. **Set Solver Max Iterations**
+    - `sys.SetSolverMaxIterations(...)` -> `sys.GetSolver().AsIterative().SetMaxIterations(...)`
+
+25. **Set Solver Force Tolerance**
+    - `SetSolverForceTolerance(...)` -> `GetSolver().AsIterative().SetTolerance(...)`
+
+26. **Actuator Force Torque**
+    - `SetF(...)` -> `SetActuatorForceTorque(...)`
+
+27. **Set Modulation Function**
+    - `SetModulationF(...)` -> `SetActuatorModulation(...)`
+
+28. **Rotational Spring Shape**
+    - `chrono.ChRotSpringShape(...)` -> `chrono.ChVisualShapeRotSpring(...)`
+
+29. **Print Statements for Velocities**
+    - `GetPos_dt()` -> `GetPosDt()`
+    - `GetWvel_par()` -> `GetAngVelParent()`
+
+30. **Set Local Shaft**
+    - `Set_local_shaft1(chrono.ChFrameD(...))` -> `SetFrameShaft1(chrono.ChFramed(...))`
+    - `Set_local_shaft2(chrono.ChFrameD(...))` -> `SetFrameShaft2(chrono.ChFramed(...))`
+
+31. **Collision Model Building**
+    - `GetCollisionModel().ClearModel()` -> `AddCollisionShape(...)`
+    - `GetCollisionModel().BuildModel()` -> `EnableCollision(True)`
+
+32. **Box Geometry for Visualization**
+    - `GetBoxGeometry().SetLengths(chrono.ChVectorD(...))` -> `chrono.ChVisualShapeBox(...)`
+
+33. **Cylinder Geometry for Visualization**
+    - `GetCylinderGeometry().SetLengths(chrono.ChVectorD(...))` -> `chrono.ChVisualShapeCylinder(...)`
+
+34. **Function Parameters for Sinusoidal Motion**
+    - `chrono.ChFunction_Sine(0, freq, ampl)` -> `chrono.ChFunctionSine(ampl, freq)`
+
+35. **Camera Position**
+    - `vis.AddCamera(chrono.ChVectorD(...))` -> `vis.AddCamera(chrono.ChVector3d(...))`
+
+36. **Frame to COG/REF**
+    - `SetFrame_COG_to_REF(frame)` -> `SetFrameCOMToRef(frame)`
+    - `SetFrame_REF_to_abs(frame)` -> `SetFrameRefToAbs(frame)`
+
+37. **Body List Retrieval**
+    - `sys.Get_bodylist()` -> `sys.GetBodies()`
+
+38. **Force Accumulator Functions**
+    - `Empty_forces_accumulators()` -> `EmptyAccumulators()`
+    - `Accumulate_force(force, pos, local)` -> `AccumulateForce(force, pos, local)`
+
+39. **Random Number Generation**
+    - `chrono.ChRandom()` -> `chrono.ChRandom.Get()`
+
+40. **Easy Body Creation**
+    - `chrono.ChBodyEasyBox(size, ...)` -> `chrono.ChBodyEasyBox(size, density, contact material)`
+
+41. **Visual Shape for Sphere**
+    - `chrono.ChSphereShape()` -> `chrono.ChVisualShapeSphere(radius)`
+
+42. **Visual Shape for Cylinder**
+    - `chrono.ChCylinderShape()` -> `chrono.ChVisualShapeCylinder(radius, height)`
+
+43. **Adding Visual Shape with Frame**
+    - `AddVisualShape(shape)` -> `AddVisualShape(shape, frame)`
+
+44. **Function Position and Rotation**
+    - `ChFunctionPosition_XYZfunctions` -> `ChFunctionPositionXYZFunctions`
+    - `ChFunctionPosition_line` -> `ChFunctionPositionLine`
+    - `ChFunctionPosition_setpoint` -> `ChFunctionPositionSetpoint`
+    - `ChFunctionRotation_axis` -> `ChFunctionRotationAxis`
+    - `ChFunctionRotation_spline` -> `ChFunctionRotationBSpline`
+    - `ChFunctionRotation_setpoint` -> `ChFunctionRotationSetpoint`
+    - `ChFunctionRotation_ABCfunctions` -> `ChFunctionRotationABCFunctions`
+
+45. **Const Function**
+    - `chrono.ChFunction_Const` -> `chrono.ChFunctionConst`
+
+### Detailed Explanation of Key Functions
+
+1. **System Initialization**
+   ```python
+   sys = chrono.ChSystemNSC()
+   sys.SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)
+   ```
+   - Initializes the Chrono system using the non-smooth contact (NSC) method and sets the collision system type to Bullet.
+
+2. **Setting Default Margins**
+   ```python
+   chrono.ChCollisionModel.SetDefaultSuggestedEnvelope(0.001)
+   chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.001)
+   ```
+   - Sets default shape margins for collision detection.
+
+3. **Solver Configuration**
+   ```python
+   sys.GetSolver().AsIterative().SetMaxIterations(70)
+   ```
+   - Configures the solver to use iterative methods with a specified maximum number of iterations.
+
+4. **Contact Material Creation**
+   ```python
+   brick_material = chrono.ChContactMaterialNSC()
+   brick_material.SetFriction(0.5)
+   brick_material.SetDampingF(0.2)
+   brick_material.SetCompliance(0.0000001)
+   brick_material.SetComplianceT(0.0000001)
+   ```
+   - Creates a contact material with specified properties.
+
+5. **Creating and Adding Bricks**
+   ```python
+   for ix in range(nbricks_on_x):
+       for iy in range(nbricks_on_y):
+           body_brick = chrono.ChBody()
+           body_brick.SetPos(chrono.ChVector3d(ix * size_brick_x, (iy + 0.5) * size_brick_y, 0))
+           body_brick.SetMass(mass_brick)
+           body_brick.SetInertiaXX(chrono.ChVector3d(inertia_brick, inertia_brick, inertia_brick))
+           body_brick_ct_shape = chrono.ChCollisionShapeBox(brick_material, size_brick_x, size_brick_y, size_brick_z)
+           body_brick.AddCollisionShape(body_brick_ct_shape)
+           body_brick.EnableCollision(True)
+           body_brick_shape = chrono.ChVisualShapeBox(size_brick_x, size_brick_y, size_brick_z)
+           if iy % 2 == 0:
+               body_brick_shape.SetColor(chrono.ChColor(0.65, 0.65, 0.6))
+           body_brick.AddVisualShape(body_brick_shape)
+           sys.Add(body_brick)
+   ```
+   - Creates and adds bricks to the system with specified properties and visualizations.
+
+6. **Creating the Floor**
+   ```python
+   body_floor = chrono.ChBody()
+   body_floor.SetFixed(True)
+   body_floor.SetPos(chrono.ChVector3d(0, -2, 0))
+   body_floor_ct_shape = chrono.ChCollisionShapeBox(brick_material, 6, 2, 6)
+   body_floor.AddCollisionShape(body_floor_ct_shape)
+   body_floor
+
+.EnableCollision(True)
+   body_floor_shape = chrono.ChVisualShapeBox(6, 2, 6)
+   body_floor_shape.SetTexture(chrono.GetChronoDataFile('textures/concrete.jpg'))
+   body_floor.AddVisualShape(body_floor_shape)
+   sys.Add(body_floor)
+   ```
+   - Creates a floor with collision and visualization properties.
+
+7. **Creating the Shaking Table**
+   ```python
+   body_table = chrono.ChBody()
+   body_table.SetPos(chrono.ChVector3d(0, -size_table_y / 2, 0))
+   body_table_ct_shape = chrono.ChCollisionShapeBox(brick_material, size_table_x, size_table_y, size_table_z)
+   body_table.AddCollisionShape(body_table_ct_shape)
+   body_table.EnableCollision(True)
+   body_table_shape = chrono.ChVisualShapeBox(size_table_x, size_table_y, size_table_z)
+   body_table_shape.SetColor(chrono.ChColor(0.4, 0.4, 0.5))
+   body_table_shape.SetTexture(chrono.GetChronoDataFile('textures/concrete.jpg'))
+   body_table.AddVisualShape(body_table_shape)
+   sys.Add(body_table)
+   ```
+   - Creates a shaking table with collision and visualization properties.
+
+8. **Adding Constraints and Motion Functions**
+   ```python
+   link_shaker = chrono.ChLinkLockLock()
+   link_shaker.Initialize(body_table, body_floor, chrono.ChFramed())
+   sys.Add(link_shaker)
+   mfunY = chrono.ChFunctionSine(0.001, 1.5)  # amplitude, frequency
+   link_shaker.SetMotionY(mfunY)
+   mfunZ = chrono.ChFunctionSine(0.12, 1.5)  # amplitude, frequency
+   link_shaker.SetMotionZ(mfunZ)
+   ```
+   - Adds constraints to the shaking table and sets motion functions for horizontal and vertical movements.
+
+9. **Setting Up Irrlicht Visualization**
+   ```python
+   vis = chronoirr.ChVisualSystemIrrlicht()
+   vis.AttachSystem(sys)
+   vis.SetWindowSize(1024, 768)
+   vis.SetWindowTitle('Earthquake demo')
+   vis.Initialize()
+   vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))
+   vis.AddSkyBox()
+   vis.AddCamera(chrono.ChVector3d(0.5, 0.5, 1.0))
+   vis.AddTypicalLights()
+   vis.AddLightWithShadow(
+       chrono.ChVector3d(0, 3, 6),    # point
+       chrono.ChVector3d(0, 3, 6),    # aimpoint
+       9,                 # radius (power)
+       1, 9,               # near, far
+       30)                # angle of FOV
+   ```
+   - Sets up the Irrlicht visualization system.
+
+10. **Running the Simulation**
+    ```python
+    while vis.Run():
+        vis.BeginScene()
+        vis.Render()
+        vis.EndScene()
+        for substep in range(5):
+            sys.DoStepDynamics(1e-4)
+    ```
+    - Runs the simulation loop.
+
+## Pipeline for Generating New Simulations
+
+1. **Define the Simulation Requirements**
+   - Specify the type of simulation, object properties, forces, constraints, and visualizations needed.
+
+2. **Generate the Initial Code Snippet**
+   - Use prompt engineering to generate the initial PyChrono code snippet.
+
+3. **Validate the Generated Code**
+   - Ensure that the generated code aligns with the latest API changes and runs correctly.
+
+4. **Add Detailed Comments and Documentation**
+   - Include comments in the code to explain each step and function used.
+
+5. **Run the Simulation**
+   - Execute the simulation and verify the results.
+
+6. **Iterate and Refine**
+   - Make necessary adjustments to the code based on the simulation results and rerun until the desired outcome is achieved.
+
+By following this comprehensive guide, you can effectively generate and run PyChrono simulations using the latest API changes for multibody system dynamics. This ensures that your simulations are accurate, up-to-date, and leverage the new features of the PyChrono library.

@@ -1,0 +1,231 @@
+# API Documentation for Example Code: "Plane-Plane Joint Simulation Using PyChrono"
+
+## Library
+
+### pychrono.core
+* **Import Statement:** `import pychrono.core as chrono`
+* **Usage:** This module provides the core functionalities of the PyChrono library, including system creation, body dynamics, and constraint management.
+
+### pychrono.irrlicht
+* **Import Statement:** `import pychrono.irrlicht as chronoirr`
+* **Usage:** This module provides functionalities for 3D visualization using the Irrlicht engine, including setting up cameras, lights, and rendering scenes.
+
+## Contact and Collision Setting
+
+### chrono.ChSystemNSC
+* **Arguments:**
+  - None
+* **Usage:** Creates a Chrono simulation system with non-smooth contact (NSC) method.
+
+### chrono.ChSystemNSC.SetGravitationalAcceleration
+* **Arguments:**
+  - `chrono.ChVector3d`: Gravitational acceleration vector.
+* **Usage:** Sets the gravitational acceleration of the simulation system.
+
+### chrono.ChBodyEasyBox
+* **Arguments:**
+  - `length (float)`: Length of the box.
+  - `width (float)`: Width of the box.
+  - `height (float)`: Height of the box.
+  - `density (float)`: Density of the box.
+  - `collision (bool)`: Enable/disable collision detection.
+  - `visualization (bool)`: Enable/disable visualization.
+* **Usage:** Creates a box-shaped body with specified properties.
+
+### chrono.ChBody.SetFixed
+* **Arguments:**
+  - `fixed (bool)`: A boolean indicating if the body is fixed in the simulation.
+* **Usage:** Sets whether a body is fixed (immovable) in the simulation.
+
+### chrono.ChSystemNSC.Add
+* **Arguments:**
+  - `item (ChBody/ChLink)`: An item to be added to the system, e.g., a body or a constraint.
+* **Usage:** Adds a body or constraint to the simulation system.
+
+### chrono.ChBodyEasyBox.SetPos
+* **Arguments:**
+  - `pos (ChVector3d)`: Position vector.
+* **Usage:** Sets the initial position of the body in the simulation.
+
+### chrono.ChBodyEasyBox.SetAngVelLocal
+* **Arguments:**
+  - `ang_vel (ChVector3d)`: Angular velocity vector.
+* **Usage:** Sets the initial angular velocity of the body.
+
+### chrono.ChBody.GetVisualShape
+* **Arguments:**
+  - `index (int)`: Index of the visual shape.
+* **Usage:** Retrieves the visual shape of the body for further customization.
+
+### chrono.ChVisualShape.SetColor
+* **Arguments:**
+  - `color (ChColor)`: Color object specifying the RGB color.
+* **Usage:** Sets the color of the visual shape.
+
+### chrono.ChLinkLockPlanar.Initialize
+* **Arguments:**
+  - `body1 (ChBody)`: First body in the joint.
+  - `body2 (ChBody)`: Second body in the joint.
+  - `frame (ChFrame)`: Coordinate system for the joint.
+* **Usage:** Initializes a planar joint between two bodies at a specified coordinate system.
+
+### chrono.ChLinkTSDA
+* **Arguments:**
+  - `None`
+* **Usage:** Creates a translational spring-damper actuator (TSDA) link between two bodies.
+
+### chrono.ChLinkTSDA.SetSpringCoefficient
+* **Arguments:**
+  - `k (float)`: Spring stiffness coefficient.
+* **Usage:** Sets the stiffness of the spring.
+
+### chrono.ChLinkTSDA.SetDampingCoefficient
+* **Arguments:**
+  - `d (float)`: Damping coefficient.
+* **Usage:** Sets the damping of the spring.
+
+### chrono.ChLinkTSDA.Initialize
+* **Arguments:**
+  - `body1 (ChBody)`: First body.
+  - `body2 (ChBody)`: Second body.
+  - `pos_are_relative (bool)`: True if positions are relative.
+  - `pos1 (ChVector3d)`: Position on the first body.
+  - `pos2 (ChVector3d)`: Position on the second body.
+* **Usage:** Initializes the spring-damper link between two bodies at specified positions.
+
+### chrono.ChLinkTSDA.SetRestLength
+* **Arguments:**
+  - `length (float)`: The rest length of the spring.
+* **Usage:** Sets the rest length of the spring.
+
+### chrono.ChLinkTSDA.AddVisualShape
+* **Arguments:**
+  - `shape (ChVisualShape)`: Visual shape to be added to the spring.
+* **Usage:** Adds a visual representation to the spring.
+
+## Visualization Setting
+
+### chronoirr.ChVisualSystemIrrlicht
+* **Arguments:**
+  - None
+* **Usage:** Creates an Irrlicht-based visualization system.
+
+### chronoirr.ChVisualSystemIrrlicht.AttachSystem
+* **Arguments:**
+  - `sys (ChSystem)`: The simulation system to be visualized.
+* **Usage:** Attaches the simulation system to the visualization system.
+
+### chronoirr.ChVisualSystemIrrlicht.SetWindowSize
+* **Arguments:**
+  - `width (int)`: Width of the window.
+  - `height (int)`: Height of the window.
+* **Usage:** Sets the size of the visualization window.
+
+### chronoirr.ChVisualSystemIrrlicht.SetWindowTitle
+* **Arguments:**
+  - `title (str)`: Title of the window.
+* **Usage:** Sets the title of the visualization window.
+
+### chronoirr.ChVisualSystemIrrlicht.Initialize
+* **Arguments:**
+  - None
+* **Usage:** Initializes the visualization system.
+
+### chronoirr.ChVisualSystemIrrlicht.AddSkyBox
+* **Arguments:**
+  - None
+* **Usage:** Adds a skybox to the visualization.
+
+### chronoirr.ChVisualSystemIrrlicht.AddCamera
+* **Arguments:**
+  - `pos (ChVector3d)`: Position of the camera.
+* **Usage:** Adds a camera to the visualization system at a specified position.
+
+### chronoirr.ChVisualSystemIrrlicht.AddTypicalLights
+* **Arguments:**
+  - None
+* **Usage:** Adds typical lights to the scene for better visualization.
+
+### chronoirr.drawAllCOGs
+* **Arguments:**
+  - `vis (ChVisualSystemIrrlicht)`: The visualization system.
+  - `size (float)`: Size of the drawn center of gravity (COG) markers.
+* **Usage:** Draws all the centers of gravity (COGs) in the scene.
+
+## Initialize Body
+
+### chrono.ChBodyEasyBox
+* **Arguments:**
+  - `length (float)`: Length of the box.
+  - `width (float)`: Width of the box.
+  - `height (float)`: Height of the box.
+  - `density (float)`: Density of the box.
+  - `collision (bool)`: Enable/disable collision detection.
+  - `visualization (bool)`: Enable/disable visualization.
+* **Usage:** Creates a box-shaped body with specified properties.
+
+### chrono.ChBody.SetPos
+* **Arguments:**
+  - `pos (ChVector3d)`: Position vector.
+* **Usage:** Sets the initial position of the body in the simulation.
+
+### chrono.ChBody.SetAngVelLocal
+* **Arguments:**
+  - `ang_vel (ChVector3d)`: Angular velocity vector.
+* **Usage:** Sets the initial angular velocity of the body.
+
+### chrono.ChSystemNSC.Add
+* **Arguments:**
+  - `item (ChBody/ChLink)`: An item to be added to the system, e.g., a body or a constraint.
+* **Usage:** Adds a body or constraint to the simulation system.
+
+## Setting Parameters
+
+### Parameters
+* **radius**: raduis of a visual shape spring
+* **density**: mass density of the simulation entities
+* **initial speeds**: initial angular velocity
+* **Window Size**: Visualization window size 1024,768
+* **Initial Angular Velocity**: Angular velocity of the boxes as `chrono.ChVector3d(0.1, 0.1, 0.1)`
+* **Rest Length**: Rest length of the spring as `1.9`
+
+## Simulation Loop
+
+### chronoirr.ChVisualSystemIrrlicht.Run
+* **Arguments:**
+  - None
+* **Usage:** Runs the visualization system.
+
+### chronoirr.ChVisualSystemIrrlicht.BeginScene
+* **Arguments:**
+  - None
+* **Usage:** Begins the rendering scene.
+
+### chronoirr.ChVisualSystemIrrlicht.Render
+* **Arguments:**
+  - None
+* **Usage:** Renders the current scene.
+
+### chronoirr.ChVisualSystemIrrlicht.EndScene
+* **Arguments:**
+  - None
+* **Usage:** Ends the rendering scene.
+
+### chrono.ChSystemNSC.DoStepDynamics
+* **Arguments:**
+  - `step_size (float)`: Time step size.
+* **Usage:** Advances the simulation by one time step.
+
+### Complete Simulation Loop
+```python
+while vis.Run():
+    vis.BeginScene() 
+    vis.Render()
+    chronoirr.drawAllCOGs(vis, 2)
+    vis.EndScene()
+    sys.DoStepDynamics(5e-3)
+```
+* **Usage:** This loop runs until the visualization is active, rendering each frame and stepping the simulation forward by 5 milliseconds.
+
+## Summary
+This documentation covers how to set up a simplified plane-plane joint simulation using the PyChrono library, including setting up gravitational and collision properties, initializing bodies, and running a visualization-enhanced simulation loop.

@@ -1,0 +1,330 @@
+# Example: Custom Contact and Collision Simulation with PyChrono
+
+## Library
+
+The script utilizes the PyChrono library for physics-based simulation. Additionally, it makes use of the Chrono Irrlicht module for visualization.
+
+- **pychrono.core**: Core functionalities of Chrono, including physics simulation, collision detection, and contact materials.
+- **pychrono.irrlicht**: Visualization module integrated with the Irrlicht Engine.
+
+```python
+import pychrono.core as chrono
+import pychrono.irrlicht as chronoirr
+import math
+```
+
+## Contact and Collision Setting
+
+This section focuses on setting up contact materials, collision shapes, and collision settings.
+
+### MyObstacle
+**Name**: `MyObstacle` (Class)
+**Arguments**:
+- `r`: Radius of the cylindrical shape.
+- `pos`: Position vector of the cylindrical shape.
+
+**Usage**: Defines a cylindrical shape obstacle and provides a method for adding its visualization to a body.
+
+### AddVisualization
+**Name**: `AddVisualization` (Method)
+**Arguments**:
+- `body`: The `ChBody` to which the visualization shape is added.
+
+**Usage**: Adds a cylindrical visualization shape to `body`.
+
+### MyCustomCollisionDetection
+**Name**: `MyCustomCollisionDetection` (Class)
+**Arguments**:
+- `ball`: The ball body.
+- `ground`: The ground body.
+- `ball_mat`: Material assigned to the ball.
+- `obst_mat`: Material assigned to the obstacle.
+- `ball_radius`: Radius of the ball.
+- `obstacle`: Instance of `MyObstacle`.
+
+**Usage**: Custom collision detection callback for handling collisions between a ball and cylindrical obstacles.
+
+### OnCustomCollision
+**Name**: `OnCustomCollision` (Method)
+**Arguments**:
+- `sys`: The system in which collisions are detected.
+
+**Usage**: Custom collision detection logic. It calculates positions and normal vectors for collision points and adds the collision info to the system's contact container.
+
+## Visualization Setting
+
+This section describes setting up the visualization, including materials, shapes, and visualization systems.
+
+### ChVisualMaterial
+**Name**: `ChVisualMaterial` (Class)
+**Arguments**: None (methods used are listed below).
+
+**Usage**: Defines the visual properties of shapes, such as textures.
+
+### SetMaterial
+**Name**: `SetMaterial` (Method)
+**Arguments**:
+- `idx`: Index of the visual material slot.
+- `material`: Material to be set at the specified index.
+
+**Usage**: Sets the visual material to a visual shape component.
+
+### ChVisualSystemIrrlicht
+**Name**: `ChVisualSystemIrrlicht` (Class)
+**Arguments**: None (methods used are listed below).
+
+**Usage**: Creates an Irrlicht application for visualizing the system.
+
+### AddLogo, AddSkyBox, AddCamera, AddTypicalLights
+**Name**: `AddLogo, AddSkyBox, AddCamera, AddTypicalLights` (Methods)
+**Arguments**: None.
+
+**Usage**: Methods to set up the visual elements like logo, skybox, camera, and typical lights for the simulation environment.
+
+## Initialize Body
+
+This section elaborates on the initialization of bodies in the simulation.
+
+### ChBody
+**Name**: `ChBody` (Class)
+**Arguments**: None (methods used are listed below).
+
+**Usage**: Represents a physical body in the simulation.
+
+### AddBody
+**Name**: `AddBody` (Method)
+**Arguments**:
+- `body`: The body to be added to the system.
+
+**Usage**: Adds a physical body to the system.
+
+## Setting Parameters
+
+This section lists and describes various parameters used in the code.
+
+### Parameters:
+- `ball_radius`: Radius of the ball.
+- `obst_radius`: Radius of the cylindrical obstacle.
+- `obst_center`: Position vector of the cylindrical obstacle.
+- `g_mat, b_mat, o_mat`: Contact materials for ground, ball, and obstacle.
+- `time_step`: Time step for the simulation.
+- `frame_skip`: Number of frames to skip between rendering steps.
+
+## Simulation Loop
+
+This section provides details about the simulation loop that incorporates solver settings and rendering.
+
+### DoStepDynamics
+**Name**: `DoStepDynamics` (Method)
+**Arguments**:
+- `step_size`: Time step for each simulation step.
+
+**Usage**: Advances the state of the system by a certain time step using the dynamics solver.
+
+### BeginScene, Render, EndScene
+**Name**: `BeginScene, Render, EndScene` (Methods)
+**Arguments**: None.
+
+**Usage**: Methods used to initiate rendering, render the current scene, and end the rendering scene process, respectively.
+
+### RegisterCustomCollisionCallback
+**Name**: `RegisterCustomCollisionCallback` (Method)
+**Arguments**:
+- `callback`: A custom collision callback object.
+
+**Usage**: Registers a custom collision callback for the system.
+
+## Full Code
+
+Here is the complete script, integrating all the mentioned settings, parameters, and functions for running the simulation:
+
+```python
+import pychrono.core as chrono
+import pychrono.irrlicht as chronoirr
+import math
+
+print("Example: demonstration of using friction models")
+
+class MyObstacle:
+    def __init__(self, r, pos):
+        self.radius = r
+        self.center = pos
+    def AddVisualization(self, body):
+        cyl = chrono.ChVisualShapeCylinder(self.radius, 1.1)
+        cyl.SetColor(chrono.ChColor(0.6, 0.3, 0.0))
+        body.AddVisualShape(cyl, chrono.ChFramed(self.center + chrono.ChVector3d(0, 0.55, 0),
+                                                 chrono.QuatFromAngleX(chrono.CH_PI_2)))
+
+class MyCustomCollisionDetection(chrono.CustomCollisionCallback):
+    def __init__(self, ball, ground,
+                 ball_mat, obst_mat,
+                 ball_radius, obstacle):
+        super().__init__()
+        self.m_ball = ball
+        self.m_ground = ground
+        self.m_ball_mat = ball_mat
+        self.m_obst_mat = obst_mat
+        self.m_ball_radius = ball_radius
+        self.m_obst_radius = obstacle.radius
+        self.m_obst_center = obstacle.center
+        
+    def OnCustomCollision(self, sys):
+        r_sum = self.m_ball_radius + self.m_obst_radius
+
+        b_pos = self.m_ball.GetPos()
+        b_center = chrono.ChVector3d(b_pos.x, 0.0, b_pos.z)
+
+        o_center = chrono.ChVector3d(self.m_obst_center.x, 0.0, self.m_obst_center.z)
+        delta = o_center - b_center
+        dist2 = delta.Length2()
+
+        if dist2 >= r_sum * r_sum:
+            return
+
+        dist = math.sqrt(dist2)
+        normal = delta / dist        
+        pt_ball = b_center + normal * self.m_ball_radius
+        pt_obst = o_center - normal * self.m_obst_radius
+
+        contact = chrono.ChCollisionInfo()
+        contact.modelA = self.m_ball.GetCollisionModel()
+        contact.modelB = self.m_ground.GetCollisionModel()
+        contact.shapeA = None
+        contact.shapeB = None
+        contact.vN = chrono.ChVector3d(normal.x, 0.0, normal.z)
+        contact.vpA = chrono.ChVector3d(pt_ball.x, b_pos.y, pt_ball.z)
+        contact.vpB = chrono.ChVector3d(pt_obst.x, b_pos.y, pt_obst.z)
+        contact.distance = dist - r_sum
+
+        sys.GetContactContainer().AddContact(contact, self.m_ball_mat, self.m_obst_mat)
+
+use_NSC = 0
+ball_radius = 0.5
+obst_radius = 2.0
+obst_center = chrono.ChVector3d(2.9, 0, 2.9)
+obstacle = MyObstacle(obst_radius, obst_center)
+
+if use_NSC:
+    sys = chrono.ChSystemNSC()
+    g_mat = chrono.ChContactMaterialNSC()
+    g_mat.SetRestitution(0.9)
+    g_mat.SetFriction(0.4)
+    b_mat = chrono.ChContactMaterialNSC()
+    b_mat.SetRestitution(0.9)
+    b_mat.SetFriction(0.5)
+    o_mat = chrono.ChContactMaterialNSC()
+    o_mat.SetRestitution(0.9)
+    o_mat.SetFriction(0.4)
+
+    ground_mat = g_mat
+    ball_mat = b_mat
+    obst_mat = o_mat
+
+    time_step = 1e-3
+    frame_skip = 10
+
+else:
+    sys = chrono.ChSystemSMC()
+
+    g_mat = chrono.ChContactMaterialSMC()
+    g_mat.SetRestitution(0.9)
+    g_mat.SetFriction(0.4)
+    b_mat = chrono.ChContactMaterialSMC()
+    b_mat.SetRestitution(0.9)
+    b_mat.SetFriction(0.5)
+    o_mat = chrono.ChContactMaterialSMC()
+    o_mat.SetRestitution(0.9)
+    o_mat.SetFriction(0.4)
+
+    ground_mat = g_mat
+    ball_mat = b_mat
+    obst_mat = o_mat
+
+    time_step = 1e-4
+    frame_skip = 100
+
+sys.SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)
+sys.SetGravitationalAcceleration(chrono.ChVector3d(0, -9.8, 0))
+
+ground = chrono.ChBody()
+sys.AddBody(ground)
+ground.EnableCollision(True)
+ground.SetFixed(True)
+
+cshape_1 = chrono.ChCollisionShapeBox(ground_mat, 10.0, 2.0, 10.0)
+cshape_2 = chrono.ChCollisionShapeBox(ground_mat, 0.2, 2.0, 10.2)
+cshape_3 = chrono.ChCollisionShapeBox(ground_mat, 0.2, 2.0, 10.2)
+cshape_4 = chrono.ChCollisionShapeBox(ground_mat, 10.2, 2.0, 0.2)
+cshape_5 = chrono.ChCollisionShapeBox(ground_mat, 10.2, 2.0, 0.2)
+
+ground.AddCollisionShape(cshape_1, chrono.ChFramed(chrono.ChVector3d(0, -1, 0), chrono.QUNIT))
+ground.AddCollisionShape(cshape_2, chrono.ChFramed(chrono.ChVector3d(-5, 0, 0), chrono.QUNIT))
+ground.AddCollisionShape(cshape_3, chrono.ChFramed(chrono.ChVector3d( 5, 0, 0), chrono.QUNIT))
+ground.AddCollisionShape(cshape_4, chrono.ChFramed(chrono.ChVector3d(0, 0, -5), chrono.QUNIT))
+ground.AddCollisionShape(cshape_5, chrono.ChFramed(chrono.ChVector3d(0, 0,  5), chrono.QUNIT))
+
+ground_vis_mat = chrono.ChVisualMaterial()
+ground_vis_mat.SetKdTexture(chrono.GetChronoDataFile("textures/blue.png"))
+
+vshape_1 = chrono.ChVisualShapeBox(10, 2, 10)
+vshape_1.SetMaterial(0, ground_vis_mat)
+ground.AddVisualShape(vshape_1, chrono.ChFramed(chrono.ChVector3d(0, -1, 0)))
+
+vshape_2 = chrono.ChVisualShapeBox(0.2, 2, 10.2)
+vshape_2.SetMaterial(0, ground_vis_mat)
+ground.AddVisualShape(vshape_2, chrono.ChFramed(chrono.ChVector3d(-5, 0, 0)))
+
+vshape_3 = chrono.ChVisualShapeBox(0.2, 2, 10.2)
+vshape_3.SetMaterial(0, ground_vis_mat)
+ground.AddVisualShape(vshape_3, chrono.ChFramed(chrono.ChVector3d(5, 0, 0)))
+
+vshape_4 = chrono.ChVisualShapeBox(10.2, 2, 0.2)
+vshape_4.SetMaterial(0, ground_vis_mat)
+ground.AddVisualShape(vshape_4, chrono.ChFramed(chrono.ChVector3d(0, 0, -5)))
+
+vshape_5 = chrono.ChVisualShapeBox(10.2, 2, 0.2)
+vshape_5.SetMaterial(0, ground_vis_mat)
+ground.AddVisualShape(vshape_5, chrono.ChFramed(chrono.ChVector3d(0, 0, 5)))
+
+obstacle.AddVisualization(ground)
+
+ball = chrono.ChBody()
+sys.AddBody(ball)
+ball.SetMass(10)
+comp = 4 * ball_radius * ball_radius
+ball.SetInertiaXX(chrono.ChVector3d(comp, comp, comp))
+ball.SetPos(chrono.ChVector3d(-3, 1.2 * ball_radius, -3))
+ball.SetPosDt(chrono.ChVector3d(5, 0, 5))
+ball.EnableCollision(True)
+
+ball_ct_shape = chrono.ChCollisionShapeSphere(ball_mat, ball_radius)
+ball.AddCollisionShape(ball_ct_shape)
+
+vshape_s = chrono.ChVisualShapeSphere(ball_radius)
+vshape_s.SetTexture(chrono.GetChronoDataFile("textures/bluewhite.png"))
+ball.AddVisualShape(vshape_s)
+
+my_collision = MyCustomCollisionDetection(ball, ground, ball_mat, obst_mat, ball_radius, obstacle)
+sys.RegisterCustomCollisionCallback(my_collision)
+
+vis = chronoirr.ChVisualSystemIrrlicht()
+vis.AttachSystem(sys)
+vis.SetWindowSize(1024,768)
+vis.SetWindowTitle('Custom contact demo')
+vis.Initialize()
+vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))
+vis.AddSkyBox()
+vis.AddCamera(chrono.ChVector3d(8, 8, -6))
+vis.AddTypicalLights()
+
+frame = 0
+while vis.Run():
+    if frame % 100 == 0:
+        vis.BeginScene() 
+        vis.Render()
+        vis.EndScene()
+    sys.DoStepDynamics(1e-4)
+    frame += 1
+```
+
+This documentation provides a detailed guide for understanding and extending the given code example.

@@ -1,0 +1,318 @@
+# Code Documentation for ANCF Shell Elements Demo
+
+## Library
+
+### Imported Libraries and Modules
+1. `pychrono as chrono`
+   - Main module providing core functionalities of Project Chrono.
+
+2. `pychrono.fea as fea`
+   - Module providing functionalities specifically for Finite Element Analysis (FEA) within Project Chrono.
+
+3. `pychrono.irrlicht as chronoirr`
+   - Module providing functionalities for visualization using the Irrlicht engine.
+
+4. `math`
+   - Standard Python library for mathematical functions.
+
+## Contact and Collision Setting
+
+This code does not explicitly include any APIs or functions specifically for setting up contact materials or collision settings, as it focuses more on the Finite Element Analysis setup and visualization.
+
+## Visualization Setting
+
+### Visualization APIs and Functions
+
+1. **Name:** `chrono.ChVisualShapeFEA`
+   - **Arguments:** 
+     - `mesh`: The FEA mesh to which this visualization shape is attached.
+   - **Usage:** Creates a visualization shape for the FEA mesh.
+
+   - **Name:** `SetFEMdataType`
+     - **Arguments:** 
+       - `data_type`: Type of data to visualize (speed norm, surface, etc.).
+     - **Usage:** Sets the type of FEA data to be visualized.
+
+   - **Name:** `SetColorscaleMinMax`
+     - **Arguments:** 
+       - `min_val`: Minimum value for the color scale.
+       - `max_val`: Maximum value for the color scale.
+     - **Usage:** Sets the minimum and maximum values for the color scale.
+
+   - **Name:** `SetShrinkElements`
+     - **Arguments:** 
+       - `shrink`: Boolean indicating whether to shrink elements.
+       - `shrink_ratio`: Ratio to which elements should be shrunk.
+     - **Usage:** Shrinks the visualized elements to improve visibility.
+
+   - **Name:** `SetSmoothFaces`
+     - **Arguments:** 
+       - `smooth`: Boolean indicating whether to smooth faces.
+     - **Usage:** Enables or disables the smoothing of faces.
+
+   - **Name:** `SetWireframe`
+     - **Arguments:** 
+       - `wireframe`: Boolean indicating whether to use wireframe mode.
+     - **Usage:** Sets the visualization to wireframe mode.
+
+   - **Name:** `SetDrawInUndeformedReference`
+     - **Arguments:** 
+       - `draw_undeformed`: Boolean indicating whether to draw in undeformed reference.
+     - **Usage:** Visualizes the mesh in its undeformed reference state.
+
+   - **Name:** `SetFEMglyphType`
+     - **Arguments:** 
+       - `glyph_type`: Type of glyph to visualize (node dot, element strain, etc.).
+     - **Usage:** Sets the type of glyph to visualize for FEA.
+
+   - **Name:** `SetSymbolsThickness`
+     - **Arguments:** 
+       - `thickness`: Thickness of the symbols.
+     - **Usage:** Sets the thickness of the visualized symbols.
+
+   - **Name:** `SetSymbolsScale`
+     - **Arguments:** 
+       - `scale`: Scale factor for the glyph symbols.
+     - **Usage:** Sets the scale for the glyph symbols.
+
+   - **Name:** `SetZbufferHide`
+     - **Arguments:** 
+       - `hide`: Boolean indicating whether to hide elements behind others.
+     - **Usage:** Enables or disables hiding elements behind others.
+
+2. **Name:** `chronoirr.ChVisualSystemIrrlicht`
+   - **Arguments:** None.
+   - **Usage:** Creates a visualization system using the Irrlicht engine.
+
+   - **Name:** `AttachSystem`
+     - **Arguments:** 
+       - `sys`: The Chrono system to attach to the visualization system.
+     - **Usage:** Attaches the Chrono simulation system to the visualization system.
+
+   - **Name:** `SetWindowSize`
+     - **Arguments:** 
+       - `width`: Width of the window.
+       - `height`: Height of the window.
+     - **Usage:** Sets the size of the visualization window.
+
+   - **Name:** `SetWindowTitle`
+     - **Arguments:** 
+       - `title`: Title of the window.
+     - **Usage:** Sets the window title.
+
+   - **Name:** `Initialize`
+     - **Arguments:** None.
+     - **Usage:** Initializes the visualization system.
+
+   - **Name:** `AddLogo`
+     - **Arguments:** 
+       - `filepath`: File path to the logo image.
+     - **Usage:** Adds a logo to the visualization window.
+
+   - **Name:** `AddSkyBox`
+     - **Arguments:** None.
+     - **Usage:** Adds a skybox to the scene.
+
+   - **Name:** `AddCamera`
+     - **Arguments:** 
+       - `position`: Position of the camera.
+       - `target`: Target point of the camera.
+     - **Usage:** Adds a camera to the scene.
+
+   - **Name:** `AddTypicalLights`
+     - **Arguments:** None.
+     - **Usage:** Adds typical lighting to the scene.
+
+## Initialize Body
+
+### Initialize Bodies APIs and Functions
+
+1. **Name:** `chrono.ChSystemSMC`
+   - **Arguments:** None.
+   - **Usage:** Creates a new Chrono system using the SMC (Soft-Contact) method.
+
+   - **Name:** `SetGravitationalAcceleration`
+     - **Arguments:** 
+       - `gravity`: A `ChVector3d` representing the gravitational acceleration vector.
+     - **Usage:** Sets the gravitational acceleration for the system.
+
+2. **Name:** `fea.ChMesh`
+   - **Arguments:** None.
+   - **Usage:** Creates a new FEA mesh.
+
+3. **Name:** `fea.ChNodeFEAxyzD`
+   - **Arguments:** 
+     - `position`: A `ChVector3d` representing the node position.
+     - `direction`: A `ChVector3d` representing the node direction.
+   - **Usage:** Creates a new FEA node with position and direction.
+
+   - **Name:** `SetMass`
+     - **Arguments:** 
+       - `mass`: Mass of the node.
+     - **Usage:** Sets the node mass.
+
+   - **Name:** `SetFixed`
+     - **Arguments:** 
+       - `fixed`: Boolean indicating whether the node is fixed.
+     - **Usage:** Fixes the node in space if set to True.
+
+4. **Name:** `mesh.AddNode`
+   - **Arguments:** 
+     - `node`: The node to add to the mesh.
+   - **Usage:** Adds a node to the FEA mesh.
+
+5. **Name:** `fea.ChMaterialShellANCF`
+   - **Arguments:** 
+     - `rho`: Density.
+     - `E`: Elasticity modulus.
+     - `nu`: Poisson's ratio vector.
+     - `G`: Shear modulus vector.
+   - **Usage:** Creates a new orthotropic material for ANCF shells.
+
+6. **Name:** `fea.ChElementShellANCF_3423`
+   - **Arguments:** None.
+   - **Usage:** Creates a new ANCF shell element.
+
+   - **Name:** `SetNodes`
+     - **Arguments:** 
+       - `node0`: First node.
+       - `node1`: Second node.
+       - `node2`: Third node.
+       - `node3`: Fourth node.
+     - **Usage:** Sets the nodes for the shell element.
+
+   - **Name:** `SetDimensions`
+     - **Arguments:** 
+       - `dx`: Dimension along x-axis.
+       - `dy`: Dimension along y-axis.
+     - **Usage:** Sets the dimensions of the shell element.
+
+   - **Name:** `AddLayer`
+     - **Arguments:** 
+       - `thickness`: Thickness of the layer.
+       - `angle`: Angle of the fiber orientation.
+       - `material`: Material of the layer.
+     - **Usage:** Adds a layer to the shell element.
+
+   - **Name:** `SetAlphaDamp`
+     - **Arguments:** 
+       - `alpha_damp`: Structural damping coefficient.
+     - **Usage:** Sets the structural damping for the shell element.
+
+7. **Name:** `mesh.AddElement`
+   - **Arguments:** 
+     - `element`: The element to add to the mesh.
+   - **Usage:** Adds an element to the FEA mesh.
+
+8. **Name:** `sys.Add`
+   - **Arguments:** 
+     - `mesh`: The mesh to add to the system.
+   - **Usage:** Adds the FEA mesh to the Chrono system.
+
+## Setting Parameters
+
+### Parameters Used
+1. **time_step**: The time step size for the simulation (used later in `sys.DoStepDynamics`).
+   - **Value:** `1e-3`
+  
+2. **plate_lenght_x, plate_lenght_y, plate_lenght_z**: Dimensions of the plate.
+   - **Values:** `1`, `0.1`, `0.01`
+  
+3. **numDiv_x, numDiv_y**: Number of divisions in the x and y directions for meshing the plate.
+   - **Values:** `10`, `2`
+  
+4. **rho**: Density of the material.
+   - **Value:** `500`
+  
+5. **E**: Modulus of Elasticity vector.
+   - **Value:** `chrono.ChVector3d(2.1e7, 2.1e7, 2.1e7)`
+  
+6. **nu**: Poisson's ratio vector.
+   - **Value:** `chrono.ChVector3d(0.3, 0.3, 0.3)`
+  
+7. **G**: Shear modulus vector.
+   - **Value:** `chrono.ChVector3d(8.0769231e6, 8.0769231e6, 8.0769231e6)`
+
+## Simulation Loop
+
+### Simulation Loop APIs and Functions
+
+1. **Name:** `chrono.ChSolverMINRES`
+   - **Arguments:** None.
+   - **Usage:** Creates a solver using the MINRES algorithm.
+
+   - **Name:** `EnableDiagonalPreconditioner`
+     - **Arguments:** 
+       - `enable`: Boolean to enable/disable the diagonal preconditioner.
+     - **Usage:** Enables or disables the diagonal preconditioner for the solver.
+
+2. **Name:** `sys.SetSolver`
+   - **Arguments:** 
+     - `solver`: The solver to set for the system.
+   - **Usage:** Sets the solver for the system.
+
+3. **Name:** `sys.GetSolver().AsIterative().SetMaxIterations`
+   - **Arguments:** 
+     - `iterations`: Maximum number of iterations.
+   - **Usage:** Sets the maximum number of iterations for the iterative solver.
+
+4. **Name:** `sys.GetSolver().AsIterative().SetTolerance`
+   - **Arguments:** 
+     - `tolerance`: Tolerance for the solver.
+   - **Usage:** Sets the tolerance for the iterative solver.
+
+5. **Name:** `chrono.ChTimestepperHHT`
+   - **Arguments:** 
+     - `sys`: The system for which to create the stepper.
+   - **Usage:** Creates an HHT time stepper for the system.
+
+6. **Name:** `sys.SetTimestepper`
+   - **Arguments:** 
+     - `stepper`: The time stepper to set for the system.
+   - **Usage:** Sets the time stepper for the system.
+
+7. **Name:** `stepper.SetAlpha`
+   - **Arguments:** 
+     - `alpha`: Alpha value for the HHT time stepper.
+   - **Usage:** Sets the alpha value for the HHT integrator.
+
+8. **Name:** `stepper.SetMaxIters`
+   - **Arguments:** 
+     - `max_iters`: Maximum number of iterations.
+   - **Usage:** Sets the maximum number of iterations for the HHT stepper.
+
+9. **Name:** `stepper.SetAbsTolerances`
+   - **Arguments:** 
+     - `tolerances`: Absolute tolerances.
+   - **Usage:** Sets the absolute tolerances for the HHT stepper.
+
+10. **Name:** `stepper.SetStepControl`
+    - **Arguments:** 
+      - `control`: Boolean to enable/disable step control.
+    - **Usage:** Enables or disables step control for the HHT integrator.
+
+11. **Name:** `stepper.SetMinStepSize`
+    - **Arguments:** 
+      - `min_step_size`: Minimum step size.
+    - **Usage:** Sets the minimum step size for the HHT integrator.
+
+12. **Name:** `vis.Run`
+    - **Arguments:** None.
+    - **Usage:** Checks if the visualization system should run.
+
+13. **Name:** `vis.BeginScene`
+    - **Arguments:** None.
+    - **Usage:** Begins the rendering of a new scene.
+
+14. **Name:** `vis.Render`
+    - **Arguments:** None.
+    - **Usage:** Renders the current scene.
+
+15. **Name:** `vis.EndScene`
+    - **Arguments:** None.
+    - **Usage:** Ends the rendering of the current scene.
+
+16. **Name:** `sys.DoStepDynamics`
+    - **Arguments:** 
+      - `time_step`: Time step for the dynamics step.
+    - **Usage:** Advances the simulation by one time step.

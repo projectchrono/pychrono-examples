@@ -1,0 +1,197 @@
+# Actuated Prismatic Joint Documentation
+
+## Library
+
+### Libraries and Modules
+This code imports several Python libraries and modules to create and simulate a model using the Chrono simulation framework:
+
+- `chrono`: Primary module for the Chrono simulation system.
+- `irr`: Module from the Chrono project for visualization using the Irrlicht engine.
+- `math`: Standard Python library for mathematical functions.
+- `numpy`: Library for numerical computations, particularly for handling arrays and linear algebra operations.
+- `numpy.linalg`: Sub-module of `numpy` for linear algebra operations.
+
+## Contact and Collision Setting
+
+### ChSystemNSC
+- **Arguments**: None.
+- **Usage**: Creates a new non-smooth dynamics simulation system (NSC).
+- ```python
+  sys = chrono.ChSystemNSC()
+  ```
+
+### SetGravitationalAcceleration
+- **Arguments**: A `ChVector3d` object representing the gravitational acceleration.
+- **Usage**: Sets the gravitational acceleration for the simulation system.
+- ```python
+  sys.SetGravitationalAcceleration(chrono.ChVector3d(0, 0, 0))
+  ```
+
+### EnableCollision
+- **Arguments**: A boolean value (True or False).
+- **Usage**: Enables or disables collision detection for the body.
+- ```python
+  ground.EnableCollision(False)
+  ```
+
+## Visualization Setting
+
+### ChVisualSystemIrrlicht
+- **Arguments**: None.
+- **Usage**: Creates a visualization application based on the Irrlicht engine.
+- ```python
+  vis = irr.ChVisualSystemIrrlicht()
+  ```
+
+### SetWindowSize
+- **Arguments**: Width and height of the window (integers).
+- **Usage**: Sets the size of the visualization window.
+- ```python
+  vis.SetWindowSize(1024, 768)
+  ```
+
+### SetWindowTitle
+- **Arguments**: A string representing the window title.
+- **Usage**: Sets the title of the visualization window.
+- ```python
+  vis.SetWindowTitle('Actuated prismatic joint demo')
+  ```
+
+### Initialize
+- **Arguments**: None.
+- **Usage**: Initializes the Irrlicht visualization system.
+- ```python
+  vis.Initialize()
+  ```
+
+### AddLogo
+- **Arguments**: A file path (string) to the logo image.
+- **Usage**: Adds a logo to the visualization window.
+- ```python
+  vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))
+  ```
+
+### AddCamera
+- **Arguments**: A `ChVector3d` object representing the camera position.
+- **Usage**: Adds a camera to the visualization scene.
+- ```python
+  vis.AddCamera(chrono.ChVector3d(-1, 1.5, -6))
+  ```
+
+### AddTypicalLights
+- **Arguments**: None.
+- **Usage**: Adds typical lighting to the scene.
+- ```python
+  vis.AddTypicalLights()
+  ```
+
+## Initialize Body
+
+### ChBody
+- **Arguments**: None.
+- **Usage**: Creates a new body object.
+- ```python
+  ground = chrono.ChBody()
+  ```
+
+### SetFixed
+- **Arguments**: A boolean value (True or False).
+- **Usage**: Sets whether the body is fixed in space.
+- ```python
+  ground.SetFixed(True)
+  ```
+
+### SetMass
+- **Arguments**: A floating-point number representing the mass.
+- **Usage**: Sets the mass of the body.
+- ```python
+  slider1.SetMass(1)
+  ```
+
+### SetInertiaXX
+- **Arguments**: A `ChVector3d` object representing the moment of inertia.
+- **Usage**: Sets the moment of inertia tensor for the body.
+- ```python
+  slider1.SetInertiaXX(chrono.ChVector3d(0.1, 0.1, 0.1))
+  ```
+
+### SetPos
+- **Arguments**: A `ChVector3d` object representing the position.
+- **Usage**: Sets the position of the body.
+- ```python
+  slider1.SetPos(chrono.ChVector3d(-4, 0, -1))
+  ```
+
+### AddBody
+- **Arguments**: A `ChBody` object.
+- **Usage**: Adds a body to the simulation system.
+- ```python
+  sys.AddBody(ground)
+  ```
+
+### AddVisualShape
+- **Arguments**: A visual shape object and a frame object.
+- **Usage**: Adds a visual shape to the body.
+- ```python
+  ground.AddVisualShape(rail1, chrono.ChFramed(chrono.ChVector3d(0, 0, -1)))
+  ```
+
+## Setting Parameters
+
+### ChFunctionSine
+- **Arguments**: Amplitude and frequency (floating-point numbers).
+- **Usage**: Creates a sine wave function for actuation.
+- ```python
+  mod = chrono.ChFunctionSine(ampl, freq)
+  ```
+
+## Simulation Loop
+
+### AttachSystem
+- **Arguments**: A `ChSystem` object.
+- **Usage**: Attaches the simulation system to the visualization application.
+- ```python
+  vis.AttachSystem(sys)
+  ```
+
+### BeginScene
+- **Arguments**: None.
+- **Usage**: Begins a new scene in the visualization window.
+- ```python
+  vis.BeginScene()
+  ```
+
+### Render
+- **Arguments**: None.
+- **Usage**: Renders the scene.
+- ```python
+  vis.Render()
+  ```
+
+### drawAllLinkframes
+- **Arguments**: Visualization application and scale factor.
+- **Usage**: Draws all link frames.
+- ```python
+  irr.drawAllLinkframes(vis, 1)
+  ```
+
+### EndScene
+- **Arguments**: None.
+- **Usage**: Ends the current scene.
+- ```python
+  vis.EndScene()
+  ```
+
+### DoStepDynamics
+- **Arguments**: Time step (floating-point number).
+- **Usage**: Advances the simulation by a single time step.
+- ```python
+  sys.DoStepDynamics(1e-2)
+  ```
+
+### GetChTime
+- **Arguments**: None.
+- **Usage**: Gets the current simulation time.
+- ```python
+  time = sys.GetChTime()
+  ```

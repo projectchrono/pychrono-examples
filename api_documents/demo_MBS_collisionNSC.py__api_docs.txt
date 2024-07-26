@@ -1,0 +1,206 @@
+# API Documentation for Collision and Visualization Simulation Code
+
+This documentation provides a comprehensive overview of the code provided, detailing the libraries and modules used, contact and collision settings, visualization settings, body initialization, parameters, and the simulation loop.
+
+## Library
+
+### Imported Libraries
+
+1. **pychrono.core**
+    - **Usage**: Core library for Chrono simulation which includes physics bodies, contact materials, vectors, and functional utilities.
+    - **Import Statement**: `import pychrono.core as chrono`
+
+2. **pychrono.irrlicht**
+    - **Usage**: Visualization and graphical rendering using the Irrlicht engine integrated within Chrono.
+    - **Import Statement**: `import pychrono.irrlicht as chronoirr`
+
+## Contact and Collision Setting
+
+### AddFallingItems Function
+
+#### Name
+`AddFallingItems`
+
+#### Arguments
+- `sys`: Refers to the Chrono system object (`chrono.ChSystemNSC`).
+
+#### Usage
+Sets up falling items (rigid bodies like spheres, boxes, and cylinders) and defines their contact materials.
+
+#### API/Functions Used
+- **chrono.ChContactMaterialNSC**
+  - **Arguments**: None
+  - **Usage**: Creates a contact material with specific properties (e.g., friction).
+- **material.SetFriction(value)**
+  - **Arguments**: `value` (float) - friction coefficient.
+  - **Usage**: Sets the friction property of the contact material.
+- **chrono.ChBodyEasySphere**
+  - **Arguments**: `radius` (float), `density` (float), `visualization` (bool), `collision` (bool), `contact material` (ChContactMaterialNSC)
+  - **Usage**: Creates a spherical rigid body with given properties.
+- **chrono.ChBodyEasyBox**
+  - **Arguments**: `x size` (float), `y size` (float), `z size` (float), `density` (float), `visualization` (bool), `collision` (bool), `contact material` (ChContactMaterialNSC)
+  - **Usage**: Creates a box-shaped rigid body with given properties.
+- **chrono.ChBodyEasyCylinder**
+  - **Arguments**: `axis` (enum), `radius` (float), `height` (float), `density` (float), `visualization` (bool), `collision` (bool), `contact material` (ChContactMaterialNSC)
+  - **Usage**: Creates a cylindrical rigid body with given properties.
+- **body.SetPos(position)**
+  - **Arguments**: `position` (ChVector3d)
+  - **Usage**: Sets the initial position of the body.
+- **body.GetVisualShape(index).SetTexture(texture_file)**
+  - **Arguments**: `index` (int), `texture_file` (str)
+  - **Usage**: Sets the texture of the visual shape.
+
+### AddContainer Function
+
+#### Name
+`AddContainer`
+
+#### Arguments
+- `sys`: Chrono system object (`chrono.ChSystemNSC`).
+
+#### Usage
+Sets up a container with walls and a rotating mixer, defining their physical and visual properties.
+
+#### API/Functions Used
+- **chrono.ChBodyEasyBox**
+  - **Arguments**: `x size`, `y size`, `z size`, `density`, `visualization`, `collision`, `contact material`
+  - **Usage**: Creates a box-shaped rigid body.
+- **body.SetPos(position)**
+  - **Arguments**: `position` (ChVector3d)
+  - **Usage**: Sets the initial position of the body.
+- **body.SetFixed(is_fixed)**
+  - **Arguments**: `is_fixed` (bool)
+  - **Usage**: Fixes the body in space, preventing it from moving.
+- **body.GetVisualShape(index).SetMaterial(index, material)**
+  - **Arguments**: `index` (int), `material` (ChVisualMaterial)
+  - **Usage**: Sets the visual material.
+- **chrono.ChLinkMotorRotationSpeed**
+  - **Arguments**: None
+  - **Usage**: Creates a motor link that applies a constant rotational speed.
+- **motor.Initialize(body1, body2, frame)**:
+  - **Arguments**: `body1` (ChBody), `body2` (ChBody), `frame` (ChFrame)
+  - **Usage**: Initializes the motor link between two bodies.
+- **motor.SetSpeedFunction(function)**
+  - **Arguments**: `function` (ChFunction)
+  - **Usage**: Sets the speed for the motor link.
+
+## Visualization Setting
+
+### Visualization Setup
+
+#### Name
+None (Inline code within the main script)
+
+#### Arguments
+None
+
+#### Usage
+Creates a visualization system using Irrlicht and configures windows, camera, and rendering parameters.
+
+#### API/Functions Used
+- **chronoirr.ChVisualSystemIrrlicht**
+  - **Arguments**: None
+  - **Usage**: Creates an Irrlicht visualization system.
+- **vis.AttachSystem(system)**
+  - **Arguments**: `system` (ChSystemNSC)
+  - **Usage**: Attaches the simulation system to the visualization.
+- **vis.SetWindowSize(width, height)**
+  - **Arguments**: `width` (int), `height` (int)
+  - **Usage**: Sets the size of the visualization window.
+- **vis.SetWindowTitle(title)**
+  - **Arguments**: `title` (str)
+  - **Usage**: Sets the title of the visualization window.
+- **vis.Initialize()**
+  - **Arguments**: None
+  - **Usage**: Initializes the visualization system.
+- **vis.AddLogo(image_file)**
+  - **Arguments**: `image_file` (str)
+  - **Usage**: Adds a logo to the visualization.
+- **vis.AddSkyBox()**
+  - **Arguments**: None
+  - **Usage**: Adds a skybox to the visualization.
+- **vis.AddCamera(position)**
+  - **Arguments**: `position` (ChVector3d)
+  - **Usage**: Adds a camera to the visualization system.
+- **vis.AddTypicalLights()**
+  - **Arguments**: None
+  - **Usage**: Adds typical lighting to the scene.
+
+## Initialize Body
+
+### Initialization of Bodies
+
+#### Name
+None (Inline code within `AddContainer` and `AddFallingItems`)
+
+#### Arguments
+None
+
+#### Usage
+Initializes body properties such as position, size, and whether they are fixed in space. Adds bodies to the Chrono system.
+
+#### API/Functions Used
+- **body.SetPos(position)**
+  - **Arguments**: `position` (ChVector3d)
+  - **Usage**: Sets the initial position of the body.
+- **body.SetFixed(is_fixed)**
+  - **Arguments**: `is_fixed` (bool)
+  - **Usage**: Fixes the body in space.
+- **sys.Add(body)**
+  - **Arguments**: `body` (ChBody)
+  - **Usage**: Adds the body to the simulation system.
+
+## Setting Parameters
+
+### Parameters Set in Code
+
+- **radius**: Radius for the spherical bodies. (`1.1` for spheres, `0.75` for cylinders)
+- **density**: Density of the bodies. (`1000` for spheres, `100` for boxes and cylinders)
+- **visualization**: Flag to enable visualization. (`True`)
+- **collision**: Flag to enable collision detection. (`True`)
+- **initial speed**: Speed for the rotating body. (`chrono.CH_PI / 4.0` radians per second)
+
+## Simulation Loop
+
+### Simulation Loop
+
+#### Name
+None (Inline loop in the main script)
+
+#### Arguments
+None
+
+#### Usage
+Runs the simulation loop, updating the visualization and physical system at each time step.
+
+#### API/Functions Used
+- **vis.Run()**
+  - **Arguments**: None
+  - **Usage**: Checks if the visualization system should continue running.
+- **vis.BeginScene()**
+  - **Arguments**: None
+  - **Usage**: Begins a new scene for rendering.
+- **vis.Render()**
+  - **Arguments**: None
+  - **Usage**: Renders the current scene.
+- **vis.EndScene()**
+  - **Arguments**: None
+  - **Usage**: Ends the current scene.
+- **sys.DoStepDynamics(time_step)**
+  - **Arguments**: `time_step` (float)
+  - **Usage**: Advances the simulation by the given time step.
+
+### System and Solver Settings
+
+#### API/Functions Used
+- **sys.SetCollisionSystemType(type)**
+  - **Arguments**: `type` (ChCollisionSystem.Type)
+  - **Usage**: Sets the type of collision system to use.
+- **sys.SetSolverType(type)**
+  - **Arguments**: `type` (ChSolver.Type)
+  - **Usage**: Sets the type of solver for the simulation.
+- **solver.AsIterative().SetMaxIterations(count)**
+  - **Arguments**: `count` (int)
+  - **Usage**: Sets the maximum number of iterations for the solver.
+
+This detailed documentation should provide a clear understanding of the various components and their functionalities used within the provided simulation code.

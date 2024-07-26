@@ -1,0 +1,201 @@
+# API Documentation for Beam Buckling Simulation Using Chrono
+
+## Library
+
+The code uses the following libraries and modules:
+- `math`: Mathematical functions.
+- `pychrono`: Core Chrono engine for physics-based simulation.
+- `pychrono.fea`: Module for finite element analysis.
+- `pychrono.pardisomkl`: Pardiso MKL solver for high-performance computing.
+- `pychrono.irrlicht`: Irrlicht visual system for rendering.
+
+```python
+import math as m
+import pychrono as chrono
+import pychrono.fea as fea
+import pychrono.pardisomkl as pardiso
+import pychrono.irrlicht as chronoirr
+import os
+```
+
+## Contact and Collision Setting
+
+### `chrono.ChSystemSMC`
+- **Arguments**: None.
+- **Usage**: Creates a Chrono physical system for simulating mechanical systems with Smooth and Contact (SMC) materials.
+
+```python
+sys = chrono.ChSystemSMC()
+```
+
+### `chrono.ChLinkMotorRotationAngle`
+- **Arguments**: None.
+- **Usage**: Motor controller for rotation angle between two bodies.
+
+```python
+motor = chrono.ChLinkMotorRotationAngle()
+```
+
+### `chrono.ChFunctionMyFun`
+- **Arguments**: None.
+- **Usage**: Custom function class inheriting from `chrono.ChFunction` to define a specific behavior of the motor.
+
+## Visualization Setting
+
+### `chrono.ChVisualShapeBox`
+- **Arguments**:
+  - `width`: Width of the box.
+  - `height`: Height of the box.
+  - `depth`: Depth of the box.
+- **Usage**: Adds a box shape for visualization.
+
+```python
+boxtruss = chrono.ChVisualShapeBox(0.02, 0.2, 0.1)
+boxcrank = chrono.ChVisualShapeBox(K, 0.02, 0.02)
+```
+
+### `chrono.ChVisualShapeSphere`
+- **Arguments**:
+  - `radius`: Radius of the sphere.
+- **Usage**: Adds a sphere shape for visualizing constraints.
+
+```python
+sphereconstr2 = chrono.ChVisualShapeSphere(0.01)
+sphereconstr3 = chrono.ChVisualShapeSphere(0.01)
+```
+
+### `chrono.ChVisualShapeFEA`
+- **Arguments**: 
+  - `mesh`: The finite element mesh.
+- **Usage**: Visualizes finite element analysis (FEA) data.
+
+```python
+mvisualizebeamA = chrono.ChVisualShapeFEA(mesh)
+mvisualizebeamC = chrono.ChVisualShapeFEA(mesh)
+```
+
+### `chronoirr.ChVisualSystemIrrlicht`
+- **Arguments**: None.
+- **Usage**: Initializes the Irrlicht visual system for rendering the simulation.
+
+```python
+vis = chronoirr.ChVisualSystemIrrlicht()
+```
+
+## Initialize Body
+
+### `chrono.ChBody`
+- **Arguments**: None.
+- **Usage**: Creates a physical body for the simulation.
+
+```python
+body_truss = chrono.ChBody()
+body_crank = chrono.ChBody()
+```
+
+### `chrono.ChBody.AddVisualShape`
+- **Arguments**:
+  - `visual_shape`: Shape to attach.
+  - `frame`: Placement frame (optional).
+- **Usage**: Adds a visual shape to the body.
+
+```python
+body_truss.AddVisualShape(boxtruss)
+body_crank.AddVisualShape(boxcrank)
+```
+
+### `chrono.ChBody.SetPos`
+- **Arguments**:
+  - `position`: Initial position of the body.
+- **Usage**: Sets the initial position of the body.
+
+```python
+body_crank.SetPos((vB + vG) * 0.5)
+```
+
+### `chrono.ChSystem.AddBody`
+- **Arguments**:
+  - `body`: The body to add to the system.
+- **Usage**: Adds a defined body to the simulation system.
+
+```python
+sys.AddBody(body_truss)
+sys.AddBody(body_crank)
+```
+
+### `fea.ChMesh`
+- **Arguments**: None.
+- **Usage**: Creates a mesh for finite element analysis.
+
+```python
+mesh = fea.ChMesh()
+```
+
+## Setting Parameters
+
+### Beam Section Parameters
+- **Parameters**:
+  - `beam_wy`: Width of the IGA beam.
+  - `beam_wz`: Depth of the IGA beam.
+  - `hbeam_d`: Diameter of the vertical beam.
+  - `crankbeam_d`: Diameter of the crank beam.
+
+```python
+beam_wy = 0.10
+beam_wz = 0.01
+hbeam_d = 0.024
+crankbeam_d = 0.048
+```
+
+### Material Properties
+- **Inertia** and **Elasticity** for beams.
+
+```python
+minertia = fea.ChInertiaCosseratSimple()
+minertia.SetAsRectangularSection(beam_wy, beam_wz, 2700)
+melasticity = fea.ChElasticityCosseratSimple()
+melasticity.SetYoungModulus(73.0e9)
+melasticity.SetShearModulusFromPoisson(0.3)
+melasticity.SetAsRectangularSection(beam_wy, beam_wz)
+```
+
+## Simulation Loop
+
+### `chrono.ChSolverPardisoMKL`
+- **Arguments**: None.
+- **Usage**: Solver for handling stiffness matrices.
+
+```python
+pardiso_solver = pardiso.ChSolverPardisoMKL()
+sys.SetSolver(pardiso_solver)
+```
+
+### `chrono.ChTimestepperHHT`
+- **Arguments**:
+  - `sys`: The Chrono system.
+- **Usage**: Time stepper for integration with reduced numerical damping.
+
+```python
+ts = chrono.ChTimestepperHHT(sys)
+ts.SetStepControl(False)
+sys.SetTimestepper(ts)
+```
+
+### Visualization Loop
+
+- **BeginScene**: Begins the rendering scene.
+- **Render**: Renders the scene.
+- **EndScene**: Ends the rendering scene.
+- **DoStepDynamics**: Advances the simulation by a timestep.
+
+```python
+while vis.Run():
+    vis.BeginScene()
+    vis.Render()
+    chronoirr.drawGrid(vis, 0.05, 0.05, 20, 20, chrono.ChCoordsysd(chrono.ChVector3d(0, 0, 0), chrono.QuatFromAngleZ(chrono.CH_PI_2)))
+    vis.EndScene()
+    
+    sys.DoStepDynamics(0.001)
+```
+
+This documentation outlines the libraries, functions, and parameters used in the code for simulating beam buckling using Project Chrono, providing a comprehensive understanding of the script's mechanics and setup.

@@ -1,0 +1,281 @@
+# API Documentation
+
+This document provides detailed information on the API used in the given Python code, which simulates a physical system using PyChrono. The code demonstrates how to set up and populate a physical system, define materials and bodies, handle contacts, and run a simulation loop.
+
+## Library
+
+### pychrono
+- **Description**: PyChrono is a Python wrapper for the Chrono::Engine, a physics-based simulation library.
+- **Imported Module**: `import pychrono as chrono`
+- **Usage**: The `chrono` module is used extensively in the script to create and manipulate physical systems, bodies, collision shapes, visualization assets, and joints.
+
+## Contact and Collision Setting
+
+### chrono.ChSystemNSC
+- **Arguments**: None
+- **Usage**: Creates a non-smooth contact (NSC) physical system.
+  ```python
+  my_system = chrono.ChSystemNSC()
+  ```
+
+### chrono.ChContactMaterialNSC
+- **Arguments**: None
+- **Usage**: Creates a contact material with non-smooth characteristics.
+  ```python
+  material = chrono.ChContactMaterialNSC()
+  ```
+
+### material.SetFriction
+- **Arguments**: `friction` (float) - coefficient of friction.
+- **Usage**: Sets the friction coefficient of the contact material.
+  ```python
+  material.SetFriction(0.3)
+  ```
+
+### material.SetCompliance
+- **Arguments**: `compliance` (float) - compliance value.
+- **Usage**: Sets the compliance (material deformation characteristic) of the contact material.
+  ```python
+  material.SetCompliance(0)
+  ```
+
+### chrono.ChBody.AddCollisionShape
+- **Arguments**: `shape` (ChCollisionShape)
+- **Usage**: Adds a collision shape to the body.
+  ```python
+  bodyA.AddCollisionShape(chrono.ChCollisionShapeBox(material,10,1,10))
+  bodyB.AddCollisionShape(chrono.ChCollisionShapeBox(material, 1, 1, 1))
+  ```
+
+### chrono.ChBody.EnableCollision
+- **Arguments**: `enable` (bool)
+- **Usage**: Enables or disables collision detection for the body.
+  ```python
+  bodyA.EnableCollision(True)
+  bodyB.EnableCollision(True)
+  ```
+
+## Visualization Setting
+
+### chrono.ChVisualShapeModelFile
+- **Arguments**: None
+- **Usage**: Creates a visual shape from a model file.
+  ```python
+  myasset = chrono.ChVisualShapeModelFile()
+  ```
+
+### myasset.SetFilename
+- **Arguments**: `filename` (str) - path to the model file.
+- **Usage**: Sets the filename for the visual shape.
+  ```python
+  myasset.SetFilename("shapes/test.obj")
+  ```
+
+### chrono.ChBodyAuxRef.AddVisualShape
+- **Arguments**: `shape` (ChVisualShape)
+- **Usage**: Adds a visual shape to the body.
+  ```python
+  bodyC.AddVisualShape(myasset)
+  ```
+
+## Initialize Body
+
+### chrono.ChBody
+- **Arguments**: None
+- **Usage**: Creates a rigid body for the simulation.
+  ```python
+  bodyA = chrono.ChBody()
+  bodyB = chrono.ChBody()
+  ```
+
+### bodyA.SetMass / bodyC.SetMass
+- **Arguments**: `mass` (float)
+- **Usage**: Sets the mass of the body.
+  ```python
+  bodyA.SetMass(20)
+  bodyC.SetMass(346.17080777653)
+  ```
+
+### bodyA.SetName / bodyB.SetName / bodyC.SetName
+- **Arguments**: `name` (str)
+- **Usage**: Sets the name for the body.
+  ```python
+  bodyA.SetName('BodyA')
+  bodyB.SetName('BodyB')
+  bodyC.SetName('Parte1-1')
+  ```
+
+### bodyA.SetInertiaXX / bodyC.SetInertiaXX
+- **Arguments**: `inertia` (ChVector)
+- **Usage**: Sets the inertia tensor (diagonal components) of the body.
+  ```python
+  bodyA.SetInertiaXX(chrono.ChVector3d(10,10,10))
+  bodyC.SetInertiaXX(chrono.ChVector3d(48583.2418823358,526927.118351673,490689.966726565))
+  ```
+
+### bodyA.SetPos / bodyB.SetPos / bodyC.SetPos
+- **Arguments**: `position` (ChVector)
+- **Usage**: Sets the position of the body.
+  ```python
+  bodyA.SetPos(chrono.ChVector3d(1,-1,0))
+  bodyB.SetPos(chrono.ChVector3d(0,2,0))
+  bodyC.SetPos(chrono.ChVector3d(-0.0445347481124079, 0.0676266363930238, -0.0230808979433518))
+  ```
+
+### bodyC.SetRot
+- **Arguments**: `rotation` (ChQuaternion)
+- **Usage**: Sets the orientation (rotation) of the body.
+  ```python
+  bodyC.SetRot(chrono.ChQuaterniond(1,0,0,0))
+  ```
+
+### bodyA.SetFixed
+- **Arguments**: `fixed` (bool)
+- **Usage**: Fixes the body in the world space if True.
+  ```python
+  bodyA.SetFixed(True)
+  ```
+
+### bodyB.AddMarker
+- **Arguments**: `marker` (ChMarker)
+- **Usage**: Adds a marker to the body.
+  ```python
+  bodyB.AddMarker(markerB)
+  ```
+
+### chrono.ChMarker.SetMotionX
+- **Arguments**: `motion` (ChFunction)
+- **Usage**: Sets the motion in the X direction for the marker.
+  ```python
+  my_funct = chrono.ChFunctionSine(3.0,0.5)
+  markerB.SetMotionX(my_funct)
+  ```
+
+### chrono.ChMarker.SetPos
+- **Arguments**: `position` (ChVector)
+- **Usage**: Sets the position of the marker.
+  ```python
+  markerB.SetPos(chrono.ChVector3d(1,2,3))
+  ```
+
+## Setting Parameters
+
+### Simulation Parameters
+- **radius**: Not directly set in this example, but typically defines the radius of shapes.
+- **density**: Implied through mass settings (mass/volume).
+- **initial speeds**: Initial velocities are not explicitly set in this example but can be defined using `SetPos_dt` for linear velocity and `SetWvel_par` for angular velocity.
+
+## Simulation Loop
+
+### chrono.ChSystem.DoStepDynamics
+- **Arguments**: `time_step` (float) - the time step for the simulation.
+- **Usage**: Advances the simulation by one time step.
+  ```python
+  my_system.DoStepDynamics(0.01)
+  ```
+
+### chrono.ChSystem.SetChTime
+- **Arguments**: `time` (float)
+- **Usage**: Sets the current time of the simulation.
+  ```python
+  my_system.SetChTime(0)
+  ```
+
+### chrono.ChSystem.GetChTime
+- **Arguments**: None
+- **Usage**: Gets the current simulation time.
+  ```python
+  my_system.GetChTime()
+  ```
+
+### chrono.ChSystem.Add / chrono.ChSystem.AddBody
+- **Arguments**: `body` (ChBody)
+- **Usage**: Adds a body to the physical system.
+  ```python
+  my_system.Add(bodyA)
+  my_system.Add(bodyB)
+  my_system.AddBody(bodyC)
+  ```
+
+### chrono.ChSystem.GetContactContainer
+- **Arguments**: None
+- **Usage**: Gets the contact container where contact information is stored.
+  ```python
+  my_system.GetContactContainer()
+  ```
+
+### chrono.ContactContainer.ReportAllContacts
+- **Arguments**: `callback` (ReportContactCallback)
+- **Usage**: Reports all contacts by calling the callback for each contact.
+  ```python
+  my_system.GetContactContainer().ReportAllContacts(my_rep)
+  ```
+
+## Custom Contact Report Callback
+
+### MyReportContactCallback
+- **Name**: OnReportContact
+- **Arguments**:
+  - `vA` (ChVector): Contact point on first body
+  - `vB` (ChVector): Contact point on second body
+  - `cA` (ChMatrix33): Continuous torsor at the contact point
+  - `dist` (float): Distance between contact points
+  - `rad` (ChVector): Radius of curvature at contact points
+  - `force` (ChVector): Force at the contact point
+  - `torque` (ChVector): Torque at the contact point
+  - `modA` (ChContactable): First contactable object
+  - `modB` (ChContactable): Second contactable object
+- **Usage**: Custom callback to report contact information.
+  ```python
+  class MyReportContactCallback(chrono.ReportContactCallback):
+      ...
+      def OnReportContact(self,vA,vB,cA,dist,rad,force,torque,modA,modB):
+          ...
+  my_rep = MyReportContactCallback()
+  ```
+
+## Joints and Links
+
+### chrono.ChLinkLockRevolute
+- **Arguments**: None
+- **Usage**: Creates a revolute joint (one degree of freedom hinge).
+  ```python
+  rev = chrono.ChLinkLockRevolute()
+  ```
+
+### rev.SetName
+- **Arguments**: `name` (str)
+- **Usage**: Sets the name for the joint.
+  ```python
+  rev.SetName('Revolute')
+  ```
+
+### rev.Initialize
+- **Arguments**: 
+  - `body1` (ChBody): First body
+  - `body2` (ChBody): Second body
+  - `frame` (ChFrame): Frame of reference for initializing the joint
+- **Usage**: Initializes the joint and connects the two bodies using the provided frame.
+  ```python
+  rev.Initialize(bodyA, bodyC, chrono.ChFramed(chrono.ChVector3d(1, 2, 3), chrono.ChQuaterniond(1, 0, 0, 0)))
+  ```
+
+### my_system.AddLink
+- **Arguments**: `link` (ChLink)
+- **Usage**: Adds a joint (link) to the physical system.
+  ```python
+  my_system.AddLink(rev)
+  ```
+
+## Additional Information
+
+### Iterating over Bodies and Links
+- Python-style iteration is used to iterate over bodies and links in the system for reporting their names and positions.
+  ```python
+  for abody in my_system.GetBodies():
+      print (' ', abody.GetName(), ' pos =', abody.GetPos())
+  for alink in my_system.GetLinks():
+      print ('  link: ', alink.GetName())
+  ```
+
+This documentation covers all the critical aspects of the provided code, including libraries, collision settings, visualization, body initialization, parameters, and the simulation loop.

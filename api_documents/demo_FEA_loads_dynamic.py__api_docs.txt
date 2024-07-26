@@ -1,0 +1,290 @@
+# API Documentation for the PyChrono FEA Simulation Code
+
+## Library
+Mention the libraries and modules imported and used in the code.
+
+- **pychrono**: Main PyChrono library.
+- **pychrono.fea**: Submodule of PyChrono for Finite Element Analysis.
+- **pychrono.irrlicht**: Submodule of PyChrono for visualization using Irrlicht.
+- **errno**: Standard Python library for error handling with OS operations.
+- **os**: Standard Python library for interacting with the operating system.
+- **copy**: Standard Python library for making deep copies of objects.
+
+## Contact and Collision Setting
+The code example does not include any specific setups for contact materials or collision shapes.
+
+## Visualization Setting
+List and describe the APIs and functions related to setting up the visualization, including materials, shapes, and visualization systems.
+
+### `ChVisualShapeFEA`
+- **Arguments**: 
+  - `mesh`: The mesh to visualize.
+- **Usage**: This creates a visual representation of an FEA mesh.
+  
+### `SetFEMdataType`
+- **Arguments**: 
+  - `data_type`: Type of data to visualize (e.g., `DataType_ELEM_BEAM_MZ`).
+- **Usage**: Sets the type of FEA data to visualize.
+  
+### `SetColorscaleMinMax`
+- **Arguments**: 
+  - `min_value`: Minimum value for the color scale.
+  - `max_value`: Maximum value for the color scale.
+- **Usage**: Sets the color scale for visual representation.
+  
+### `SetSmoothFaces`
+- **Arguments**: 
+  - `smooth`: Boolean indicating if faces should be smooth.
+- **Usage**: Enables or disables smooth faces in the visualization.
+  
+### `SetWireframe`
+- **Arguments**: 
+  - `wireframe`: Boolean indicating if the visualization should be in wireframe mode.
+- **Usage**: Enables or disables wireframe visualization.
+  
+### `SetFEMglyphType`
+- **Arguments**: 
+  - `glyph_type`: Type of glyphs to visualize (e.g., `GlyphType_NODE_CSYS`).
+- **Usage**: Sets the type of glyphs (symbols) to visualize on the FEM nodes/elements.
+  
+### `SetSymbolsThickness`
+- **Arguments**: 
+  - `thickness`: Thickness of the symbols.
+- **Usage**: Sets the thickness of the visualized symbols.
+  
+### `SetSymbolsScale`
+- **Arguments**: 
+  - `scale`: Scale of the symbols.
+- **Usage**: Sets the scale of the visualized symbols.
+  
+### `ChVisualSystemIrrlicht`
+- **Usage**: This class sets up visualization using the Irrlicht engine.
+  
+### `AttachSystem`
+- **Arguments**: 
+  - `system`: The Chrono physical system to attach to the visualization system.
+- **Usage**: Attaches the Chrono physical system to the Irrlicht visualization system.
+  
+### `SetWindowSize`
+- **Arguments**: 
+  - `width`: Window width in pixels.
+  - `height`: Window height in pixels.
+- **Usage**: Sets the size of the visualization window.
+  
+### `SetWindowTitle`
+- **Arguments**: 
+  - `title`: Title for the visualization window.
+- **Usage**: Sets the title of the visualization window.
+
+### `Initialize`
+- **Usage**: Initializes the visualization system.
+  
+### `AddLogo`
+- **Arguments**: 
+  - `logo_file`: Path to the logo image file.
+- **Usage**: Adds a logo to the visualization window.
+  
+### `AddSkyBox`
+- **Usage**: Adds a skybox to the visualization environment.
+  
+### `AddCamera`
+- **Arguments**: 
+  - `position`: Position of the camera.
+  - `target`: Target point that the camera looks at.
+- **Usage**: Adds a camera to the visualization system.
+  
+### `AddTypicalLights`
+- **Usage**: Adds typical lights to the visualization environment.
+
+## Initialize Body
+List and describe the APIs and functions used to initialize bodies in the simulation, including their properties and how they are added to the system.
+
+### `ChSystemSMC`
+- **Usage**: Initializes the Chrono physical system using the SMC (Smooth Contact) method.
+  
+### `Add`
+- **Arguments**: 
+  - `item`: Item to add to the system (e.g., a mesh).
+- **Usage**: Adds items such as meshes, bodies, constraints, etc., to the Chrono system.
+
+### `ChMesh`
+- **Usage**: Creates a finite element mesh.
+  
+### `ChNodeFEAxyzrot`
+- **Arguments**: 
+  - `frame`: Initial frame (position and orientation) of the node.
+- **Usage**: Creates a finite element node with rotational degrees of freedom.
+  
+### `ChNodeFEAxyz`
+- **Arguments**: 
+  - `position`: Initial position of the node.
+- **Usage**: Creates a finite element node with translational degrees of freedom.
+  
+### `SetMass`
+- **Arguments**: 
+  - `mass`: Mass of the node.
+- **Usage**: Sets the mass of the node. In the example, it is set to 0.0 for both nodes.
+  
+### `AddNode`
+- **Arguments**: 
+  - `node`: The node to add to the mesh.
+- **Usage**: Adds a node to the FEA mesh.
+
+### `ChBeamSectionEulerAdvanced`
+- **Usage**: Creates an advanced Euler-Bernoulli beam section.
+  
+### `SetAsRectangularSection`
+- **Arguments**: 
+  - `height`: Height of the rectangular section.
+  - `width`: Width of the rectangular section.
+- **Usage**: Sets the cross-sectional shape of the beam as rectangular.
+
+### `SetYoungModulus`
+- **Arguments**: 
+  - `E`: Young's modulus for the material.
+- **Usage**: Sets the Young's modulus of the beam section material.
+
+### `SetShearModulus`
+- **Arguments**: 
+  - `G`: Shear modulus for the material.
+- **Usage**: Sets the shear modulus of the beam section material.
+
+### `SetRayleighDamping`
+- **Arguments**: 
+  - `alpha`: Rayleigh damping coefficient.
+- **Usage**: Sets the Rayleigh damping for the beam section.
+
+### `SetDensity`
+- **Arguments**: 
+  - `density`: Density of the material.
+- **Usage**: Sets the density of the beam section material.
+
+### `ChElementBeamEuler`
+- **Usage**: Creates an Euler-Bernoulli beam element.
+
+### `SetNodes`
+- **Arguments**: 
+  - `nodeA`: The first node of the beam element.
+  - `nodeB`: The second node of the beam element.
+- **Usage**: Sets the two nodes that define the beam element.
+
+### `SetSection`
+- **Arguments**: 
+  - `section`: The beam section to associate with this element.
+- **Usage**: Associates a beam section with the beam element.
+
+### `ChBody`
+- **Usage**: Creates a body in the Chrono physical system.
+
+### `SetFixed`
+- **Arguments**: 
+  - `fixed`: Boolean indicating if the body is fixed in space.
+- **Usage**: Sets the body as fixed in space.
+
+### `ChLinkMateGeneric`
+- **Usage**: Creates a generic constraint between two frames.
+
+### `Initialize`
+- **Arguments**: 
+  - `bodyA`: The first body to constrain.
+  - `bodyB`: The second body to constrain.
+  - `auto_restraint`: Boolean indicating automatic determination of restraint type.
+  - `frameA`: Initial frame for the constraint relative to `bodyA`.
+  - `frameB`: Initial frame for the constraint relative to `bodyB`.
+- **Usage**: Initializes the constraint between two bodies.
+
+### `SetConstrainedCoords`
+- **Arguments**: `cx, cy, cz, crx, cry, crz`: Booleans indicating if the respective translational and rotational coordinates are constrained.
+- **Usage**: Sets which coordinates are constrained by the constraint.
+
+### `ChLoadContainer`
+- **Usage**: Creates a container for loads.
+
+### `ChLoadCustom`
+- **Usage**: Base class for custom loads.
+
+### `ComputeQ`
+- **Arguments**: 
+  - `state_x`: State position to evaluate the load.
+  - `state_w`: State speed to evaluate the load.
+- **Usage**: Computes the generalized load on the specified states.
+  
+### `IsStiff`
+- **Usage**: Indicates whether the load is stiff.
+
+## Setting Parameters
+List and describe the parameters used in the code, such as radius, density, and initial speeds.
+
+- **beam_wy**: Width of the beam in the y-direction (0.1 units).
+- **beam_wz**: Width of the beam in the z-direction (0.2 units).
+- **Young's Modulus**: 0.01e9 units.
+- **Shear Modulus**: 0.01e9 * 0.3 units.
+- **Rayleigh Damping**: 0.200 units.
+- **Density**: 1500 units.
+- **spring constants Kx**: 100 units.
+- **spring constants Ky**: 400 units.
+- **damper constants Dx**: 0.6 units.
+- **damper constants Dy**: 0.9 units.
+- **x_offset**: 2 units.
+- **y_offset**: 5 units.
+- **x_force**: 50 units.
+- **y_force**: 0 units.
+
+## Simulation Loop
+List and describe the APIs and functions used in the simulation loop, including solver settings and rendering steps.
+
+### `ChSolverMINRES`
+- **Usage**: Creates a MINRES solver for the system.
+
+### `SetMaxIterations`
+- **Arguments**: 
+  - `iterations`: Maximum number of iterations.
+- **Usage**: Sets the maximum number of iterations for the solver.
+  
+### `SetTolerance`
+- **Arguments**: 
+  - `tolerance`: Tolerance for the solver.
+- **Usage**: Sets the tolerance for the solver.
+
+### `EnableDiagonalPreconditioner`
+- **Arguments**: 
+  - `enable`: Boolean indicating whether to enable the diagonal preconditioner.
+- **Usage**: Enables or disables the diagonal preconditioner.
+
+### `SetVerbose`
+- **Arguments**: 
+  - `verbose`: Boolean indicating whether the solver should output verbose information.
+- **Usage**: Sets the verbosity of the solver.
+
+### `AsIterative`
+- **Usage**: Retrieves the solver as an iterative solver.
+
+### `SetTolerance`
+- **Arguments**: 
+  - `tolerance`: Tolerance for the iterative solver.
+- **Usage**: Sets the tolerance for the iterative solver.
+
+### `ChTimestepperEulerImplicitLinearized`
+- **Usage**: Creates an implicit linearized Euler time stepper.
+
+### `SetTimestepper`
+- **Arguments**: 
+  - `timestepper`: Timestepper to use for the system.
+- **Usage**: Sets the timestepper for the system.
+
+### `Run`
+- **Usage**: Runs the visualization loop. 
+
+### `BeginScene`
+- **Usage**: Begins the scene rendering.
+  
+### `Render`
+- **Usage**: Renders the scene.
+
+### `EndScene`
+- **Usage**: Ends the scene rendering.
+
+### `DoStepDynamics`
+- **Arguments**: 
+  - `step_size`: Time step size for the simulation.
+- **Usage**: Advances the simulation by a specified time step.

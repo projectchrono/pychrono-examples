@@ -1,0 +1,259 @@
+# API Documentation for PyChrono FEA Simulation Example
+
+## Library
+The following libraries and modules are imported and used in the code:
+- `pychrono` as `chrono`: Main Chrono engine library for simulation.
+- `pychrono.fea` as `fea`: Finite Element Analysis (FEA) module of Chrono.
+- `pychrono.pardisomkl` as `mkl`: Pardiso MKL module for advanced numerical solvers.
+- `pychrono.irrlicht` as `chronoirr`: Module for visualization using Irrlicht.
+
+## Contact and Collision Setting
+This code example doesn't explicitly set up contact materials and collision shapes. The focus is on FEA with beam elements. As such, there are no specific APIs/functions in this section.
+
+## Visualization Setting
+### chrono.ChVisualShapeFEA
+- **Arguments**:
+  - `mesh`: Reference to the FEA mesh.
+- **Usage**: Creates a visual object that can be attached to an FEA mesh for visualization purposes.
+   
+### chrono.ChVisualShapeFEA.SetFEMdataType
+- **Arguments**:
+  - `data_type`: Type of data to visualize, e.g., `DataType_ELEM_BEAM_MZ`, `DataType_NONE`.
+- **Usage**: Sets the type of FEM data to be visualized, such as beam moment or no data.
+
+### chrono.ChVisualShapeFEA.SetColorscaleMinMax
+- **Arguments**:
+  - `min`: Minimum value in the color scale.
+  - `max`: Maximum value in the color scale.
+- **Usage**: Sets the minimum and maximum values for the color scale applied to the visualization.
+
+### chrono.ChVisualShapeFEA.SetSmoothFaces
+- **Arguments**:
+  - `smooth`: Boolean flag to enable or disable smooth faces.
+- **Usage**: Enable or disable smoothing of the faces in the visualization.
+
+### chrono.ChVisualShapeFEA.SetWireframe
+- **Arguments**:
+  - `wireframe`: Boolean flag to enable or disable wireframe mode.
+- **Usage**: Enable or disable wireframe mode of visualization.
+
+### chrono.ChVisualShapeFEA.SetFEMglyphType
+- **Arguments**:
+  - `glyph_type`: Type of glyph to visualize, e.g., `GlyphType_NODE_CSYS`.
+- **Usage**: Sets the type of glyphs for visualization.
+
+### chrono.ChVisualShapeFEA.SetSymbolsThickness
+- **Arguments**:
+  - `thickness`: Thickness of the symbols.
+- **Usage**: Sets the thickness of the symbols in the visualization.
+
+### chrono.ChVisualShapeFEA.SetSymbolsScale
+- **Arguments**:
+  - `scale`: Scale factor for the symbols.
+- **Usage**: Sets the scale of the symbols in the visualization.
+
+### chrono.ChVisualShapeFEA.SetZbufferHide
+- **Arguments**:
+  - `hide`: Boolean flag to enable or disable z-buffer hiding.
+- **Usage**: Enable or disable z-buffer hiding for symbols.
+
+### chronoirr.ChVisualSystemIrrlicht
+- **Arguments**: None
+- **Usage**: Creates a visualization system using Irrlicht.
+
+### chronoirr.ChVisualSystemIrrlicht.AttachSystem
+- **Arguments**:
+  - `sys`: Reference to the physical system.
+- **Usage**: Attaches the physical system to the visualization.
+
+### chronoirr.ChVisualSystemIrrlicht.SetWindowSize
+- **Arguments**:
+  - `width`: Width of the window.
+  - `height`: Height of the window.
+- **Usage**: Sets the size of the window for visualization.
+
+### chronoirr.ChVisualSystemIrrlicht.SetWindowTitle
+- **Arguments**:
+  - `title`: Title of the window.
+- **Usage**: Sets the title of the window for the visualization.
+
+### chronoirr.ChVisualSystemIrrlicht.Initialize
+- **Arguments**: None
+- **Usage**: Initializes the visualization window.
+
+### chronoirr.ChVisualSystemIrrlicht.AddLogo
+- **Arguments**:
+  - `file_path`: Path to the logo file.
+- **Usage**: Adds a logo to the visualization.
+
+### chronoirr.ChVisualSystemIrrlicht.AddSkyBox
+- **Arguments**: None
+- **Usage**: Adds a skybox to the visualization.
+
+### chronoirr.ChVisualSystemIrrlicht.AddCamera
+- **Arguments**:
+  - `position`: Position of the camera in 3D space (as `chrono.ChVector3d`).
+- **Usage**: Adds a camera to the visualization system.
+
+### chronoirr.ChVisualSystemIrrlicht.AddTypicalLights
+- **Arguments**: None
+- **Usage**: Adds typical lights to the visualization system for better visibility.
+
+## Initialize Body
+### chrono.ChSystemSMC
+- **Arguments**: None  
+- **Usage**: Creates a new mechanical system using the Chrono::Engine's Smooth Contact Model.
+
+### fea.ChMesh
+- **Arguments**: None  
+- **Usage**: Creates an FEA mesh container to hold nodes and elements.
+
+### fea.ChBeamSectionEulerAdvanced
+- **Arguments**: None  
+- **Usage**: Creates a beam section with advanced properties such as material characteristics and geometrical attributes.
+
+### fea.ChNodeFEAxyzrot
+- **Arguments**:
+  - `frame`: Reference frame for the node using `chrono.ChFramed`.
+- **Usage**: Creates a 3D beam-node with rotation.
+
+### fea.ChElementBeamEuler
+- **Arguments**: None  
+- **Usage**: Creates a beam element using Euler-Bernoulli theory.
+
+### fea.ChBuilderBeamEuler.BuildBeam
+- **Arguments**:
+  - `mesh`: The mesh to contain created nodes and elements.
+  - `section`: The beam section to use.
+  - `num_elements`: Number of beam elements to create.
+  - `A_point`: Start point of the beam (`chrono.ChVector3d`).
+  - `B_point`: End point of the beam (`chrono.ChVector3d`).
+  - `Y_dir`: Y direction of the beam section (`chrono.ChVector3d`).
+- **Usage**: Builds a multi-element beam from two points or a point and a node.
+
+### fea.ChBuilderBeamEuler.GetLastBeamNodes
+- **Arguments**: None  
+- **Usage**: Retrieves the last nodes used in the built beam.
+
+### mesh.SetAutomaticGravity
+- **Arguments**:
+  - `automatic_gravity`: Boolean flag to enable or disable automatic gravity.
+- **Usage**: Sets the automatic gravity setting for the mesh.
+
+### chrono.ChBody
+- **Arguments**: None  
+- **Usage**: Creates a new physical body.
+
+### chrono.ChBody.SetFixed
+- **Arguments**:
+  - `fixed`: Boolean flag to fix the body or release it.
+- **Usage**: Sets whether the body is fixed in space.
+
+### sys.Add
+- **Arguments**:
+  - `body`: The body or mesh to add to the system.
+- **Usage**: Adds a body or mesh to the physical system.
+
+### chrono.ChLinkMateGeneric
+- **Arguments**: None
+- **Usage**: Creates a generic constraint between two frames.
+
+### chrono.ChLinkMateGeneric.Initialize
+- **Arguments**:
+  - `bodyA`: First body/frame.
+  - `bodyB`: Second body/frame.
+  - `pos_are_relative`: Boolean flag indicating if the positions are relative.
+  - `frameA`: Reference frame in body A.
+  - `frameB`: Reference frame in body B.
+- **Usage**: Initializes the constraint between two bodies or frames.
+
+### chrono.ChLinkMateGeneric.SetConstrainedCoords
+- **Arguments**:
+  - `x, y, z, Rx, Ry, Rz`: Boolean flags to constrain translations (x, y, z) and rotations (Rx, Ry, Rz).
+- **Usage**: Sets the constraints on the coordinates.
+
+### fea.ChBeamSectionEulerAdvanced.SetAsRectangularSection
+- **Arguments**:
+  - `width_y`: Width in the y-direction.
+  - `width_z`: Width in the z-direction.
+- **Usage**: Sets the beam section to be rectangular with specified dimensions.
+
+### fea.ChBeamSectionEulerAdvanced.SetYoungModulus
+- **Arguments**:
+  - `young_modulus`: Young's modulus of the material.
+- **Usage**: Sets Young's modulus for the material in the beam section.
+
+### fea.ChBeamSectionEulerAdvanced.SetShearModulus
+- **Arguments**:
+  - `shear_modulus`: Shear modulus of the material.
+- **Usage**: Sets shear modulus for the material in the beam section.
+
+### fea.ChBeamSectionEulerAdvanced.SetRayleighDamping
+- **Arguments**:
+  - `rayleigh_damping`: Rayleigh damping value.
+- **Usage**: Sets Rayleigh damping for the beam section.
+
+### fea.ChElementBeamEuler.SetNodes
+- **Arguments**:
+  - `node1`: First node.
+  - `node2`: Second node.
+- **Usage**: Sets the nodes for the beam element.
+
+### fea.ChElementBeamEuler.SetSection
+- **Arguments**:
+  - `section`: Beam section to be used.
+- **Usage**: Sets the section for the beam element.
+
+## Setting Parameters
+### Beam Geometry and Properties
+```python
+beam_wy = 0.012
+beam_wz = 0.025
+beam_L = 0.1
+```
+- **Usage**: Specifies the dimensions (width and length) for the beams.
+
+### Material Properties
+```python
+msection.SetYoungModulus(0.01e9)
+msection.SetShearModulus(0.01e9 * 0.3)
+msection.SetRayleighDamping(0.000)
+```
+- **Usage**: Sets material properties for the beam section including Young's modulus, shear modulus, and Rayleigh damping.
+
+### Forces and Torques
+```python
+hnode2.SetForce(chrono.ChVector3d(4, 2, 0))
+hnode3.SetTorque(chrono.ChVector3d(0, -0.04, 0))
+builder.GetLastBeamNodes().front().SetForce(chrono.ChVector3d(0, -1, 0))
+```
+- **Usage**: Applies forces and torques to specified nodes.
+
+## Simulation Loop
+### chronoirr.ChVisualSystemIrrlicht.Run
+- **Arguments**: None
+- **Usage**: Runs the visualization loop which updates the render every frame.
+
+### chronoirr.ChVisualSystemIrrlicht.BeginScene
+- **Arguments**: None
+- **Usage**: Prepares to render a new scene.
+
+### chronoirr.ChVisualSystemIrrlicht.Render
+- **Arguments**: None
+- **Usage**: Renders the current scene.
+
+### chronoirr.ChVisualSystemIrrlicht.EndScene
+- **Arguments**: None
+- **Usage**: Finalizes the current scene rendering.
+
+### sys.DoStepDynamics
+- **Arguments**:
+  - `time_step`: Time step for the simulation.
+- **Usage**: Advances the simulation by the specified time step.
+
+### chrono.ChSystemSMC.SetSolver
+- **Arguments**:
+  - `solver`: Reference to the numerical solver (e.g., `mkl.ChSolverPardisoMKL`).
+- **Usage**: Sets the solver for the simulation system for better precision and performance.
+
+This documentation provides an in-depth explanation of the APIs and functions used in the provided FEA simulation example with PyChrono.

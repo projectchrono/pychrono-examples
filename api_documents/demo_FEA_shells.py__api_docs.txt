@@ -1,0 +1,231 @@
+# API Documentation for Script setting up FEA Shell Simulation using Project Chrono
+
+## Library
+
+### Imported Libraries and Modules
+- `pychrono`:
+  - Provides the core functionality for the Project Chrono simulation engine.
+- `pychrono.fea`:
+  - Contains classes and functions for Finite Element Analysis (FEA) using the Project Chrono simulation engine.
+- `pychrono.pardisomkl`:
+  - Provides access to the Pardiso MKL solver, which is a high-performance solver for sparse linear systems.
+- `pychrono.irrlicht`:
+  - Integrates Irrlicht, a 3D engine used for creating visualizations of simulations.
+- `errno`:
+  - Standard Python module for error numbers.
+- `os`:
+  - Standard Python module for operating system interfaces.
+- `numpy`:
+  - Library for numerical computations in Python.
+- `matplotlib.pyplot`:
+  - A MATLAB-like plotting framework for Python.
+
+## Contact and Collision Setting
+
+### Chrono Environment Setup
+- **chrono.ChSystemSMC()**
+  - Arguments: None
+  - Usage: Creates a new Chrono system with Soft-Contact (SMC) simulation approach.
+
+### Mesh Creation
+- **fea.ChMesh()**
+  - Arguments: None
+  - Usage: Creates an FEA mesh, a container for finite elements and nodes.
+
+- **sys.Add(mesh)**
+  - Arguments: `mesh` (ChMesh): The FEA mesh to add to the system.
+  - Usage: Adds an FEA mesh to the Chrono simulation system.
+
+### Gravity Setting
+- **mesh.SetAutomaticGravity(False)**
+  - Arguments: `False` (bool)
+  - Usage: Disables automatic gravity for the FEA mesh.
+
+### Contact Materials and Nodes
+- **fea.ChElasticityReissnerIsothropic(E, nu, 1.0, 0.01)**
+  - Arguments: 
+    - `E` (float): Young's modulus.
+    - `nu` (float): Poisson's ratio.
+    - `1.0` (float): Directional stiffness scaling.
+    - `0.01` (float): Transverse stiffness scaling.
+  - Usage: Defines an isotropic elastic material based on Reissner shell theory.
+  
+- **fea.ChNodeFEAxyzrot()**
+  - Arguments: None
+  - Usage: Creates an FEA node with 3D translational and rotational degrees of freedom.
+
+## Visualization Setting
+
+### FEA Visualization
+- **chrono.ChVisualShapeFEA(mesh)**
+  - Arguments: `mesh` (ChMesh): The mesh to visualize.
+  - Usage: Creates a visualization shape for the FEA mesh.
+
+- **mvisualizeshellA.SetSmoothFaces(True)**
+  - Arguments: `True` (bool)
+  - Usage: Enables smooth faces visualization.
+  
+- **mvisualizeshellA.SetWireframe(True)**
+  - Arguments: `True` (bool)
+  - Usage: Enables wireframe visualization.
+
+- **mvisualizeshellC.SetFEMdataType(chrono.ChVisualShapeFEA.DataType_NONE)**
+  - Arguments: `chrono.ChVisualShapeFEA.DataType_NONE` (enum)
+  - Usage: Sets the data type for the FEA visualization shape.
+  
+- **mvisualizeshellC.SetFEMglyphType(chrono.ChVisualShapeFEA.GlyphType_NODE_CSYS)**
+  - Arguments: `chrono.ChVisualShapeFEA.GlyphType_NODE_CSYS` (enum)
+  - Usage: Sets the glyph type for FEA visualization.
+  
+- **mvisualizeshellC.SetSymbolsThickness(0.05)**
+  - Arguments: `0.05` (float)
+  - Usage: Sets the thickness of symbols in the visualization.
+
+- **mvisualizeshellC.SetZbufferHide(False)**
+  - Arguments: `False` (bool)
+  - Usage: Disables Z-buffer hiding.
+  
+- **mesh.AddVisualShapeFEA(mvisualizeshellA)**
+  - Arguments: `mvisualizeshellA` (ChVisualShapeFEA)
+  - Usage: Adds visualization shape to the FEA mesh.
+
+## Initialize Body
+
+### Creating Nodes and Elements
+- **fea.ChElementShellReissner4()**
+  - Arguments: None
+  - Usage: Creates a shell element based on Reissner theory.
+  
+- **mesh.AddNode(mnode)**
+  - Arguments: `mnode` (ChNodeFEAxyzrot)
+  - Usage: Adds an FEA node to the mesh.
+  
+- **mesh.AddElement(melement)**
+  - Arguments: `melement` (ChElementShellReissner4)
+  - Usage: Adds an element to the FEA mesh.
+
+### Setting Node Properties
+- **mnode.GetInertia()[i, i] = 0**
+  - Arguments: `i` (int)
+  - Usage: Sets the inertia of the node.
+  
+- **mnode.SetMass(0)**
+  - Arguments: `0` (float)
+  - Usage: Sets the mass of the node.
+  
+### Fixed Constraints and Loads
+- **startnode.SetFixed(True)**
+  - Arguments: `True` (bool)
+  - Usage: Fixes the node (without degrees of freedom).
+  
+- **sys.Add(mlink)**
+  - Arguments: `mlink` (ChLinkMateGeneric)
+  - Usage: Adds a generic mate link to the simulation system.
+
+## Setting Parameters
+
+### Simulation Parameters
+- **timestep = 0.1**
+  - Usage: Sets the time step for the simulation.
+
+### Material Properties
+- **rect_thickness, plate_thickness**
+  - Usage: Sets the thickness for beams and plates.
+  
+- **rho, E, nu**
+  - Usage: Sets material properties including density, Young's modulus, and Poisson’s ratio.
+
+### Node and Element Arrays
+- **nodearray, elarray, nodes_start, nodes_end**
+  - Usage: Arrays for storing nodes and elements.
+
+### Initial Forces and Torques
+- **load_force, load_torque**
+  - Usage: Stores applied force and torque vectors for simulations.
+
+## Simulation Loop
+
+### Visualization System
+- **chronoirr.ChVisualSystemIrrlicht()**
+  - Arguments: None
+  - Usage: Creates a new visualization system using Irrlicht.
+  
+- **vis.AttachSystem(sys)**
+  - Arguments: `sys` (ChSystemSMC)
+  - Usage: Attaches the Chrono system to the visualization system.
+  
+### Solver Settings
+- **mkl.ChSolverPardisoMKL()**
+  - Arguments: None
+  - Usage: Creates a new instance of the Pardiso MKL solver.
+  
+- **sys.SetSolver(mkl_solver)**
+  - Arguments: `mkl_solver` (ChSolverPardisoMKL)
+  - Usage: Sets the solver for the simulation system.
+  
+- **chrono.ChTimestepperEulerImplicit(sys)**
+  - Arguments: `sys` (ChSystemSMC)
+  - Usage: Sets the time stepper to Euler implicit method for the simulation.
+
+- **sys.SetTimestepper(ts)**
+  - Arguments: `ts` (ChTimestepperEulerImplicit)
+  - Usage: Sets the time integrator for the simulation.
+  
+- **ts.SetMaxIters(5)**
+  - Arguments: `5` (int)
+  - Usage: Sets the maximum iterations for the timestep solver.
+  
+- **ts.SetAbsTolerances(1e-12, 1e-12)**
+  - Arguments: `1e-12` (float), `1e-12` (float)
+  - Usage: Sets the absolute tolerances for the solver.
+
+### Simulation Steps
+- **sys.Setup()**
+  - Arguments: None
+  - Usage: Sets up the Chrono system.
+  
+- **sys.Update()**
+  - Arguments: None
+  - Usage: Updates the Chrono system.
+
+### Simulation Execution
+- **sys.DoStaticNonlinear(3)**
+  - Arguments: `3` (int)
+  - Usage: Performs a static nonlinear analysis.
+  
+- **sys.DoStaticLinear()**
+  - Arguments: None
+  - Usage: Performs a static linear analysis.
+  
+### Render and Visualize
+- **vis.BeginScene()**
+  - Arguments: None
+  - Usage: Starts a new scene for rendering.
+  
+- **vis.Render()**
+  - Arguments: None
+  - Usage: Performs rendering of the current scene.
+  
+- **chronoirr.drawGrid(vis, 1, 1)**
+  - Arguments: `vis` (ChVisualSystemIrrlicht), `1` (float), `1` (float)
+  - Usage: Draws a grid in the visualization system.
+  
+### Update Forces and Torques
+- **mendnode.SetForce(load_force * load_scale * (1. / len(nodesLoad)))**
+  - Arguments: `load_force` (ChVector3d)
+  - Usage: Updates the force applied to the end nodes.
+
+## Post-Processing
+
+### Output and Plotting
+- **plt.plot(load, rec_Y)**
+  - Arguments: `load` (list of float), `rec_Y` (list of float)
+  - Usage: Plots the recorded Y displacements vs. load.
+  
+- **plt.savefig(out_dir+'/shell_benchmark.pdf')**
+  - Arguments: `(out_dir+'/shell_benchmark.pdf')` (string)
+  - Usage: Saves the plot to a PDF file in the output directory.
+  
+- **plt.show()**
+  - Arguments: None
+  - Usage: Displays the plot.

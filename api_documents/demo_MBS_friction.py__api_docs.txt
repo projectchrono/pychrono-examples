@@ -1,0 +1,173 @@
+# Chrono Simulation Documentation
+
+## Library
+The code uses the `pychrono` library, specifically the `core` and `irrlicht` modules:
+
+1. **pychrono.core**: Core functionalities for creating and managing physical simulations.
+   `import pychrono.core as chrono`
+2. **pychrono.irrlicht**: Functions for visualization using the Irrlicht engine.
+   `import pychrono.irrlicht as chronoirr`
+
+## Contact and Collision Setting
+
+### chrono.ChSystemNSC
+- **Arguments**: None
+- **Usage**: Creates a physical system using a non-smooth contact model (NSC).
+
+### chrono.ChSystemNSC.SetCollisionSystemType
+- **Arguments**:
+  - `collision_system_type`: Type of collision system (e.g., `chrono.ChCollisionSystem.Type_BULLET`).
+- **Usage**: Sets the type of collision system to be used in the simulation.
+
+### chrono.ChContactMaterialNSC
+- **Arguments**: None
+- **Usage**: Creates a contact material with non-smooth contact (NSC) properties.
+
+### chrono.ChContactMaterialNSC.SetFriction
+- **Arguments**:
+  - `friction`: Friction coefficient (float).
+- **Usage**: Sets the friction coefficient for the contact material.
+
+### chrono.ChContactMaterialNSC.SetRollingFriction
+- **Arguments**:
+  - `rolling_friction`: Rolling friction coefficient (float).
+- **Usage**: Sets the rolling friction coefficient for the contact material.
+
+### chrono.ChContactMaterialNSC.SetSpinningFriction
+- **Arguments**:
+  - `spinning_friction`: Spinning friction coefficient (float).
+- **Usage**: Sets the spinning friction coefficient for the contact material.
+
+### chrono.ChBodyEasySphere
+- **Arguments**:
+  - `radius`: Radius of the sphere (float).
+  - `density`: Density of the sphere (float).
+  - `visualization`: Whether to enable visualization (bool).
+  - `collision`: Whether to enable collision detection (bool).
+  - `material`: Contact material.
+- **Usage**: Creates an easy-to-use sphere body with specified properties and contact material.
+
+## Visualization Setting
+
+### chrono.ChVisualMaterial
+- **Arguments**: None
+- **Usage**: Creates a visual material for rendering purposes.
+
+### chrono.ChVisualMaterial.SetKdTexture
+- **Arguments**:
+  - `texture_path`: Path to the texture file.
+- **Usage**: Sets the diffuse texture for the visual material.
+
+### chrono.ChVisualShapeBox
+- **Arguments**:
+  - `size_x`: Size in the x dimension (float).
+  - `size_y`: Size in the y dimension (float).
+  - `size_z`: Size in the z dimension (float).
+- **Usage**: Creates a box shape for visualization.
+
+### chrono.ChBody.AddVisualShape
+- **Arguments**:
+  - `visual_shape`: Shape to be added.
+  - `frame`: Frame of reference, typically `chrono.ChFramed`.
+- **Usage**: Adds a visual shape to the body for rendering.
+
+### chronoirr.ChVisualSystemIrrlicht
+- **Arguments**: None
+- **Usage**: Initializes the Irrlicht visualization system for the Chrono simulation.
+
+### chronoirr.ChVisualSystemIrrlicht.AttachSystem
+- **Arguments**:
+  - `system`: The physical system to be visualized.
+- **Usage**: Attaches the visualization system to the physical system.
+
+### chronoirr.ChVisualSystemIrrlicht.SetWindowSize
+- **Arguments**:
+  - `width`: Width of the window (int).
+  - `height`: Height of the window (int).
+- **Usage**: Sets the size of the visualization window.
+
+### chronoirr.ChVisualSystemIrrlicht.SetWindowTitle
+- **Arguments**:
+  - `title`: Title of the window (string).
+- **Usage**: Sets the title of the visualization window.
+
+### chronoirr.ChVisualSystemIrrlicht.Initialize
+- **Arguments**: None
+- **Usage**: Initializes the visualization window and prepares it for rendering.
+
+### chronoirr.ChVisualSystemIrrlicht.AddLogo
+- **Arguments**:
+  - `logo_path`: Path to the logo image file.
+- **Usage**: Adds a logo to the visualization window.
+
+### chronoirr.ChVisualSystemIrrlicht.AddSkyBox
+- **Arguments**: None
+- **Usage**: Adds a skybox to the visualization environment.
+
+### chronoirr.ChVisualSystemIrrlicht.AddCamera
+- **Arguments**:
+  - `position`: Position of the camera (chrono.ChVector3d).
+- **Usage**: Adds a camera to the visualization environment.
+
+### chronoirr.ChVisualSystemIrrlicht.AddTypicalLights
+- **Arguments**: None
+- **Usage**: Adds typical light sources to the visualization environment.
+
+## Initialize Body
+
+### chrono.ChBody.SetPos
+- **Arguments**:
+  - `position`: Position vector (chrono.ChVector3d).
+- **Usage**: Sets the position of the body in the simulation world.
+
+### chrono.ChBody.SetFixed
+- **Arguments**:
+  - `is_fixed`: Boolean value indicating whether the body is fixed in space.
+- **Usage**: Sets whether the body is fixed and immovable.
+
+### chrono.ChBody.EnableCollision
+- **Arguments**:
+  - `enable`: Boolean value indicating whether collision is enabled.
+- **Usage**: Enables or disables collision for the body.
+
+### chrono.ChBody.AddCollisionShape
+- **Arguments**:
+  - `shape`: Collision shape to add.
+  - `frame`: Frame of reference, typically `chrono.ChFramed`.
+- **Usage**: Adds a collision shape to the body for collision detection.
+
+## Setting Parameters
+- **mradius**: Radius of the spheres (0.5 units).
+- **density**: Density of the spheres (1000).
+- **initial_angspeed**: Initial angular speed of the rolling spheres (10 units).
+- **initial_linspeed**: Initial linear speed of the rolling spheres (initial_angspeed * mradius).
+
+## Simulation Loop
+
+### chrono.ChSystemNSC.SetSolverType
+- **Arguments**:
+  - `solver_type`: Type of solver to be used (e.g., `chrono.ChSolver.Type_APGD`).
+- **Usage**: Sets the solver type for the physics engine.
+
+### chrono.ChVisualSystemIrrlicht.Run
+- **Arguments**: None
+- **Usage**: Runs the visualization window's main loop.
+
+### chrono.ChVisualSystemIrrlicht.BeginScene
+- **Arguments**: None
+- **Usage**: Prepares the scene for rendering.
+
+### chrono.ChVisualSystemIrrlicht.Render
+- **Arguments**: None
+- **Usage**: Renders the current frame.
+
+### chrono.ChVisualSystemIrrlicht.EndScene
+- **Arguments**: None
+- **Usage**: Concludes the rendering for the current frame.
+
+### chrono.ChSystemNSC.DoStepDynamics
+- **Arguments**:
+  - `step_size`: Time step size for the dynamics simulation (float).
+- **Usage**: Advances the simulation by a given time step.
+
+This documentation provides a comprehensive overview of the classes, methods, and functionalities used in the provided Chrono simulation code.

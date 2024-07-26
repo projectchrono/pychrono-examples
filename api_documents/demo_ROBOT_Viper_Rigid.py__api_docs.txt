@@ -1,0 +1,170 @@
+# API Documentation for Viper Rover Simulation
+
+This documentation provides a detailed description of the code used to simulate a Viper Rover operating on rigid terrain using the PyChrono library.
+
+## Library
+The code utilizes several libraries and modules:
+
+- **os**: Standard Python library for operating system interfaces.
+- **math**: Standard Python library for mathematical functions.
+- **numpy**: Library for numerical computations in Python.
+- **pychrono**: Main library for Chrono simulations.
+- **pychrono.robot**: A submodule for robotics simulations.
+- **pychrono.irrlicht**: A submodule for rendering and visualization using the Irrlicht engine.
+
+## Contact and Collision Setting
+These APIs and functions are used to set up contact materials, collision shapes, and collision settings.
+
+### ChSystemNSC
+- **Arguments**: None
+- **Usage**: Creates a non-smooth contact (NSC) Chrono system for simulations.
+
+### SetCollisionSystemType
+- **Arguments**: `chrono.ChCollisionSystem.Type_BULLET`
+- **Usage**: Sets the collision detection system type to BULLET.
+
+### SetGravitationalAcceleration
+- **Arguments**: `chrono.ChVector3d(0, 0, -9.81)`
+- **Usage**: Sets the gravitational acceleration in the simulation.
+
+### ChCollisionModel.SetDefaultSuggestedEnvelope
+- **Arguments**: `0.0025`
+- **Usage**: Sets the suggested envelope for collision detection.
+
+### ChCollisionModel.SetDefaultSuggestedMargin
+- **Arguments**: `0.0025`
+- **Usage**: Sets the default margin for collision detection.
+
+### ChContactMaterialNSC
+- **Arguments**: None
+- **Usage**: Creates a non-smooth contact material.
+
+### ChBodyEasyBox
+- **Arguments**: `20, 20, 1, 1000, True, True, ground_mat`
+- **Usage**: Creates a box-shaped body that is easy to use for collision and visualization purposes.
+
+### SetPos
+- **Arguments**: `chrono.ChVector3d(0, 0, -1)`
+- **Usage**: Sets the position of the body.
+
+### SetFixed
+- **Arguments**: `True`
+- **Usage**: Sets the body to be fixed (immovable).
+
+### GetVisualShape(0).SetTexture
+- **Arguments**: `chrono.GetChronoDataFile("textures/concrete.jpg")`
+- **Usage**: Sets the texture for the visual representation of the body.
+
+### Add
+- **Arguments**: `ground`
+- **Usage**: Adds the body to the Chrono system.
+
+## Visualization Setting
+These APIs and functions are used to set up the visualization system, including materials, shapes, and rendering.
+
+### ChVisualSystemIrrlicht
+- **Arguments**: None
+- **Usage**: Creates an Irrlicht visualization system for rendering the simulation.
+
+### AttachSystem
+- **Arguments**: `system`
+- **Usage**: Attaches the Chrono system to the visualization system.
+
+### SetCameraVertical
+- **Arguments**: `chrono.CameraVerticalDir_Z`
+- **Usage**: Sets the vertical direction for the camera.
+
+### SetWindowSize
+- **Arguments**: `1280, 720`
+- **Usage**: Sets the dimensions of the visualization window.
+
+### SetWindowTitle
+- **Arguments**: `'Viper rover - Rigid terrain'`
+- **Usage**: Sets the title of the visualization window.
+
+### Initialize
+- **Arguments**: None
+- **Usage**: Initializes the visualization system.
+
+### AddLogo
+- **Arguments**: `chrono.GetChronoDataFile('logo_pychrono_alpha.png')`
+- **Usage**: Adds a logo to the visualization window.
+
+### AddSkyBox
+- **Arguments**: None
+- **Usage**: Adds a skybox to the scene.
+
+### AddCamera
+- **Arguments**: `chrono.ChVector3d(0, 2.5, 1.5), chrono.ChVector3d(0, 0, 1)`
+- **Usage**: Adds a camera to the scene with specified position and target.
+
+### AddTypicalLights
+- **Arguments**: None
+- **Usage**: Adds typical lights to the scene.
+
+### AddLightWithShadow
+- **Arguments**: `chrono.ChVector3d(1.5, -2.5, 5.5), chrono.ChVector3d(0, 0, 0.5), 3, 4, 10, 40, 512`
+- **Usage**: Adds a light with shadow to the scene.
+
+#### EnableShadows
+- **Arguments**: None
+- **Usage**: (Commented out) Enables shadows in the scene.
+
+## Initialize Body
+APIs and functions used to create and initialize bodies in the simulation, including their properties and how they are added to the system.
+
+### ViperDCMotorControl
+- **Arguments**: None
+- **Usage**: Creates a motor control system for the Viper rover.
+
+### Viper
+- **Arguments**: `system`
+- **Usage**: Creates a Viper rover and associates it with the Chrono system.
+
+### SetDriver
+- **Arguments**: `driver`
+- **Usage**: Sets the driver for the Viper rover.
+
+### Initialize
+- **Arguments**: `chrono.ChFramed(chrono.ChVector3d(0, -0.2, 0), chrono.ChQuaterniond(1, 0, 0, 0))`
+- **Usage**: Initializes the Viper rover with a specified position and orientation.
+
+## Setting Parameters
+These are the parameters set in the simulation:
+
+### time_step
+- **Value**: `1e-3`
+- **Usage**: Sets the fixed time step for the simulation loop.
+
+## Simulation Loop
+Functions used to run the simulation loop, including solver settings and rendering steps.
+
+### Run
+- **Arguments**: None
+- **Usage**: Checks if the visualization window is still running.
+
+### SetSteering
+- **Arguments**: `steering`
+- **Usage**: Sets the steering angle for the Viper rover.
+
+### Update
+- **Arguments**: None
+- **Usage**: Updates the state of the Viper rover.
+
+### BeginScene
+- **Arguments**: None
+- **Usage**: Begins a new rendering scene.
+
+### Render
+- **Arguments**: None
+- **Usage**: Renders the current scene.
+
+### EndScene
+- **Arguments**: None
+- **Usage**: Ends the current rendering scene.
+
+### DoStepDynamics
+- **Arguments**: `time_step`
+- **Usage**: Advances the simulation by a single time step.
+
+By following this documentation, users should be able to understand and modify the Viper Rover simulation code effectively.

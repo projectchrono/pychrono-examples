@@ -1,0 +1,206 @@
+# API Documentation for ChLinkRSDA Example
+
+## Library
+This code utilizes the following Python libraries and modules from the Project Chrono library for multi-physics simulation:
+
+- **pychrono**: Core Chrono functionalities for physics simulations.
+- **pychrono.irrlicht**: Enables visualization of the simulation using the Irrlicht engine.
+- **math as m**: Python’s standard math library used for mathematical calculations.
+
+## Contact and Collision Setting
+### `chrono.ChSystemNSC()`
+**Arguments**: None  
+**Usage**: Constructs a non-smooth (NSC) Chrono system, which includes all physical systems (e.g. bodies, links).
+
+### `chrono.ChBody()`
+**Arguments**: None  
+**Usage**: Creates a rigid body that can be added to a system.
+
+### `chrono.ChLinkLockRevolute()`
+**Arguments**: None  
+**Usage**: Creates a revolute joint, which constrains two bodies to rotate relative to a joint axis.
+
+### `chrono.ChLinkRSDA()`
+**Arguments**: None  
+**Usage**: Creates a rotational spring-damper actuator.
+
+### `system.AddBody(body_object)`
+**Arguments**:  
+- `body_object` (ChBody): The body to be added to the system.
+
+**Usage**: Adds a body to the physical system.
+
+### `system.AddLink(link_object)`
+**Arguments**:  
+- `link_object` (ChLinkLockRevolute | ChLinkRSDA): The link to be added to the system.
+
+**Usage**: Adds a constraint link to the physical system.
+
+## Visualization Setting
+### `chrono.ChVisualShapeCylinder(radius, height)`
+**Arguments**:  
+- `radius` (float): Radius of the cylinder.  
+- `height` (float): Height of the cylinder.
+
+**Usage**: Creates a cylindrical visual shape.
+
+### `chrono.ChVisualShapeSphere(radius)`
+**Arguments**:  
+- `radius` (float): Radius of the sphere.
+
+**Usage**: Creates a spherical visual shape.
+
+### `chrono.ChVisualShapeRotSpring(radius, turns)`
+**Arguments**:  
+- `radius` (float): Radius of the rotational spring.  
+- `turns` (int): Number of turns in the spring.
+
+**Usage**: Creates a visual representation of the rotational spring.
+
+### `chrono.ChColor(r, g, b)`
+**Arguments**:  
+- `r` (float): Red channel (0-1).  
+- `g` (float): Green channel (0-1).  
+- `b` (float): Blue channel (0-1).
+
+**Usage**: Represents color to be used for visual shapes.
+
+### `irr.ChVisualSystemIrrlicht()`
+**Arguments**: None  
+**Usage**: Creates an Irrlicht visualization system.
+
+### `vis.AttachSystem(system)`
+**Arguments**:  
+- `system` (ChSystemNSC): The Chrono system to be visualized.
+
+**Usage**: Attaches a Chrono system to the visualization system.
+
+### `vis.Initialize()`
+**Arguments**: None  
+**Usage**: Initializes the visualization system.
+
+### `vis.SetWindowSize(width, height)`
+**Arguments**:  
+- `width` (int): Window width.  
+- `height` (int): Window height.
+
+**Usage**: Sets the size of the visualization window.
+
+### `vis.SetWindowTitle(title)`
+**Arguments**:  
+- `title` (str): The title for the visualization window.
+
+**Usage**: Sets the title of the visualization window.
+
+### `vis.AddLogo(file_path)`
+**Arguments**:  
+- `file_path` (str): Path to the logo image to be added.
+
+**Usage**: Adds a logo to the visualization window.
+
+### `vis.AddSkyBox()`
+**Arguments**: None  
+**Usage**: Adds a skybox to the visualization environment.
+
+### `vis.AddCamera(position)`
+**Arguments**:  
+- `position` (ChVector3d): 3D vector representing camera position.
+
+**Usage**: Adds a camera to the visualization system.
+
+### `vis.AddTypicalLights()`
+**Arguments**: None  
+**Usage**: Adds typical lights to the visualization environment.
+
+## Initialize Body
+### `body.SetPos(position)`
+**Arguments**:  
+- `position` (ChVector3d): 3D vector representing initial position.
+
+**Usage**: Sets the initial position of the body.
+
+### `body.SetPosDt(linear_velocity)`
+**Arguments**:  
+- `linear_velocity` (ChVector3d): 3D vector representing initial linear velocity.
+
+**Usage**: Sets the initial linear velocity of the body.
+
+### `body.SetAngVelParent(angular_velocity)`
+**Arguments**:  
+- `angular_velocity` (ChVector3d): 3D vector representing initial angular velocity.
+
+**Usage**: Sets the initial angular velocity of the body.
+
+### `body.SetFixed(fixed)`
+**Arguments**:  
+- `fixed` (bool): A flag to fix the body in space.
+
+**Usage**: Fixes the body in space if set to `True`.
+
+### `body.EnableCollision(enable)`
+**Arguments**:  
+- `enable` (bool): A flag to enable/disable collision for the body.
+
+**Usage**: Enables collision detection for the body if set to `True`.
+
+### `body.SetMass(mass)`
+**Arguments**:  
+- `mass` (float): Mass of the body.
+
+**Usage**: Sets the mass of the body.
+
+### `body.SetInertiaXX(inertia)`
+**Arguments**:  
+- `inertia` (ChVector3d): 3D vector representing the principal moments of inertia.
+
+**Usage**: Sets the principal moments of inertia for the body.
+
+## Setting Parameters
+### `spring_coef = 40`
+**Definition**: spring constant of the rotational spring-damper system.
+
+### `damping_coef = 2`
+**Definition**: damping coefficient of the rotational spring-damper system.
+
+### `rest_angle = m.pi / 6`
+**Definition**: rest angle (equilibrium) for the rotational spring.
+
+### `omega = 5.0`
+**Definition**: angular speed, used to calculate linear and angular velocity.
+
+## Simulation Loop
+### `vis.Run()`
+**Arguments**: None  
+**Usage**: Runs the visualization system. Returns `True` if the visualization window is open.
+
+### `vis.BeginScene()`
+**Arguments**: None  
+**Usage**: Begins rendering a new scene.
+
+### `vis.Render()`
+**Arguments**: None  
+**Usage**: Renders the current simulation state.
+
+### `irr.drawAllCOGs(visual_system, scale)`
+**Arguments**:  
+- `visual_system` (ChVisualSystemIrrlicht): The visualization system.  
+- `scale` (float): Scale for the center of gravity markers.
+
+**Usage**: Draws the centers of gravity for all bodies.
+
+### `irr.drawAllLinkframes(visual_system, scale)`
+**Arguments**:  
+- `visual_system` (ChVisualSystemIrrlicht): The visualization system.  
+- `scale` (float): Scale for the link frames.
+
+**Usage**: Draws the link frames for all constraints.
+
+### `vis.EndScene()`
+**Arguments**: None  
+**Usage**: Ends rendering of the current scene.
+
+### `system.DoStepDynamics(time_step)`
+**Arguments**:  
+- `time_step` (float): Time step for the simulation.
+
+**Usage**: Advances the simulation by a specified time step.

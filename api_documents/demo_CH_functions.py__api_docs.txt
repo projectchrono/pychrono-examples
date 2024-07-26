@@ -1,0 +1,180 @@
+# API Documentation for Given Code Example
+
+## Library
+
+### Imported Libraries and Modules
+
+- `pychrono as chrono`: A Python package part of Project Chrono, used for simulating dynamic and rigid body systems.
+- `errno`: A Python module for standard error numbers.
+- `os`: A Python module providing a portable way of using operating system-dependent functionality.
+- `math`: A Python module providing access to mathematical functions.
+
+## Contact and Collision Setting
+
+This section is not applicable as the provided code does not deal with setting up contact materials, collision shapes, or collision settings.
+
+## Visualization Setting
+
+This section is not applicable as the provided code does not deal explicitly with visualization settings.
+
+## Initialize Body
+
+This section is not applicable as the provided code does not initialize any bodies in a physical simulation.
+
+## Setting Parameters
+
+### Constants, Coefficients, and Function Parameters
+
+- **Ramp Function:**
+  - `AngularCoeff`: Angular coefficient of the ramp function.
+  - `StartVal`: Starting value of the ramp at \( x = 0 \).
+
+- **Sine Function:**
+  - `Amplitude`: Amplitude of the sine wave.
+  - `Frequency`: Frequency of the sine wave.
+
+- **Custom Function (MyFunction):**
+  - `f(\pi x)`: A custom function defined by the user returning the cosine value.
+
+- **Function Sequence:**
+  - `Duration`: Duration for constant acceleration functions.
+  - `Displacement`: Vertical displacement for constant acceleration functions.
+  - `FirstAccelerationEnd`: Percentage of total length after which first acceleration ends.
+  - `SecondAccelerationStart`: Percentage of total length where second acceleration starts.
+
+- **Repeating Sequence:**
+  - `SliceWidth`: Width of slices for repeating sequence.
+  - `SliceStart`: Starting point for slices.
+  - `SliceShift`: Shift value for slices.
+
+## Simulation Loop
+
+This section is not applicable since the provided code does not include a simulation loop with solver settings and rendering steps.
+
+## Detailed API/Function Descriptions
+
+### Class and Function Definitions
+
+#### `class MyFunction(chrono.ChFunction)`
+
+- **Arguments**: None.
+- **Usage**: Inherits from `chrono.ChFunction` to create a custom user-defined function for \( f(\pi x) = \cos(\pi x) \).
+
+#### Method: `GetVal(x)`
+
+- **Arguments**:
+  - `x` (float): The input value at which the function is evaluated.
+- **Usage**: Returns the cosine value of \( \pi x \).
+
+### Ramp Function Initialization
+
+#### `chrono.ChFunctionRamp()`
+
+- **Arguments**: None.
+- **Usage**: Constructor to create an instance of a ramp function.
+
+#### Method: `SetAngularCoeff(coeff)`
+
+- **Arguments**:
+  - `coeff` (float): Angular coefficient of the ramp.
+- **Usage**: Sets the angular coefficient for the ramp function.
+
+#### Method: `SetStartVal(val)`
+
+- **Arguments**:
+  - `val` (float): Starting value of the ramp.
+- **Usage**: Defines the starting y-value at \( x = 0 \).
+
+### Sine Function Initialization
+
+#### `chrono.ChFunctionSine()`
+
+- **Arguments**: None.
+- **Usage**: Constructor to create an instance of a sine function.
+
+#### Method: `SetAmplitude(amp)`
+
+- **Arguments**:
+  - `amp` (float): Amplitude of the sine wave.
+- **Usage**: Sets the amplitude for the sine function.
+
+#### Method: `SetFrequency(freq)`
+
+- **Arguments**:
+  - `freq` (float): Frequency of the sine wave.
+- **Usage**: Sets the frequency for the sine function.
+
+### Function Sequence Initialization
+
+#### `chrono.ChFunctionSequence()`
+
+- **Arguments**: None.
+- **Usage**: Constructor to create an instance of a function sequence.
+
+#### Method: `InsertFunct(function, duration, weight, ..., [extra params])`
+
+- **Arguments**:
+  - `function` (chrono.ChFunction): Function to be inserted.
+  - `duration` (float): Duration of this part of the sequence.
+  - `weight` (float): Weight of the function in the sequence.
+  - `[extra params]`: Optional parameters for specific sequence settings.
+- **Usage**: Inserts a function into the sequence at the specified duration and weight.
+
+#### Method: `Setup()`
+
+- **Arguments**: None.
+- **Usage**: Finalizes setup for the function sequence.
+
+### Repeating Function Sequence Initialization
+
+#### `chrono.ChFunctionRepeat(base_function)`
+
+- **Arguments**:
+  - `base_function` (chrono.ChFunction): The base function to be repeated.
+- **Usage**: Constructor to create an instance of a repeating function based on a base function.
+
+#### Method: `SetSliceWidth(width)`
+
+- **Arguments**:
+  - `width` (float): Width of the slice.
+- **Usage**: Sets the width of slices for the repeating sequence.
+
+#### Method: `SetSliceStart(start)`
+
+- **Arguments**:
+  - `start` (float): Start position of the slice.
+- **Usage**: Sets the start of the slice for the repeating sequence.
+
+#### Method: `SetSliceShift(shift)`
+
+- **Arguments**:
+  - `shift` (float): Shift value for the slice.
+- **Usage**: Sets the shift for the slice in the repeating sequence.
+
+## Example Usage
+
+**Directory Creation:**
+- **os.mkdir(path)**
+  - `path` (str): The directory path.
+  - **Usage**: Creates a directory if not already existing.
+
+**File Handling:**
+- **open(path, mode)**
+  - `path` (str): The file path.
+  - `mode` (str): The file access mode.
+  - **Usage**: Opens a file for reading or writing.
+
+- **write(content)**
+  - `content` (str): Content to be written.
+  - **Usage**: Writes content to the file.
+  
+- **close()**
+  - **Usage**: Closes the file.
+
+**Function Evaluation:**
+- **GetVal(x)**, **GetDer(x)**, **GetDer2(x)**
+  - `x` (float): The input value.
+  - **Usage**: These methods return the function value, first derivative, and second derivative at x, respectively.
+
+## Notes
+The provided code sample focuses primarily on setting up and manipulating various mathematical functions using the Project Chrono library. The primary operations are centered around function evaluation, custom function definition, sequence creation, and file output for visualization of these functions.

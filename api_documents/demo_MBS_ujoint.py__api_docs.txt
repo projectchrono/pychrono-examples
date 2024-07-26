@@ -1,0 +1,224 @@
+# Universal Joint Simulation with Project Chrono
+
+This document provides detailed documentation for a Python script simulating a universal joint using Project Chrono. The script sets up a simulation system, initializes bodies, specifies contact and collision settings, and visualizes the state of the simulation.
+
+## Library
+
+Below are the libraries and modules imported and used in this code:
+
+- `pychrono.core`: Core functionalities of the Project Chrono simulation framework.
+- `pychrono.irrlicht`: Interface to Irrlicht, a high-performance real-time 3D engine used to visualize the simulation.
+
+```python
+import pychrono.core as chrono
+import pychrono.irrlicht as chronoirr
+import math
+```
+
+## Contact and Collision Setting
+
+Contact and collision settings are brief in this example, consisting primarily of enabling/disabling collision for specific bodies:
+
+- **Name**: `EnableCollision`
+  - **Arguments**: `boolean` (True to enable collision, False to disable)
+  - **Usage**: Enables or disables collision for a body.
+
+```python
+ground.EnableCollision(False)
+shaft_1.EnableCollision(False)
+shaft_2.EnableCollision(False)
+```
+
+## Visualization Setting
+
+Below are the APIs and functions used for visualization settings, which include attaching various visual shapes to bodies and initializing the Irrlicht visualization system:
+
+- **Name**: `ChVisualShapeCylinder`
+  - **Arguments**: `double radius`, `double height`
+  - **Usage**: Creates a visual representation of a cylinder.
+  
+```python
+cyl_1 = chrono.ChVisualShapeCylinder(0.3, 0.4)
+cyl_2 = chrono.ChVisualShapeCylinder(0.05, 0.4)
+```
+
+- **Name**: `ChVisualShapeBox`
+  - **Arguments**: `double size_x`, `double size_y`, `double size_z`
+  - **Usage**: Creates a visual representation of a box.
+  
+```python
+box_1 = chrono.ChVisualShapeBox(0.3, 0.3, 1.8 * hl)
+```
+
+- **Name**: `ChColor`
+  - **Arguments**: `float red`, `float green`, `float blue`
+  - **Usage**: Specifies the color of a visual shape.
+  
+```python
+cyl_2.SetColor(chrono.ChColor(0.9, 0.4, 0.1))
+```
+
+- **Name**: `ChVisualSystemIrrlicht`
+  - **Arguments**: None
+  - **Usage**: Initializes the Irrlicht visualization system.
+  
+```python
+vis = chronoirr.ChVisualSystemIrrlicht()
+vis.AttachSystem(sys)
+vis.SetWindowSize(1024,768)
+vis.SetWindowTitle('Universal joint demo')
+vis.Initialize()
+vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))
+vis.AddSkyBox()
+vis.AddCamera(chrono.ChVector3d(3, 1, -1.5))
+vis.AddTypicalLights()
+```
+
+## Initialize Body
+
+Functions to initialize bodies in the simulation system and set their properties:
+
+- **Name**: `ChBody`
+  - **Arguments**: None
+  - **Usage**: Creates a new rigid body.
+  
+```python
+ground = chrono.ChBody()
+shaft_1 = chrono.ChBody()
+shaft_2 = chrono.ChBody()
+```
+
+- **Name**: `SetFixed`
+  - **Arguments**: `boolean` (True to fix the body, False otherwise)
+  - **Usage**: Fixes a body in space.
+  
+```python
+ground.SetFixed(True)
+```
+
+- **Name**: `SetMass`
+  - **Arguments**: `double mass`
+  - **Usage**: Sets the mass of the body.
+  
+```python
+shaft_1.SetMass(1)
+shaft_2.SetMass(1)
+```
+
+- **Name**: `SetInertiaXX`
+  - **Arguments**: `ChVector<> inertia`
+  - **Usage**: Sets the inertia tensor of the body.
+  
+```python
+shaft_1.SetInertiaXX(chrono.ChVector3d(1, 1, 0.2))
+shaft_2.SetInertiaXX(chrono.ChVector3d(1, 1, 0.2))
+```
+
+- **Name**: `SetPos`
+  - **Arguments**: `ChVector<> position`
+  - **Usage**: Sets the initial position of the body.
+  
+```python
+shaft_1.SetPos(chrono.ChVector3d(0, 0, -hl))
+shaft_2.SetPos(chrono.ChVector3d(0, -hl * sina, hl * cosa))
+```
+
+- **Name**: `SetRot`
+  - **Arguments**: `ChQuaternion<> rotation`
+  - **Usage**: Sets the initial rotation of the body.
+  
+```python
+shaft_1.SetRot(chrono.ChQuaterniond(1, 0, 0, 0))
+shaft_2.SetRot(rot)
+```
+
+## Setting Parameters
+
+The script uses the following parameters to configure the simulation:
+
+- **Name**: `hl`
+  - **Description**: Half-length of the shafts.
+  - **Value**: `2`
+  
+```python
+hl = 2
+```
+
+- **Name**: `angle`
+  - **Description**: Bend angle between the two shafts (rotation about the global X axis).
+  - **Value**: `math.pi / 6`
+  
+```python
+angle = math.pi / 6.
+```
+
+- **Name**: `rot`
+  - **Description**: Quaternion representing rotation.
+  - **Value**: `chrono.QuatFromAngleX(angle)`
+  
+```python
+rot = chrono.QuatFromAngleX(angle)
+```
+
+## Simulation Loop
+
+The main loop performs the simulation steps and rendering:
+
+- **Name**: `vis.Run`
+  - **Arguments**: None
+  - **Usage**: Checks if the visualization system is active.
+  
+```python
+while vis.Run():
+```
+
+- **Name**: `BeginScene`
+  - **Arguments**: None
+  - **Usage**: Begins rendering a new scene.
+  
+```python
+vis.BeginScene()
+```
+
+- **Name**: `Render`
+  - **Arguments**: None
+  - **Usage**: Renders the current scene.
+  
+```python
+vis.Render()
+```
+
+- **Name**: `EndScene`
+  - **Arguments**: None
+  - **Usage**: Ends rendering the current scene.
+  
+```python
+vis.EndScene()
+```
+
+- **Name**: `DoStepDynamics`
+  - **Arguments**: `double timestep`
+  - **Usage**: Advances the simulation by one timestep.
+  
+```python
+sys.DoStepDynamics(1e-3)
+```
+
+- **Name**: `GetChTime`
+  - **Arguments**: None
+  - **Usage**: Gets the current simulation time.
+  
+```python
+sys.GetChTime()
+```
+
+- **Name**: `GetAngVelLocal`
+  - **Arguments**: None
+  - **Usage**: Gets the angular velocity of the body in its local frame.
+  
+```python
+omega_1 = shaft_1.GetAngVelLocal().z
+omega_2 = shaft_2.GetAngVelLocal().z
+```
+
+This analytical breakdown should help you understand the structure and functionalities of the provided code. The emphasis on key APIs and parameters aids in the comprehension and potential modification of the script for similar engineering simulations.

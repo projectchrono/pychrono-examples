@@ -1,0 +1,186 @@
+# RoboSimian Simulation Documentation
+
+## Summary 
+
+This documentation covers the setup and execution of a RoboSimian simulation using the Chrono and RoboSimian libraries. The simulation involves specifying contact materials, creating collision shapes, setting visualization parameters, initializing the RoboSimian robot, and running the simulation loop.
+
+---
+
+## Libraries
+
+### Imported Libraries
+
+**os**
+- Standard Python library for miscellaneous operating system interfaces.
+
+**errno**
+- Standard Python library for error number definitions.
+
+**math**
+- Standard Python library for mathematical functions.
+
+**pychrono as chrono**
+- Chrono Engine library for simulating dynamics.
+
+**pychrono.robot as robosimian**
+- RoboSimian robot simulation component of the Chrono Engine.
+
+**pychrono.irrlicht as chronoirr**
+- Irrlicht-based visualization component for the Chrono Engine.
+
+---
+
+## Contact and Collision Setting
+
+### `SetContactProperties(robot)`
+
+**Arguments:**
+- `robot`: The RoboSimian robot instance.
+
+**Description:**
+- Sets up the contact properties for both the sled and wheel materials of the RoboSimian robot.
+
+**Usage:**
+- **`robot.GetSledContactMaterial().SetFriction(friction)`**: Sets the friction coefficient for the sled material.
+- **`robot.GetSledContactMaterial().SetRestitution(cr)`**: Sets the restitution (bounciness) for the sled material.
+- **`robot.GetWheelContactMaterial().SetFriction(friction)`**: Sets the friction coefficient for the wheel material.
+- **`robot.GetWheelContactMaterial().SetRestitution(cr)`**: Sets the restitution (bounciness) for the wheel material.
+- **`chrono.CastToChContactMaterialSMC(material)`**: Converts a general contact material to a specific type (SMC), needed if the system uses SMC contact method.
+- **`material.SetYoungModulus(Y)`**: Sets the Young's modulus (stiffness) for an SMC contact material.
+
+---
+
+## Visualization Setting
+
+### `chronoirr.ChVisualSystemIrrlicht()`
+
+**Arguments:**
+- None
+
+**Description:**
+- Creates an Irrlicht-based visualization system for Chrono simulations.
+
+**Usage:**
+- **`vis.AttachSystem(sys)`**: Links the visualization system to the simulation system.
+- **`vis.SetWindowSize(1024, 768)`**: Sets the window size for the visualization.
+- **`vis.SetWindowTitle('RoboSimian - Rigid terrain')`**: Sets the window title.
+- **`vis.Initialize()`**: Initializes the visualization system.
+- **`vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))`**: Adds a logo to the visualization window.
+- **`vis.AddSkyBox()`**: Adds a skybox to the scene.
+- **`vis.AddCamera(chrono.ChVector3d(1, -2.75, 0.2), chrono.ChVector3d(1, 0, 0))`**: Adds a camera to the scene with a specific position and target vector.
+- **`vis.AddLight(chrono.ChVector3d(100, +100, 100), 290)`**: Adds a light source to the scene.
+- **`vis.AddLight(chrono.ChVector3d(100, -100, 80), 190)`**: Adds another light source to the scene.
+
+---
+
+## Initialize Body
+
+### `robosimian.RoboSimian(system, fixed, visualize)`
+
+**Arguments:**
+- `system`: The Chrono system.
+- `fixed`: Boolean to fix the robot's base to the world.
+- `visualize`: Boolean to enable visualization.
+
+**Description:**
+- Initializes the RoboSimian robot in the simulation system with the specified parameters.
+
+### `robot.Initialize(coords)`
+
+**Arguments:**
+- `coords`: The coordinate system for robot initialization (position and orientation).
+
+**Description:**
+- Specifies the initial position and orientation of the RoboSimian robot in the simulation.
+
+### `robot.SetOutputDirectory(directory)`
+
+**Arguments:**
+- `directory`: Path to the output directory.
+
+**Description:**
+- Sets the directory for the robot's output data.
+
+### `robosimian.RS_Driver(...files, repeat)`
+
+**Arguments:**
+- `files`: File paths for the driver sequence.
+- `repeat`: Boolean to repeat the driving sequence.
+
+**Description:**
+- Creates a driver for the robot to follow a specified actuation sequence.
+
+### `driver.RegisterPhaseChangeCallback(callback)`
+
+**Arguments:**
+- `callback`: Callback function for phase change events.
+
+**Description:**
+- Registers a callback for the driver to handle phase changes.
+
+### `driver.SetTimeOffsets(pose, settle_robot)`
+
+**Arguments:**
+- `pose`: Duration for posing.
+- `settle_robot`: Duration for settling the robot.
+
+**Description:**
+- Sets the time offsets for robot posing and settling phases before starting the simulation.
+
+---
+
+## Setting Parameters
+
+### Parameters:
+- `time_step = 1e-3`: Simulation time step.
+- `drop = True`: Indicates whether to drop the robot onto the terrain.
+- `mode = robosimian.LocomotionMode_WALK`: Specifies the robot locomotion mode.
+- `contact_method = chrono.ChContactMethod_SMC`: Sets the contact method for the simulation system.
+- `duration_pose = 1.0`: Durations for various phases in the simulation.
+- `output_fps = 100`: Output frequency for simulation data.
+- `render_fps = 60`: Rendering frequency for visualization.
+- `out_dir = "./ROBOSIMIAN_RIGID"`: Directory for output data.
+- `pov_dir = out_dir + "/POVRAY"`: Directory for POV-Ray data.
+- `img_dir = out_dir + "/IMG"`: Directory for image data.
+- `data_output = True`: Enable or disable data output.
+- `povray_output = False`: Enable or disable POV-Ray output.
+- `image_output = False`: Enable or disable image output.
+- `time_create_terrain = duration_pose`: Time to create terrain.
+- `time_start = time_create_terrain + duration_settle_robot`: Start time for the simulation.
+- `time_end = time_start + duration_sim`: End time for the simulation.
+
+---
+
+## Simulation Loop
+
+### `vis.Run()`
+
+**Arguments:**
+- None
+
+**Description:**
+- Starts the visualization loop, rendering each frame.
+
+### Simulation Loop Steps:
+1. **`vis.BeginScene()`**: Begins the scene rendering process.
+2. **`vis.Render()`**: Renders the current scene.
+3. **`robot.DoStepDynamics(time_step)`**: Advances the robot dynamics by the given time step.
+4. **`vis.EndScene()`**: Ends the current scene rendering process.
+5. **Data Output:**
+   - `if data_output and sim_frame % output_steps == 0: robot.Output()`
+6. **POV-Ray Output:**
+   - `if povray_output and sim_frame % render_steps == 0: chrono.WriteVisualizationAssets(sys, filename)`
+7. **Image Output:**
+   - `if image_output and sim_frame % render_steps == 0: vis.GetVideoDriver().createScreenShot()`
+
+### Directory Handling
+
+**Creating Output Directories:**
+- **`os.mkdir(out_dir)`**: Creates the output directory if it doesn’t exist.
+- **Exception Handling:** Catches and handles the directory creation errors.
+
+---
+
+## Conclusion
+
+This documentation covers the setup and execution of a RoboSimian simulation using the Chrono library. By following these steps, users can modify and extend the simulation with different parameters, visualize the simulation, and capture data outputs.

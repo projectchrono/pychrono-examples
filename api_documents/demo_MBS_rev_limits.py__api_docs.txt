@@ -1,0 +1,191 @@
+# PyChrono and Irrlicht API Documentation
+
+## Library
+
+### Imported Libraries and Modules
+1. **pychrono as chrono**
+   - Description: Main library for chrono-related functions and classes.
+2. **pychrono.irrlicht as irr**
+   - Description: Irrlicht visualization module for chrono.
+3. **math as m**
+   - Description: Standard Python math library.
+
+## Contact and Collision Setting
+
+### Ground Body
+1. **chrono.ChSystemNSC()**
+   - Arguments: None.
+   - Usage: Creates a non-smooth contact system for managing physical simulations.
+   
+2. **chrono.ChBody()**
+   - Arguments: None.
+   - Usage: Creates a body object which could be static or dynamic.
+   
+3. **sys.AddBody(body)**
+   - Arguments:
+     - `body`: an instance of `chrono.ChBody`.
+   - Usage: Adds a body to the simulation system.
+
+4. **ground.SetFixed(True)**
+   - Arguments: 
+     - `True`: Boolean value indicating that the body is fixed (i.e., immovable).
+   - Usage: Sets the body to be static and fixes its position and orientation.
+   
+5. **ground.EnableCollision(False)**
+   - Arguments:
+     - `False`: Boolean value indicating that collisions should be disabled.
+   - Usage: Disables collision detection for the ground body.
+
+## Visualization Setting
+
+### Adding Visualization Shapes
+1. **chrono.ChVisualShapeCylinder(radius, length)**
+   - Arguments:
+     - `radius`: Radius of the cylinder.
+     - `length`: Length of the cylinder.
+   - Usage: Creates a cylindrical visual shape that can be attached to a body for visualization.
+
+2. **ground.AddVisualShape(cyl_rev)**
+   - Arguments:
+     - `cyl_rev`: Instance of `chrono.ChVisualShapeCylinder`.
+   - Usage: Attaches a visual shape to the ground body.
+
+3. **pend.AddVisualShape(cyl_p, frame)**
+   - Arguments:
+     - `cyl_p`: Instance of `chrono.ChVisualShapeCylinder`.
+     - `frame`: Instance of `chrono.ChFrame`, positioning and orienting the shape.
+   - Usage: Attaches a visual shape with specific positioning and orientation to the pendulum body.
+
+### Setting Shape Colors
+1. **cyl_p.SetColor(color)**
+   - Arguments:
+     - `color`: Instance of `chrono.ChColor` representing color in RGB.
+   - Usage: Sets the color of the visual shape.
+
+### Setting Up the Visualization System
+1. **irr.ChVisualSystemIrrlicht()**
+   - Arguments: None.
+   - Usage: Creates an Irrlicht visualization system.
+   
+2. **vis.AttachSystem(system)**
+   - Arguments:
+     - `system`: Instance of `chrono.ChSystemNSC`.
+   - Usage: Attaches the simulation system to the visualization system.
+
+3. **vis.Initialize()**
+   - Arguments: None.
+   - Usage: Initializes the visualization window and system.
+
+4. **vis.AddSkyBox()**
+   - Arguments: None.
+   - Usage: Adds a skybox to the scene for more realistic visuals.
+
+5. **vis.AddCamera(position)**
+   - Arguments:
+     - `position`: Instance of `chrono.ChVector3d`.
+   - Usage: Adds a camera to the visualization window at a specific position.
+
+6. **vis.AddTypicalLights()**
+   - Arguments: None.
+   - Usage: Adds predefined lights to the scene for better visualization.
+
+## Initialize Body
+
+### Pendulum Body
+1. **pend.SetFixed(False)**
+   - Arguments: 
+     - `False`: Boolean value indicating that the body is dynamic.
+   - Usage: Sets the body to be dynamic (movable).
+
+2. **pend.EnableCollision(False)**
+   - Arguments:
+     - `False`: Boolean value indicating that collisions should be disabled.
+   - Usage: Disables collision detection for the pendulum body.
+
+3. **pend.SetMass(mass)**
+   - Arguments:
+     - `mass`: Mass of the pendulum body (e.g., 1).
+   - Usage: Sets the mass of the pendulum body.
+
+4. **pend.SetInertiaXX(inertia)**
+   - Arguments:
+     - `inertia`: Instance of `chrono.ChVector3d`.
+   - Usage: Sets the inertia tensor of the pendulum body.
+
+5. **pend.SetPos(position)**
+   - Arguments:
+     - `position`: Instance of `chrono.ChVector3d`.
+   - Usage: Sets the initial position of the pendulum body.
+
+## Contact and Collision Setting
+
+### Revolute Joint
+1. **chrono.ChLinkLockRevolute()**
+   - Arguments: None.
+   - Usage: Creates a revolute joint to connect two bodies.
+
+2. **sys.AddLink(rev)**
+   - Arguments: 
+     - `rev`: Instance of `chrono.ChLinkLockRevolute`.
+   - Usage: Adds the revolute joint to the system.
+
+### Setting Joint Limits
+1. **rev.LimitRz().SetActive(True)**
+   - Arguments:
+     - `True`: Boolean value to activate the limit.
+   - Usage: Activates the rotational Z limit for the revolute joint.
+
+2. **rev.LimitRz().SetMin(min_angle)**
+   - Arguments:
+     - `min_angle`: Minimum angle limit.
+   - Usage: Sets the minimum rotational limit around the Z-axis.
+
+3. **rev.LimitRz().SetMax(max_angle)**
+   - Arguments:
+     - `max_angle`: Maximum angle limit.
+   - Usage: Sets the maximum rotational limit around the Z-axis.
+
+4. **rev.Initialize(body1, body2, frame)**
+   - Arguments:
+     - `body1`: Instance of `chrono.ChBody` (ground).
+     - `body2`: Instance of `chrono.ChBody` (pendulum).
+     - `frame`: Instance of `chrono.ChFrame`.
+   - Usage: Initializes the revolute joint with the specified bodies and frame.
+
+## Setting Parameters
+
+### Simulation Parameters
+1. **radius**: 0.2 (Pendulum Cylinder Radius)
+2. **density**: Not explicitly defined but can be inferred from mass and dimensions of the pendulum.
+3. **initial speeds**: Not explicitly defined but can be set using `SetPos_dt`.
+
+## Simulation Loop
+
+### Visualization and Rendering
+1. **vis.Run()**
+   - Arguments: None.
+   - Usage: Checks if the visualization system is running.
+   
+2. **vis.BeginScene()**
+   - Arguments: None.
+   - Usage: Begins the rendering of a new scene.
+
+3. **vis.Render()**
+   - Arguments: None.
+   - Usage: Renders the current state of the scene.
+
+4. **irr.drawSegment(vis, point1, point2)**
+   - Arguments:
+     - `vis`: Instance of `irr.ChVisualSystemIrrlicht`.
+     - `point1`: Start point of the segment as instance of `chrono.ChVector3d`.
+     - `point2`: End point of the segment as instance of `chrono.ChVector3d`.
+   - Usage: Draws a line segment between two points.
+
+5. **vis.EndScene()**
+   - Arguments: None.
+   - Usage: Ends the rendering of the scene and presents it to the screen.
+
+6. **sys.DoStepDynamics(time_step)**
+   - Arguments:
+     - `time_step`: Time step for the simulation (e.g., `1e-3`).
+   - Usage: Advances the simulation by the specified time step.

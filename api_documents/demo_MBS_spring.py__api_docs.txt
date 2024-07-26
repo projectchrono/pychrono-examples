@@ -1,0 +1,186 @@
+# Project Chrono - ChLinkTSDA Demo Documentation
+
+## Library
+### Imported Libraries:
+- `pychrono`: The core library for the Chrono simulation.
+- `pychrono.irrlicht`: A module used for visualizing the simulation using the Irrlicht engine.
+
+## Contact and Collision Setting
+### Classes and Functions:
+#### `ChSystemNSC`:
+- **Arguments**: None in this context (constructor).
+- **Usage**: Creates an instance of the Chrono simulation system with non-smooth contact (NSC).
+
+#### `ChSystemNSC.SetGravitationalAcceleration`:
+- **Arguments**:
+  - `chrono.ChVector3d(0, 0, 0)`: A vector setting the gravitational acceleration.
+- **Usage**: Sets the gravitational acceleration to zero in this example.
+
+#### `ChBody.EnableCollision`:
+- **Arguments**:
+  - `False`: A Boolean to enable or disable collision.
+- **Usage**: Disables collision detection for bodies.
+
+## Visualization Setting
+### Classes and Functions
+#### `ChVisualShapeSphere`:
+- **Arguments**:
+  - `0.1`: The radius of the sphere shape.
+- **Usage**: Creates a visual spherical shape with the given radius.
+
+#### `ChVisualShapeBox`:
+- **Arguments**:
+  - `(1, 1, 1)`: The dimensions (width, height, depth) of the box shape.
+- **Usage**: Creates a visual box shape with given dimensions.
+
+#### `ChVisualShapeBox.SetColor`:
+- **Arguments**:
+  - `chrono.ChColor`: A color object with RGB values.
+- **Usage**: Sets the color of the box for visualization purposes.
+
+#### `ChVisualSystemIrrlicht`:
+- **Arguments**: None in this context (constructor).
+- **Usage**: Initializes the Irrlicht visualization system.
+
+#### `ChVisualSystemIrrlicht.AttachSystem`:
+- **Arguments**:
+  - `sys`: The Chrono system to be visualized.
+- **Usage**: Attaches the simulation system `sys` to the Irrlicht visualization.
+
+#### `ChVisualSystemIrrlicht.SetWindowSize`:
+- **Arguments**:
+  - `1024`: The width of the window.
+  - `768`: The height of the window.
+- **Usage**: Sets the window size for the simulation visualization.
+
+#### `ChVisualSystemIrrlicht.SetWindowTitle`:
+- **Arguments**:
+  - `'ChLinkTSDA demo'`: The title of the window.
+- **Usage**: Sets the window title for the simulation visualization.
+
+#### `ChVisualSystemIrrlicht.Initialize`:
+- **Arguments**: None in this context.
+- **Usage**: Initializes the visualization system.
+
+#### `ChVisualSystemIrrlicht.AddLogo`:
+- **Arguments**:
+  - `chrono.GetChronoDataFile('logo_pychrono_alpha.png')`: Path to the logo file.
+- **Usage**: Adds a logo to the visualization application.
+
+#### `ChVisualSystemIrrlicht.AddSkyBox`:
+- **Arguments**: None in this context.
+- **Usage**: Adds a skybox to the visualization.
+
+#### `ChVisualSystemIrrlicht.AddCamera`:
+- **Arguments**:
+  - `chrono.ChVector3d(0, 0, 6)`: A 3D vector representing the position of the camera.
+- **Usage**: Adds a camera at the specified position to the visualization.
+
+#### `ChVisualSystemIrrlicht.AddTypicalLights`:
+- **Arguments**: None in this context.
+- **Usage**: Adds typical lighting to the scene.
+
+## Initialize Body
+### Classes and Functions
+#### `ChBody`:
+- **Arguments**: None in this context (constructor).
+- **Usage**: Creates an instance of a physical body in the system.
+
+#### `ChBody.SetPos`:
+- **Arguments**:
+  - `chrono.ChVector3d(x, y, z)`: A 3D vector setting the body's position.
+- **Usage**: Sets the position of the body in the simulation.
+
+#### `ChBody.SetFixed`:
+- **Arguments**:
+  - `True/False`: A Boolean to fix the body in place or make it moveable.
+- **Usage**: Fixes the body in place or allows it to move.
+
+#### `ChBody.SetMass`:
+- **Arguments**:
+  - `1`: The mass of the body.
+- **Usage**: Sets the mass of the body.
+
+#### `ChBody.SetInertiaXX`:
+- **Arguments**:
+  - `chrono.ChVector3d(1, 1, 1)`: A 3D vector setting the body's inertia tensor.
+- **Usage**: Sets the inertia tensor of the body.
+
+#### `ChBody.AddVisualShape`:
+- **Arguments**:
+  - `shape`: The visual shape to be attached to the body.
+  - `chrono.ChFramed(chrono.ChVector3d(x, y, z))`: The frame of reference for the visual shape.
+- **Usage**: Adds a visual representation to the body.
+
+## Setting Parameters
+### Parameters
+- **rest_length**: The rest length of the spring, set to 1.5.
+- **spring_coef**: The spring coefficient, set to 50.
+- **damping_coef**: The damping coefficient, set to 1.
+
+## Simulation Loop
+### Classes and Functions
+#### `ChLinkTSDA`:
+- **Arguments**: None in this context (constructor).
+- **Usage**: Creates an instance of a translational spring-damper in the system.
+
+#### `ChLinkTSDA.Initialize`:
+- **Arguments**:
+  - `body1`: The first body connected by the spring.
+  - `body2`: The second body connected by the spring.
+  - `True`: Specifies if the anchor points are relative to the bodies.
+  - `anchor1`: The anchor point relative to body1.
+  - `anchor2`: The anchor point relative to body2.
+- **Usage**: Initializes the spring-damper link between two bodies.
+
+#### `ChLinkTSDA.SetRestLength`:
+- **Arguments**:
+  - `rest_length`: The rest length of the spring.
+- **Usage**: Sets the rest length of the spring.
+
+#### `ChLinkTSDA.SetSpringCoefficient`:
+- **Arguments**:
+  - `spring_coef`: The spring constant.
+- **Usage**: Sets the spring constant.
+
+#### `ChLinkTSDA.SetDampingCoefficient`:
+- **Arguments**:
+  - `damping_coef`: The damping coefficient.
+- **Usage**: Sets the damping coefficient.
+
+#### `ChLinkTSDA.RegisterForceFunctor`:
+- **Arguments**:
+  - `force`: A custom force functor to define the spring force.
+- **Usage**: Registers a custom force functor to the spring-damper.
+
+### Simulation Loop Functions
+#### `ChVisualSystemIrrlicht.BeginScene`:
+- **Arguments**: None in this context.
+- **Usage**: Begins the rendering of a new scene.
+
+#### `ChVisualSystemIrrlicht.Render`:
+- **Arguments**: None in this context.
+- **Usage**: Renders the current scene.
+
+#### `ChVisualSystemIrrlicht.EndScene`:
+- **Arguments**: None in this context.
+- **Usage**: Ends the rendering of the current scene.
+
+#### `ChSystemNSC.DoStepDynamics`:
+- **Arguments**:
+  - `1e-3`: The time step for the simulation.
+- **Usage**: Advances the simulation by the given time step.
+
+#### `ChLinkTSDA.GetLength`:
+- **Arguments**: None in this context.
+- **Usage**: Retrieves the current length of the spring.
+
+#### `ChLinkTSDA.GetVelocity`:
+- **Arguments**: None in this context.
+- **Usage**: Retrieves the velocity of the spring.
+
+#### `ChLinkTSDA.GetForce`:
+- **Arguments**: None in this context.
+- **Usage**: Retrieves the force exerted by the spring.
+
+This documentation provides a detailed breakdown of the classes, methods, and parameters used in the given code snippet for simulating a simple spring-damper system with Chrono and visualizing it using Irrlicht.

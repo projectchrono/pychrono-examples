@@ -1,0 +1,199 @@
+# Documentation for Slider Crank Simulation Code
+
+## Library
+
+### Libraries and Modules
+- **Module:** `pychrono.core`
+  - **Usage:** Core functionalities of Project Chrono.
+  - **Import Statement:** `import pychrono.core as chrono`
+
+- **Module:** `pychrono.irrlicht`
+  - **Usage:** Visualization features using the Irrlicht engine.
+  - **Import Statement:** `import pychrono.irrlicht as chronoirr`
+
+- **Module:** `matplotlib.pyplot`
+  - **Usage:** Plotting results.
+  - **Import Statement:** `import matplotlib.pyplot as plt`
+
+- **Module:** `numpy`
+  - **Usage:** Numerical operations, specifically for linspace in plotting.
+  - **Import Statement:** `import numpy as np`
+
+## Contact and Collision Setting
+
+This code does not include any specific contact materials or collision shapes settings. It initializes physical bodies which automatically consider default contact properties.
+
+## Visualization Setting
+
+### Name: `ChVisualSystemIrrlicht`
+- **Arguments:** None on creation, customized with methods after instantiation.
+- **Usage:** Initializes the Irrlicht visualization system.
+
+### Name: `AttachSystem`
+- **Arguments:**
+  - `sys`: The ChSystem object representing the physical simulation.
+- **Usage:** Attaches the visualization system to the simulation system.
+
+### Name: `SetWindowSize`
+- **Arguments:**
+  - `width`: The window width in pixels.
+  - `height`: The window height in pixels.
+- **Usage:** Sets the size of the visualization window.
+
+### Name: `SetWindowTitle`
+- **Arguments:**
+  - `title`: The title for the window.
+- **Usage:** Sets the title for the visualization window.
+
+### Name: `Initialize`
+- **Arguments:** None.
+- **Usage:** Initializes the visualization system.
+
+### Name: `AddLogo`
+- **Arguments:**
+  - `file`: Path to the image file to be used as logo.
+- **Usage:** Adds a logo to the visualization window.
+
+### Name: `AddSkyBox`
+- **Arguments:**
+  - None
+- **Usage:** Adds a skybox for visualization.
+
+### Name: `AddCamera`
+- **Arguments:**
+  - `position`: The position vector of the camera.
+  - `target`: The target point of the camera.
+- **Usage:** Adds a camera to the visualization system.
+
+### Name: `AddTypicalLights`
+- **Arguments:** None.
+- **Usage:** Adds typical lights to the scene for better visualization.
+
+## Initialize Body
+
+### Name: `ChBodyEasyBox`
+- **Arguments:**
+  - `x_size`: Length in x direction.
+  - `y_size`: Length in y direction.
+  - `z_size`: Length in z direction.
+  - `density`: Density of the material.
+- **Usage:** Creates a box-shaped rigid body.
+
+### Name: `ChBodyEasyCylinder`
+- **Arguments:**
+  - `axis`: The axis along which the cylinder is aligned.
+  - `radius`: Radius of the cylinder.
+  - `height`: Height of the cylinder.
+  - `density`: Density of the material.
+- **Usage:** Creates a cylinder-shaped rigid body.
+
+### Name: `SetPos`
+- **Arguments:**
+  - `pos`: The position vector where the body is placed.
+- **Usage:** Sets the position of the body.
+
+### Name: `SetFixed`
+- **Arguments:**
+  - `fixed`: Boolean to make the body fixed in the simulation frame.
+- **Usage:** Fixes the body in space if `True`.
+
+### Name: `SetRot`
+- **Arguments:**
+  - `rot`: The quaternion representing the orientation.
+- **Usage:** Sets the orientation of the body.
+
+### Name: `Add`
+- **Arguments:**
+  - `body`: The body object to be added.
+- **Usage:** Adds a body to the simulation system.
+
+### Name: `ChLinkMotorRotationSpeed`
+- **Arguments:** None.
+- **Usage:** Creates an angular speed motor constraint.
+
+### Name: `ChFunctionConst`
+- **Arguments:**
+  - `value`: The constant value of the function.
+- **Usage:** Defines a constant function.
+
+### Name: `SetMotorFunction`
+- **Arguments:**
+  - `function`: The function object defining motor speed.
+- **Usage:** Sets the motor function for a motor constraint.
+
+### Name: `Initialize`
+- **Arguments:**
+  - `body1`: The first body to attach.
+  - `body2`: The second body to attach.
+  - `frame`: The frame in which the constraint is made.
+- **Usage:** Initializes a constraint or motor between two bodies.
+
+### Name: `ChLinkLockRevolute`
+- **Arguments:** None.
+- **Usage:** Creates a revolute joint.
+
+### Name: `ChLinkLockPrismatic`
+- **Arguments:** None.
+- **Usage:** Creates a prismatic joint.
+
+### Name: `ChFramed`
+- **Arguments:**
+  - `pos`: Position vector for the frame.
+  - `rot`: Optional quaternion for orientation.
+- **Usage:** Creates and initializes a frame in space.
+
+## Setting Parameters
+
+### Parameters:
+- **crank_center:** Position vector for the center of the crank.
+- **crank_rad:** Radius of the crank cylinder.
+- **crank_thick:** Thickness (height) of the crank cylinder.
+- **rod_length:** Length of the connecting rod.
+- **sys:** The simulation system object.
+- **mfloor:** Floor truss (fixed rigid body).
+- **mcrank:** Crank (rigid body).
+- **mrod:** Connecting rod (rigid body).
+- **mpiston:** Piston (rigid body).
+- **my_motor:** Speed motor for rotating the crank.
+- **mjointA:** Revolute joint between rod and crank.
+- **mjointB:** Revolute joint between piston and rod.
+- **mjointC:** Prismatic joint between piston and floor.
+
+## Simulation Loop
+
+### Name: `GetChTime`
+- **Arguments:** None.
+- **Usage:** Retrieves the current time of the simulation.
+
+### Name: `GetMotorAngle`
+- **Arguments:** None.
+- **Usage:** Gets the angle of the motor.
+
+### Name: `GetPos`
+- **Arguments:** None.
+- **Usage:** Retrieves the position of the body.
+
+### Name: `GetPosDt`
+- **Arguments:** None.
+- **Usage:** Retrieves the velocity of the body.
+
+### Name: `BeginScene`
+- **Arguments:** None.
+- **Usage:** Initializes rendering of the scene.
+
+### Name: `Render`
+- **Arguments:** None.
+- **Usage:** Renders the current scene.
+
+### Name: `EndScene`
+- **Arguments:** None.
+- **Usage:** Finalizes rendering of the scene.
+
+### Name: `DoStepDynamics`
+- **Arguments:**
+  - `time_step`: Time step for the dynamics solver.
+- **Usage:** Advances the simulation by a given time step.
+
+### Name: `GetDevice().closeDevice`
+- **Arguments:** None.
+- **Usage:** Closes the Irrlicht visualization device, ending the simulation.

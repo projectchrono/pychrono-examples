@@ -1,0 +1,395 @@
+# API Documentation for the Provided Code Example
+
+## Library
+
+The code uses the following libraries from the Project Chrono framework:
+
+### Libraries:
+- **pychrono.core**: Provides core functionalities for creating and managing physical simulations.
+- **pychrono.irrlicht**: Provides functionalities for visualization using the Irrlicht engine.
+
+```python
+import pychrono.core as chrono
+import pychrono.irrlicht as chronoirr
+```
+
+## Contact and Collision Setting
+
+### 1. `chrono.ChSystemNSC()`
+**Arguments**: None
+
+**Usage**: Creates a new physical system using the Non-Smooth Contact (NSC) method.
+
+```python
+sys = chrono.ChSystemNSC()
+```
+
+### 2. `sys.SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)`
+**Arguments**:
+- `Type_BULLET`: Specifies the type of collision system to use.
+
+**Usage**: Sets the type of collision system for the physical system.
+
+```python
+sys.SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)
+```
+
+### 3. `chrono.ChCollisionModel.SetDefaultSuggestedEnvelope(0.001)`
+**Arguments**:
+- `0.001`: Default outward shape margin.
+
+**Usage**: Sets the default outward shape margin for collision detection.
+
+```python
+chrono.ChCollisionModel.SetDefaultSuggestedEnvelope(0.001)
+```
+
+### 4. `chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.001)`
+**Arguments**:
+- `0.001`: Default inward shape margin.
+
+**Usage**: Sets the default inward shape margin for collision detection.
+
+```python
+chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.001)
+```
+
+### 5. `chrono.ChContactMaterialNSC()`
+**Arguments**: None
+
+**Usage**: Creates a new contact material with Non-Smooth Contact (NSC) properties.
+
+```python
+brick_material = chrono.ChContactMaterialNSC()
+```
+
+### 6. `SetFriction()`, `SetDampingF()`, `SetCompliance()`, `SetComplianceT()`
+**Arguments**:
+- `SetFriction(0.5)`: Sets the friction coefficient.
+- `SetDampingF(0.2)`: Sets the damping coefficient.
+- `SetCompliance (0.0000001)`: Sets the compliance in normal direction.
+- `SetComplianceT(0.0000001)`: Sets the compliance in tangential direction.
+
+**Usage**: Sets the various properties of the contact material.
+
+```python
+brick_material.SetFriction(0.5)
+brick_material.SetDampingF(0.2)
+brick_material.SetCompliance (0.0000001)
+brick_material.SetComplianceT(0.0000001)
+```
+
+### 7. `body_brick.EnableCollision(True)`
+**Arguments**:
+- `True`: Enable collision for the body.
+
+**Usage**: Enables the collision for the specified body.
+
+```python
+body_brick.EnableCollision(True)
+```
+
+## Visualization Setting
+
+### 1. `chronoirr.ChVisualSystemIrrlicht()`
+**Arguments**: None
+
+**Usage**: Initializes the Irrlicht visualization system.
+
+```python
+vis = chronoirr.ChVisualSystemIrrlicht()
+```
+
+### 2. `vis.AttachSystem(sys)`
+**Arguments**:
+- `sys`: The physical system to be visualized.
+
+**Usage**: Attaches the physical system to the visualization system.
+
+```python
+vis.AttachSystem(sys)
+```
+
+### 3. `vis.SetWindowSize(1024,768)`
+**Arguments**:
+- `1024`: Width of the window.
+- `768`: Height of the window.
+
+**Usage**: Sets the size of the visualization window.
+
+```python
+vis.SetWindowSize(1024,768)
+```
+
+### 4. `vis.SetWindowTitle('Earthquake demo')`
+**Arguments**:
+- `'Earthquake demo'`: Title of the window.
+
+**Usage**: Sets the title of the window.
+
+```python
+vis.SetWindowTitle('Earthquake demo')
+```
+
+### 5. `vis.Initialize()`
+**Arguments**: None
+
+**Usage**: Initializes the visualization system.
+
+```python
+vis.Initialize()
+```
+
+### 6. `vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))`
+**Arguments**:
+- `chrono.GetChronoDataFile('logo_pychrono_alpha.png')`: Path to the logo file.
+
+**Usage**: Adds a logo to the visualization window.
+
+```python
+vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))
+```
+
+### 7. `vis.AddSkyBox()`
+**Arguments**: None
+
+**Usage**: Adds a skybox to the visualization system.
+
+```python
+vis.AddSkyBox()
+```
+
+### 8. `vis.AddCamera(chrono.ChVector3d(0.5,0.5,1.0))`
+**Arguments**:
+- `chrono.ChVector3d(0.5,0.5,1.0)`: Position of the camera.
+
+**Usage**: Adds a camera to the visualization system.
+
+```python
+vis.AddCamera(chrono.ChVector3d(0.5,0.5,1.0))
+```
+
+### 9. `vis.AddTypicalLights()`
+**Arguments**: None
+
+**Usage**: Adds typical lights to the scene.
+
+```python
+vis.AddTypicalLights()
+```
+
+### 10. `vis.AddLightWithShadow(chrono.ChVector3d(0, 3, 6), chrono.ChVector3d(0, 3, 6), 9, 1, 9, 30)`
+**Arguments**:
+- `chrono.ChVector3d(0, 3, 6)`: Position of the light.
+- `chrono.ChVector3d(0, 3, 6)`: Aim point of the light.
+- `9`: Radius of the light.
+- `1`: Near clipping plane.
+- `9`: Far clipping plane.
+- `30`: Field of view angle.
+
+**Usage**: Adds a light with shadows to the scene.
+
+```python
+vis.AddLightWithShadow(chrono.ChVector3d(0, 3, 6), chrono.ChVector3d(0, 3, 6), 9, 1, 9, 30)
+```
+
+## Initialize Body
+
+### 1. `chrono.ChBody()`
+**Arguments**: None
+
+**Usage**: Creates a new body in the simulation.
+
+```python
+body_brick = chrono.ChBody()
+```
+
+### 2. `body_brick.SetPos(chrono.ChVector3d(0, -2, 0))`
+**Arguments**:
+- `chrono.ChVector3d(0, -2, 0)`: Position vector of the body.
+
+**Usage**: Sets the position of the body.
+
+```python
+body_brick.SetPos(chrono.ChVector3d(0, -2, 0))
+```
+
+### 3. `body_brick.SetMass(mass_brick)`
+**Arguments**:
+- `mass_brick`: Mass of the body.
+
+**Usage**: Sets the mass of the body.
+
+```python
+body_brick.SetMass(mass_brick)
+```
+
+### 4. `body_brick.SetInertiaXX(chrono.ChVector3d(0.1,0.1,0.1))`
+**Arguments**:
+- `chrono.ChVector3d(0.1,0.1,0.1)`: Inertia tensor components.
+
+**Usage**: Sets the inertia tensor for the body.
+
+```python
+body_brick.SetInertiaXX(chrono.ChVector3d(0.1,0.1,0.1))
+```
+
+### 5. `chrono.ChCollisionShapeBox(brick_material, size_brick_x, size_brick_y, size_brick_z)`
+**Arguments**:
+- `brick_material`: Material of the collision shape.
+- `size_brick_x`: Width of the box.
+- `size_brick_y`: Height of the box.
+- `size_brick_z`: Depth of the box.
+
+**Usage**: Creates a box collision shape.
+
+```python
+body_brick_ct_shape = chrono.ChCollisionShapeBox(brick_material, size_brick_x, size_brick_y, size_brick_z)
+```
+
+### 6. `body_brick.AddCollisionShape(body_brick_ct_shape)`
+**Arguments**:
+- `body_brick_ct_shape`: The collision shape to add.
+
+**Usage**: Adds a collision shape to a body.
+
+```python
+body_brick.AddCollisionShape(body_brick_ct_shape)
+```
+
+### 7. `chrono.ChVisualShapeBox(size_brick_x, size_brick_y, size_brick_z)`
+**Arguments**:
+- `size_brick_x`: Width of the box.
+- `size_brick_y`: Height of the box.
+- `size_brick_z`: Depth of the box.
+
+**Usage**: Creates a box visual shape.
+
+```python
+body_brick_shape = chrono.ChVisualShapeBox(size_brick_x, size_brick_y, size_brick_z)
+```
+
+### 8. `body_brick_shape.SetColor(chrono.ChColor(0.65, 0.65, 0.6))`
+**Arguments**:
+- `chrono.ChColor(0.65, 0.65, 0.6)`: Color of the visual shape.
+
+**Usage**: Sets the color of the visual shape.
+
+```python
+body_brick_shape.SetColor(chrono.ChColor(0.65, 0.65, 0.6))
+```
+
+### 9. `body_brick.AddVisualShape(body_brick_shape)`
+**Arguments**:
+- `body_brick_shape`: The visual shape to add.
+
+**Usage**: Adds a visual shape to a body.
+
+```python
+body_brick.AddVisualShape(body_brick_shape)
+```
+
+### 10. `sys.Add(body_brick)`
+**Arguments**:
+- `body_brick`: The body to add to the system.
+
+**Usage**: Adds a body to the physical system.
+
+```python
+sys.Add(body_brick)
+```
+
+### 11. `chrono.ChLinkLockLock()`
+**Arguments**: None
+
+**Usage**: Creates a link lock constraint.
+
+```python
+link_shaker = chrono.ChLinkLockLock()
+```
+
+### 12. `link_shaker.Initialize(body_table, body_floor, chrono.ChFrame())`
+**Arguments**:
+- `body_table`: The first body to link.
+- `body_floor`: The second body to link.
+- `chrono.ChFrame()`: The frame of reference.
+
+**Usage**: Initializes the link lock with the specified bodies and frame.
+
+```python
+link_shaker.Initialize(body_table, body_floor, chrono.ChFrame())
+```
+
+## Setting Parameters
+
+### Parameters:
+
+- **`nbricks_on_x`**: Number of bricks along the X axis.
+- **`nbricks_on_y`**: Number of bricks along the Y axis.
+- **`size_brick_x`**: Size of the brick along the X axis.
+- **`size_brick_y`**: Size of the brick along the Y axis.
+- **`size_brick_z`**: Size of the brick along the Z axis.
+- **`density_brick`**: Density of the brick.
+- **`mass_brick`**: Mass of the brick (calculated using density and size).
+- **`inertia_brick`**: Inertia of the brick (calculated).
+
+```python
+nbricks_on_x = 1
+nbricks_on_y = 6
+
+size_brick_x = 0.25
+size_brick_y = 0.12
+size_brick_z = 0.12
+density_brick = 1000
+
+mass_brick = density_brick * size_brick_x * size_brick_y * size_brick_z
+inertia_brick = 2/5*(pow(size_brick_x,2))*mass_brick # to do: compute separate xx,yy,zz inertias
+```
+
+## Simulation Loop
+
+### 1. `vis.Run()`
+**Arguments**: None
+
+**Usage**: Runs the visualization system, this returns `True` if the system is running.
+
+```python
+while vis.Run():
+```
+
+### 2. `vis.BeginScene()`
+**Arguments**: None
+
+**Usage**: Begins the rendering of a new scene.
+
+```python
+vis.BeginScene()
+```
+
+### 3. `vis.Render()`
+**Arguments**: None
+
+**Usage**: Renders the current state of the physical system.
+
+```python
+vis.Render()
+```
+
+### 4. `vis.EndScene()`
+**Arguments**: None
+
+**Usage**: Ends the rendering of the current scene.
+
+```python
+vis.EndScene()
+```
+
+### 5. `sys.DoStepDynamics(1e-4)`
+**Arguments**:
+- `1e-4`: Time step for the simulation dynamics.
+
+**Usage**: Advances the simulation by one time step.
+
+```python
+sys.DoStepDynamics(1e-4)
+```

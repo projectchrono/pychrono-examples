@@ -1,0 +1,206 @@
+## PyChrono FEA API Usage and Pipeline Guide
+
+### Overview
+This document provides guidance on using the PyChrono library for submodule FEA with the latest API updates. It includes an example simulation, detailed explanations of key API functions, and a pipeline for generating and running new simulations.
+
+### Key API Changes
+
+1. **Vector and Quaternion Classes**
+   - ChVectorD -> ChVector3d
+   - ChQuaternionD -> ChQuaterniond
+
+2. **Frame Class**
+   - ChFrameD -> ChFramed
+
+3. **Body Fixation**
+   - SetBodyFixed(True) -> SetFixed(True)
+
+4. **Material Properties**
+   - SetGshearModulus(value) -> SetShearModulus(value)
+   - SetBeamRaleyghDamping(value) -> SetRayleighDamping(value)
+   - SetGwithPoissonRatio(value) -> SetShearModulusFromPoisson(value)
+
+5. **Visual Shapes**
+   - ChBoxShape -> ChVisualShapeBox
+   - ChSphereShape -> ChVisualShapeSphere
+
+6. **Gravitational Acceleration**
+   - Set_G_acc(chrono.ChVectorD(...)) -> SetGravitationalAcceleration(chrono.ChVector3d(...))
+
+7. **Function Classes**
+   - ChFunction_Recorder -> ChFunctionInterp
+
+8. **Accessing Vector Elements**
+   - Use GetItem(index) instead of direct indexing for vector elements.
+
+9. **Section Rotation**
+   - SetSectionRotation(45*chrono.CH_C_RAD_TO_DEG) -> SetSectionRotation(45*chrono.CH_RAD_TO_DEG)
+
+10. **Collision Models**
+    - AddTriangleMesh(...) -> AddShape(chrono.ChCollisionShapeTriangleMesh(...))
+
+11. **Cylinder Body Creation**
+    - ChBodyEasyCylinder(0.24, 0.05, 7800) -> ChBodyEasyCylinder(chrono.ChAxis_Y, 0.24, 0.1, 7800)
+### Example API Usage:
+1. **System Initialization**
+
+python
+   sys = chrono.ChSystemSMC()
+
+   - Initializes the Chrono system using the SMC (Smooth Contact) method.
+
+2. **Creating a Mesh**
+
+python
+   mesh = fea.ChMesh()
+
+   - Creates a container for finite elements and their nodes.
+
+3. **Defining Beam Section Properties**
+
+python
+   msection = fea.ChBeamSectionEulerAdvanced()
+   msection.SetAsRectangularSection(beam_wy, beam_wz)
+   msection.SetYoungModulus(0.01e9)
+   msection.SetShearModulus(0.01e9 * 0.3)
+   msection.SetRayleighDamping(0.000)
+
+   - Defines the physical properties of the beam section.
+
+4. **Adding Nodes and Elements**
+
+python
+   hnode1 = fea.ChNodeFEAxyzrot(chrono.ChFramed(chrono.ChVector3d(0, 0, 0)))
+   hnode2 = fea.ChNodeFEAxyzrot(chrono.ChFramed(chrono.ChVector3d(beam_L, 0, 0)))
+   hnode3 = fea.ChNodeFEAxyzrot(chrono.ChFramed(chrono.ChVector3d(beam_L * 2, 0, 0)))
+   mesh.AddNode(hnode1)
+   mesh.AddNode(hnode2)
+   mesh.AddNode(hnode3)
+
+   belement1 = fea.ChElementBeamEuler()
+   belement1.SetNodes(hnode1, hnode2)
+   belement1.SetSection(msection)
+   mesh.AddElement(belement1)
+
+   belement2 = fea.ChElementBeamEuler()
+   belement2.SetNodes(hnode2, hnode3)
+   belement2.SetSection(msection)
+   mesh.AddElement(belement
+
+2)
+
+   - Adds nodes and beam elements to the mesh.
+
+5. **Applying Forces and Torques**
+
+python
+   hnode2.SetForce(chrono.ChVector3d(4, 2, 0))
+   hnode3.SetTorque(chrono.ChVector3d(0, -0.04, 0))
+
+   - Applies force and torque to the nodes.
+
+6. **Fixing Nodes to Ground**
+
+python
+   mtruss = chrono.ChBody()
+   mtruss.SetFixed(True)
+   sys.Add(mtruss)
+
+   constr_bc = chrono.ChLinkMateGeneric()
+   constr_bc.Initialize(hnode3, mtruss, False, hnode3.Frame(), hnode3.Frame())
+   sys.Add(constr_bc)
+   constr_bc.SetConstrainedCoords(True, True, True, True, True, True)
+
+   constr_d = chrono.ChLinkMateGeneric()
+   constr_d.Initialize(hnode1, mtruss, False, hnode1.Frame(), hnode1.Frame())
+   sys.Add(constr_d)
+   constr_d.SetConstrainedCoords(False, True, True, False, False, False)
+
+   - Fixes nodes to the ground using constraints.
+
+7. **Building Beam Elements**
+
+python
+   builder = fea.ChBuilderBeamEuler()
+   builder.BuildBeam(mesh, msection, 5, chrono.ChVector3d(0, 0, -0.1), chrono.ChVector3d(0.2, 0, -0.1), chrono.ChVector3d(0, 1, 0))
+   builder.GetLastBeamNodes().back().SetFixed(True)
+   builder.GetLastBeamNodes().front().SetForce(chrono.ChVector3d(0, -1, 0))
+   builder.BuildBeam(mesh, msection, 5, builder.GetLastBeamNodes().front(), chrono.ChVector3d(0.2, 0.1, -0.1), chrono.ChVector3d(0, 1, 0))
+
+   - Uses the builder helper to create beam elements efficiently.
+
+8. **Visualizing the Mesh**
+
+python
+   visualizebeamA = chrono.ChVisualShapeFEA(mesh)
+   visualizebeamA.SetFEMdataType(chrono.ChVisualShapeFEA.DataType_ELEM_BEAM_MZ)
+   visualizebeamA.SetColorscaleMinMax(-0.4, 0.4)
+   visualizebeamA.SetSmoothFaces(True)
+   visualizebeamA.SetWireframe(False)
+   mesh.AddVisualShapeFEA(visualizebeamA)
+
+   visualizebeamC = chrono.ChVisualShapeFEA(mesh)
+   visualizebeamC.SetFEMglyphType(chrono.ChVisualShapeFEA.GlyphType_NODE_CSYS)
+   visualizebeamC.SetFEMdataType(chrono.ChVisualShapeFEA.DataType_NONE)
+   visualizebeamC.SetSymbolsThickness(0.006)
+   visualizebeamC.SetSymbolsScale(0.01)
+   visualizebeamC.SetZbufferHide(False)
+   mesh.AddVisualShapeFEA(visualizebeamC)
+
+   - Adds visual shapes to the mesh for better visualization.
+
+9. **Setting Up Irrlicht Visualization**
+
+python
+   vis = chronoirr.ChVisualSystemIrrlicht()
+   vis.AttachSystem(sys)
+   vis.SetWindowSize(1024, 768)
+   vis.SetWindowTitle('FEA beams')
+   vis.Initialize()
+   vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))
+   vis.AddSkyBox()
+   vis.AddCamera(chrono.ChVector3d(0.1, 0.1, 0.2))
+   vis.AddTypicalLights()
+
+   - Sets up the Irrlicht visualization system.
+
+10. **Changing the Solver**
+
+python
+    msolver = mkl.ChSolverPardisoMKL()
+    sys.SetSolver(msolver)
+
+    - Changes the solver to MKL Pardiso for better precision in FEA.
+
+11. **Running the Simulation**
+
+python
+    while vis.Run():
+        vis.BeginScene()
+        vis.Render()
+        vis.EndScene()
+        sys.DoStepDynamics(0.001)
+
+    - Runs the simulation loop.
+
+### Pipeline for Generating New Simulations
+
+1. **Define the Simulation Requirements**
+   - Specify the type of simulation, object properties, forces, constraints, and visualizations needed.
+
+2. **Generate the Initial Code Snippet**
+   - Use prompt engineering to generate the initial PyChrono code snippet.
+
+3. **Validate the Generated Code**
+   - Ensure that the generated code aligns with the latest API changes and runs correctly.
+
+4. **Add Detailed Comments and Documentation**
+   - Include comments in the code to explain each step and function used.
+
+5. **Run the Simulation**
+   - Execute the simulation and verify the results.
+
+6. **Iterate and Refine**
+   - Make necessary adjustments to the code based on the simulation results and rerun until the desired outcome is achieved.
+
+By following this guide, you can effectively generate and run PyChrono simulations using the latest API changes. This ensures that your simulations are accurate, up-to-date, and leverage the new features of the PyChrono library.
