@@ -22,7 +22,7 @@ chrono.SetChronoDataPath(chrono.GetChronoDataPath())
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 
 # Initial vehicle location and orientation
-initLoc = chrono.ChVector3d(-8, 0, 0.6)
+initLoc = chrono.ChVector3d(0, 0, 1.1)
 initRot = chrono.ChQuaterniond(1, 0, 0, 0)
 
 # Visualization type for vehicle parts (PRIMITIVES, MESH, or NONE)
@@ -31,9 +31,6 @@ vis_type = veh.VisualizationType_MESH
 # Collision type for chassis (PRIMITIVES, MESH, or NONE)
 chassis_collision_type = veh.CollisionType_NONE
 
-# Type of tire model (RIGID, TMEASY)
-tire_model = veh.TireModelType_RIGID
-
 # Rigid terrain
 # terrain_model = veh.RigidTerrain.BOX
 terrainHeight = 0      # terrain height
@@ -41,14 +38,14 @@ terrainLength = 100.0  # size in X direction
 terrainWidth = 100.0   # size in Y direction
 
 # Poon chassis tracked by the camera
-trackPoint = chrono.ChVector3d(0.0, 0.0, 1.71)
+trackPoint = chrono.ChVector3d(0.0, 0.0, 0.1)
 
 # Contact method
 contact_method = chrono.ChContactMethod_SMC
 contact_vis = False
 
 # Simulation step sizes
-step_size = 1e-3
+step_size = 5e-4
 tire_step_size = step_size
 
 # Time interval between two render frames
@@ -58,48 +55,41 @@ render_step_size = 1.0 / 50  # FPS = 50
 # Create systems
 # --------------
 
-# Create the HMMWV vehicle, set parameters, and initialize
+# Create the MAN vehicle, set parameters, and initialize
 
-vehicle = veh.HMMWV_Full() # veh.HMMWV_Reduced()  could be another choice here
+vehicle = veh.M113()
 vehicle.SetContactMethod(contact_method)
-vehicle.SetChassisCollisionType(chassis_collision_type)
-vehicle.SetChassisFixed(False)
+vehicle.SetTrackShoeType(veh.TrackShoeType_SINGLE_PIN)
+vehicle.SetDrivelineType(veh.DrivelineTypeTV_BDS)
+vehicle.SetEngineType(veh.EngineModelType_SHAFTS)
+vehicle.SetTransmissionType(veh.TransmissionModelType_AUTOMATIC_SHAFTS)
+vehicle.SetBrakeType(veh.BrakeType_SIMPLE)
+
 vehicle.SetInitPosition(chrono.ChCoordsysd(initLoc, initRot))
-vehicle.SetTireType(tire_model)
-vehicle.SetTireStepSize(tire_step_size)
-
-
 vehicle.Initialize()
 
 vehicle.SetChassisVisualizationType(vis_type)
+vehicle.SetSprocketVisualizationType(vis_type)
+vehicle.SetIdlerVisualizationType(vis_type)
+vehicle.SetIdlerWheelVisualizationType(vis_type)
 vehicle.SetSuspensionVisualizationType(vis_type)
-vehicle.SetSteeringVisualizationType(vis_type)
-vehicle.SetWheelVisualizationType(vis_type)
-vehicle.SetTireVisualizationType(vis_type)
+vehicle.SetRoadWheelVisualizationType(vis_type)
+vehicle.SetTrackShoeVisualizationType(vis_type)
 
 vehicle.GetSystem().SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)
 
-# Create the SCM deformable terrain patch
-terrain = veh.SCMTerrain(vehicle.GetSystem())
-terrain.SetSoilParameters(2e6,   # Bekker Kphi
-                            0,     # Bekker Kc
-                            1.1,   # Bekker n exponent
-                            0,     # Mohr cohesive limit (Pa)
-                            30,    # Mohr friction limit (degrees)
-                            0.01,  # Janosi shear coefficient (m)
-                            2e8,   # Elastic stiffness (Pa/m), before plastic yield
-                            3e4    # Damping (Pa s/m), proportional to negative vertical speed (optional)
-)
+# Create the terrain
+patch_mat = chrono.ChContactMaterialSMC()
+patch_mat.SetFriction(0.9)
+patch_mat.SetRestitution(0.01)
+terrain = veh.RigidTerrain(vehicle.GetSystem())
+patch = terrain.AddPatch(patch_mat, 
+    chrono.ChCoordsysd(chrono.ChVector3d(0, 0, 0), chrono.QUNIT), 
+    terrainLength, terrainWidth)
 
-# Optionally, enable moving patch feature (single patch around vehicle chassis)
-terrain.AddMovingPatch(vehicle.GetChassisBody(), chrono.ChVector3d(0, 0, 0), chrono.ChVector3d(5, 3, 1))
-
-# Set plot type for SCM (false color plotting)
-terrain.SetPlotType(veh.SCMTerrain.PLOT_SINKAGE, 0, 0.1)
-
-# Initialize the SCM terrain (length, width, mesh resolution), specifying the initial mesh grid
-terrain.Initialize(20, 20, 0.02)
-
+patch.SetTexture(veh.GetDataFile("terrain/textures/tile4.jpg"), 200, 200)
+patch.SetColor(chrono.ChColor(0.8, 0.8, 0.5))
+terrain.Initialize()
 
 
 # -------------------------------------
@@ -107,10 +97,10 @@ terrain.Initialize(20, 20, 0.02)
 # Create the driver system
 # -------------------------------------
 
-vis = veh.ChWheeledVehicleVisualSystemIrrlicht()
-vis.SetWindowTitle('HMMWV Demo')
+vis = veh.ChTrackedVehicleVisualSystemIrrlicht()
+vis.SetWindowTitle('M113 Demo')
 vis.SetWindowSize(1280, 1024)
-vis.SetChaseCamera(trackPoint, 6.0, 0.5)
+vis.SetChaseCamera(trackPoint, 9.0, 1.5)
 vis.Initialize()
 vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))
 vis.AddLightDirectional()
@@ -131,6 +121,9 @@ driver.SetBrakingDelta(render_step_size / braking_time)
 
 driver.Initialize()
 
+# Solver and integrator settings
+# ------------------------------
+vehicle.GetSystem().SetSolverType(chrono.ChSolver.Type_BARZILAIBORWEIN)
 # ---------------
 # Simulation loop
 # ---------------
@@ -142,10 +135,9 @@ print( "VEHICLE MASS: ",  vehicle.GetVehicle().GetMass())
 render_steps = math.ceil(render_step_size / step_size)
 
 # Initialize simulation frame counter s
-realtime_timer = chrono.ChRealtimeStepTimer()
 step_number = 0
 render_frame = 0
-
+vehicle.GetVehicle().EnableRealtime(True)
 while vis.Run() :
     time = vehicle.GetSystem().GetChTime()
 
@@ -162,7 +154,7 @@ while vis.Run() :
     # Update modules (process inputs from other modules)
     driver.Synchronize(time)
     terrain.Synchronize(time)
-    vehicle.Synchronize(time, driver_inputs, terrain)
+    vehicle.Synchronize(time, driver_inputs)
     vis.Synchronize(time, driver_inputs)
 
     # Advance simulation for one timestep for all modules
@@ -174,6 +166,4 @@ while vis.Run() :
     # Increment frame number
     step_number += 1
 
-    # Spin in place for real time to catch up
-    realtime_timer.Spin(step_size)
 
