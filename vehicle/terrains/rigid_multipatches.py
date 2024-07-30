@@ -1,33 +1,8 @@
-# =============================================================================
-# PROJECT CHRONO - http://projectchrono.org
-#
-# Copyright (c) 2014 projectchrono.org
-# All rights reserved.
-#
-# Use of this source code is governed by a BSD-style license that can be found
-# in the LICENSE file at the top level of the distribution and at
-# http://projectchrono.org/license-chrono.txt.
-#
-# =============================================================================
-# Authors: Radu Serban
-# =============================================================================
-#
-# Demonstration of using a RigidTerrain constructed from different patches.
-#
-# The vehicle reference frame has Z up, X towards the front of the vehicle, and
-# Y pointing to the left.
-#
-# =============================================================================
-
 import pychrono as chrono
 import pychrono.vehicle as veh
 import pychrono.irrlicht as irr
 
-# =============================================================================
-
 def main():
-    #print("Copyright (c) 2017 projectchrono.org\nChrono version: ", CHRONO_VERSION , "\n\n")
-
     #  Create the HMMWV vehicle, set parameters, and initialize
     hmmwv = veh.HMMWV_Full()
     hmmwv.SetContactMethod(chrono.ChContactMethod_NSC)
@@ -127,17 +102,11 @@ def main():
 
     return 0
 
-
-
-# The path to the Chrono data directory containing various assets (meshes, textures, data files)
-# is automatically set, relative to the default location of this demo.
-# If running from a different directory, you must change the path to the data directory with: 
-#chrono.SetChronoDataPath('path/to/data')
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 
 # Simulation step sizes
-step_size = 2e-3;
-tire_step_size = 1e-3;
+step_size = 2e-3
+tire_step_size = 1e-3
 
 
 main()

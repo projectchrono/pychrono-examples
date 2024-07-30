@@ -1,28 +1,8 @@
-# =============================================================================
-# PROJECT CHRONO - http://projectchrono.org
-#
-# Copyright (c) 2014 projectchrono.org
-# All rights reserved.
-#
-# Use of this source code is governed by a BSD-style license that can be found
-# in the LICENSE file at the top level of the distribution and at
-# http://projectchrono.org/license-chrono.txt.
-#
-# =============================================================================
-# Authors: Radu Serban
-# =============================================================================
-#
-# Demonstration of simulating two vehicles simultaneously.
-#
-# =============================================================================
-
 import pychrono as chrono
 import pychrono.vehicle as veh
 import pychrono.irrlicht as irr
 
 def main():
-    #print("Copyright (c) 2017 projectchrono.org\nChrono version: ", CHRONO_VERSION , "\n\n")
-
     step_size = 0.005
 
     sys = chrono.ChSystemNSC()
@@ -137,11 +117,6 @@ def main():
         sys.DoStepDynamics(step_size)
 
     return 0
-
-# The path to the Chrono data directory containing various assets (meshes, textures, data files)
-# is automatically set, relative to the default location of this demo.
-# If running from a different directory, you must change the path to the data directory with: 
-#chrono.SetChronoDataPath('path/to/data')
 
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 

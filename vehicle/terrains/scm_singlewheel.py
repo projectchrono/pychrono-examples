@@ -1,31 +1,9 @@
-# =============================================================================
-# PROJECT CHRONO - http://projectchrono.org
-#
-# Copyright (c) 2014 projectchrono.org
-# All rights reserved.
-#
-# Use of this source code is governed by a BSD-style license that can be found
-# in the LICENSE file at the top level of the distribution and at
-# http://projectchrono.org/license-chrono.txt.
-#
-# =============================================================================
-# Authors: Radu Serban
-# =============================================================================
-# Demo of the SCM semi-empirical model for deformable soil
-# =============================================================================
-
 import pychrono.core as chrono
 import pychrono.irrlicht as chronoirr
 import pychrono.vehicle as veh
 
 import math
 
-# The path to the Chrono data directory containing various assets (meshes, textures, data files)
-# is automatically set, relative to the default location of this demo.
-# If running from a different directory, you must change the path to the data directory with: 
-#chrono.SetChronoDataPath('path/to/data')
-
-# If true, use provided callback to change soil properties based on location
 var_params = True
 
 class MySoilParams (veh.SoilParametersCallback):

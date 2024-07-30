@@ -1,15 +1,3 @@
-# =============================================================================
-# PROJECT CHRONO - http://projectchrono.org
-#
-# Copyright (c) 2014 projectchrono.org
-# All rights reserved.
-#
-# Use of this source code is governed by a BSD-style license that can be found
-# in the LICENSE file at the top level of the distribution and at
-# http://projectchrono.org/license-chrono.txt.
-#
-# =============================================================================
-
 import pychrono.core as chrono
 import pychrono.irrlicht as irr
 import pychrono.vehicle as veh
@@ -54,12 +42,8 @@ tire_step_size = step_size
 # Time interval between two render frames
 render_step_size = 1.0 / 50  # FPS = 50
 
-# --------------
-# Create systems
-# --------------
 
 # Create the HMMWV vehicle, set parameters, and initialize
-
 vehicle = veh.HMMWV_Full() # veh.HMMWV_Reduced()  could be another choice here
 vehicle.SetContactMethod(contact_method)
 vehicle.SetChassisCollisionType(chassis_collision_type)
@@ -92,11 +76,7 @@ patch.SetTexture(veh.GetDataFile("terrain/textures/tile4.jpg"), 200, 200)
 patch.SetColor(chrono.ChColor(0.8, 0.8, 0.5))
 terrain.Initialize()
 
-
-# -------------------------------------
 # Create the vehicle Irrlicht interface
-# Create the driver system
-# -------------------------------------
 
 vis = veh.ChWheeledVehicleVisualSystemIrrlicht()
 vis.SetWindowTitle('HMMWV Demo')

@@ -1,15 +1,3 @@
-# =============================================================================
-# PROJECT CHRONO - http://projectchrono.org
-#
-# Copyright (c) 2014 projectchrono.org
-# All rights reserved.
-#
-# Use of this source code is governed by a BSD-style license that can be found
-# in the LICENSE file at the top level of the distribution and at
-# http://projectchrono.org/license-chrono.txt.
-#
-# =============================================================================
-
 import pychrono.core as chrono
 import pychrono.irrlicht as irr
 import pychrono.vehicle as veh
@@ -46,11 +34,7 @@ elif choice_eng == '2':
 else:
     raise ValueError('Invalid choice for powertrain model. Please enter 1 or 2.')
 
-
-
-
 # Rigid terrain
-# terrain_model = veh.RigidTerrain.BOX
 terrainHeight = 0      # terrain height
 terrainLength = 100.0  # size in X direction
 terrainWidth = 100.0   # size in Y direction
@@ -68,10 +52,6 @@ tire_step_size = step_size
 
 # Time interval between two render frames
 render_step_size = 1.0 / 50  # FPS = 50
-
-# --------------
-# Create systems
-# --------------
 
 # Create the HMMWV vehicle, set parameters, and initialize
 
@@ -108,11 +88,7 @@ patch.SetTexture(veh.GetDataFile("terrain/textures/tile4.jpg"), 200, 200)
 patch.SetColor(chrono.ChColor(0.8, 0.8, 0.5))
 terrain.Initialize()
 
-
-# -------------------------------------
 # Create the vehicle Irrlicht interface
-# Create the driver system
-# -------------------------------------
 
 vis = veh.ChWheeledVehicleVisualSystemIrrlicht()
 vis.SetWindowTitle('HMMWV Demo')

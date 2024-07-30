@@ -54,10 +54,6 @@ tire_step_size = step_size
 # Time interval between two render frames
 render_step_size = 1.0 / 20  # FPS = 50
 
-# --------------
-# Create systems
-# --------------
-
 # Create the HMMWV vehicle, set parameters, and initialize
 
 vehicle = veh.HMMWV_Full() # veh.HMMWV_Reduced()  could be another choice here
@@ -102,10 +98,7 @@ terrain.Initialize(veh.GetDataFile("terrain/height_maps/bump64.bmp"),40, 40, -1,
 
 terrain.SetTexture(veh.GetDataFile("terrain/textures/dirt.jpg"), 6.0, 6.0)
 
-# -------------------------------------
 # Create the vehicle Irrlicht interface
-# Create the driver system
-# -------------------------------------
 
 vis = veh.ChWheeledVehicleVisualSystemIrrlicht()
 vis.SetWindowTitle('HMMWV Demo')
