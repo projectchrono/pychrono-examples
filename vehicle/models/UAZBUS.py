@@ -3,9 +3,6 @@ import pychrono.irrlicht as irr
 import pychrono.vehicle as veh
 import math
 
-"""
-!!!! Set this path before running the demo!
-"""
 chrono.SetChronoDataPath(chrono.GetChronoDataPath())
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 
@@ -42,9 +39,6 @@ tire_step_size = step_size
 # Time interval between two render frames
 render_step_size = 1.0 / 50  # FPS = 50
 
-# --------------
-# Create systems
-# --------------
 
 # Create the UAZBUS vehicle, set parameters, and initialize
 
@@ -92,7 +86,6 @@ vis.AddLightDirectional()
 vis.AddSkyBox()
 vis.AttachVehicle(vehicle.GetVehicle())
 
-
 # Create the driver system
 driver = veh.ChInteractiveDriverIRR(vis)
 
@@ -105,10 +98,6 @@ driver.SetThrottleDelta(render_step_size / throttle_time)
 driver.SetBrakingDelta(render_step_size / braking_time)
 
 driver.Initialize()
-
-# ---------------
-# Simulation loop
-# ---------------
 
 # output vehicle mass
 print( "VEHICLE MASS: ",  vehicle.GetVehicle().GetMass())
@@ -123,7 +112,6 @@ render_frame = 0
 
 while vis.Run() :
     time = vehicle.GetSystem().GetChTime()
-
     # Render scene and output POV-Ray data
     if (step_number % render_steps == 0) :
         vis.BeginScene()
@@ -148,7 +136,5 @@ while vis.Run() :
 
     # Increment frame number
     step_number += 1
-
     # Spin in place for real time to catch up
     realtime_timer.Spin(step_size)
-

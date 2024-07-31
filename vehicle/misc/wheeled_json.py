@@ -19,7 +19,6 @@ def main() :
     transmission = veh.ReadTransmissionJSON(transmission_file)
     powertrain = veh.ChPowertrainAssembly(engine, transmission)
     vehicle.InitializePowertrain(powertrain)
-
     # Create and initialize the tires
     for axle in vehicle.GetAxles() :
         for wheel in axle.GetWheels() :
@@ -27,7 +26,6 @@ def main() :
             vehicle.InitializeTire(tire, wheel, veh.VisualizationType_MESH)
 
     vehicle.GetSystem().SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)
-
     # Create the terrain
     terrain = veh.RigidTerrain(vehicle.GetSystem(), rigidterrain_file)
     terrain.Initialize()

@@ -2,10 +2,7 @@ import pychrono.core as chrono
 import pychrono.irrlicht as irr
 import pychrono.vehicle as veh
 import math
-print(veh)
-"""
-!!!! Set this path before running the demo!
-"""
+
 chrono.SetChronoDataPath(chrono.GetChronoDataPath())
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 
@@ -42,10 +39,6 @@ tire_step_size = step_size
 # Time interval between two render frames
 render_step_size = 1.0 / 50  # FPS = 50
 
-# --------------
-# Create systems
-# --------------
-
 # Create the citybus vehicle, set parameters, and initialize
 vehicle = veh.CityBus()
 vehicle.SetContactMethod(contact_method)
@@ -54,7 +47,6 @@ vehicle.SetChassisFixed(False)
 vehicle.SetInitPosition(chrono.ChCoordsysd(initLoc, initRot))
 vehicle.SetTireType(tire_model)
 vehicle.SetTireStepSize(tire_step_size)
-
 
 vehicle.Initialize()
 
@@ -78,7 +70,6 @@ patch = terrain.AddPatch(patch_mat,
 patch.SetTexture(veh.GetDataFile("terrain/textures/tile4.jpg"), 200, 200)
 patch.SetColor(chrono.ChColor(0.8, 0.8, 0.5))
 terrain.Initialize()
-
 # Create the vehicle Irrlicht interface
 
 vis = veh.ChWheeledVehicleVisualSystemIrrlicht()
@@ -90,7 +81,6 @@ vis.AddLogo(chrono.GetChronoDataFile('logo_pychrono_alpha.png'))
 vis.AddLightDirectional()
 vis.AddSkyBox()
 vis.AttachVehicle(vehicle.GetVehicle())
-
 
 # Create the driver system
 driver = veh.ChInteractiveDriverIRR(vis)
@@ -104,10 +94,6 @@ driver.SetThrottleDelta(render_step_size / throttle_time)
 driver.SetBrakingDelta(render_step_size / braking_time)
 
 driver.Initialize()
-
-# ---------------
-# Simulation loop
-# ---------------
 
 # output vehicle mass
 print( "VEHICLE MASS: ",  vehicle.GetVehicle().GetMass())
@@ -144,10 +130,8 @@ while vis.Run() :
     terrain.Advance(step_size)
     vehicle.Advance(step_size)
     vis.Advance(step_size)
-
     # Increment frame number
     step_number += 1
-
     # Spin in place for real time to catch up
     realtime_timer.Spin(step_size)
 

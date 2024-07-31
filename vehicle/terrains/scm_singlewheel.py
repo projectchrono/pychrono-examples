@@ -142,9 +142,7 @@ vis.AddSkyBox()
 vis.AddCamera(chrono.ChVector3d(2.0,1.4,0.0), chrono.ChVector3d(0,tire_rad,0))
 vis.AddTypicalLights()
 
-# ------------------
-# Run the simulation
-# ------------------
+
 
 while vis.Run() :
     vis.BeginScene()

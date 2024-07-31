@@ -3,9 +3,6 @@ import pychrono.irrlicht as irr
 import pychrono.vehicle as veh
 import math
 
-"""
-!!!! Set this path before running the demo!
-"""
 chrono.SetChronoDataPath(chrono.GetChronoDataPath())
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 
@@ -38,10 +35,6 @@ tire_step_size = step_size
 
 # Time interval between two render frames
 render_step_size = 1.0 / 50  # FPS = 50
-
-# --------------
-# Create systems
-# --------------
 
 # Create the MAN vehicle, set parameters, and initialize
 
@@ -108,9 +101,6 @@ driver.Initialize()
 # Solver and integrator settings
 # ------------------------------
 vehicle.GetSystem().SetSolverType(chrono.ChSolver.Type_BARZILAIBORWEIN)
-# ---------------
-# Simulation loop
-# ---------------
 
 # output vehicle mass
 print( "VEHICLE MASS: ",  vehicle.GetVehicle().GetMass())
@@ -124,7 +114,6 @@ render_frame = 0
 vehicle.GetVehicle().EnableRealtime(True)
 while vis.Run() :
     time = vehicle.GetSystem().GetChTime()
-
     # Render scene and output POV-Ray data
     if (step_number % render_steps == 0) :
         vis.BeginScene()
@@ -134,19 +123,16 @@ while vis.Run() :
 
     # Get driver inputs
     driver_inputs = driver.GetInputs()
-
     # Update modules (process inputs from other modules)
     driver.Synchronize(time)
     terrain.Synchronize(time)
     vehicle.Synchronize(time, driver_inputs)
     vis.Synchronize(time, driver_inputs)
-
     # Advance simulation for one timestep for all modules
     driver.Advance(step_size)
     terrain.Advance(step_size)
     vehicle.Advance(step_size)
     vis.Advance(step_size)
-
     # Increment frame number
     step_number += 1
 

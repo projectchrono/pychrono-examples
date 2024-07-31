@@ -3,9 +3,6 @@ import pychrono.irrlicht as irr
 import pychrono.vehicle as veh
 import math
 
-"""
-!!!! Set this path before running the demo!
-"""
 chrono.SetChronoDataPath(chrono.GetChronoDataPath())
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 
@@ -73,7 +70,6 @@ patch.SetColor(chrono.ChColor(0.8, 0.8, 0.5))
 terrain.Initialize()
 
 # Create the vehicle Irrlicht interface
-
 vis = veh.ChWheeledVehicleVisualSystemIrrlicht()
 vis.SetWindowTitle('Kraz Demo')
 vis.SetWindowSize(1280, 1024)
@@ -97,10 +93,6 @@ driver.SetThrottleDelta(render_step_size / throttle_time)
 driver.SetBrakingDelta(render_step_size / braking_time)
 
 driver.Initialize()
-
-# ---------------
-# Simulation loop
-# ---------------
 
 # output vehicle mass
 print( "VEHICLE MASS: ",  vehicle.GetTractor().GetMass())

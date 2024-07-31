@@ -3,9 +3,7 @@ import pychrono.irrlicht as irr
 import pychrono.vehicle as veh
 import math
 
-"""
-!!!! Set this path before running the demo!
-"""
+
 chrono.SetChronoDataPath(chrono.GetChronoDataPath())
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 

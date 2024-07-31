@@ -3,9 +3,6 @@ import pychrono.irrlicht as irr
 import pychrono.vehicle as veh
 import math
 
-"""
-!!!! Set this path before running the demo!
-"""
 chrono.SetChronoDataPath(chrono.GetChronoDataPath())
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 
@@ -14,7 +11,7 @@ initLoc = chrono.ChVector3d(0, 0, 0.5)
 initRot = chrono.ChQuaterniond(1, 0, 0, 0)
 
 # Visualization type for vehicle parts (PRIMITIVES, MESH, or NONE)
-vis_type = veh.VisualizationType_MESH
+vis_type = veh.VisualizationType_PRIMITIVES
 
 # Collision type for chassis (PRIMITIVES, MESH, or NONE)
 chassis_collision_type = veh.CollisionType_NONE
@@ -68,10 +65,7 @@ patch_mat = chrono.ChContactMaterialNSC()
 patch_mat.SetFriction(0.9)
 patch_mat.SetRestitution(0.01)
 terrain = veh.RigidTerrain(vehicle.GetSystem())
-patch = terrain.AddPatch(patch_mat, 
-    chrono.ChCoordsysd(chrono.ChVector3d(0, 0, 0), chrono.QUNIT), 
-    terrainLength, terrainWidth)
-
+patch = terrain.AddPatch(patch_mat,chrono.ChCoordsysd(chrono.ChVector3d(0, 0, 0), chrono.QUNIT),terrainLength, terrainWidth)
 patch.SetTexture(veh.GetDataFile("terrain/textures/tile4.jpg"), 200, 200)
 patch.SetColor(chrono.ChColor(0.8, 0.8, 0.5))
 terrain.Initialize()
@@ -101,10 +95,6 @@ driver.SetThrottleDelta(render_step_size / throttle_time)
 driver.SetBrakingDelta(render_step_size / braking_time)
 
 driver.Initialize()
-
-# ---------------
-# Simulation loop
-# ---------------
 
 # output vehicle mass
 print( "VEHICLE MASS: ",  vehicle.GetVehicle().GetMass())

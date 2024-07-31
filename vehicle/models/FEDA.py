@@ -3,9 +3,6 @@ import pychrono.irrlicht as irr
 import pychrono.vehicle as veh
 import math
 
-"""
-!!!! Set this path before running the demo!
-"""
 chrono.SetChronoDataPath(chrono.GetChronoDataPath())
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 
@@ -41,10 +38,6 @@ tire_step_size = step_size
 
 # Time interval between two render frames
 render_step_size = 1.0 / 50  # FPS = 50
-
-# --------------
-# Create systems
-# --------------
 
 # Create the FEDA vehicle, set parameters, and initialize
 vehicle = veh.FEDA()
@@ -104,10 +97,6 @@ driver.SetThrottleDelta(render_step_size / throttle_time)
 driver.SetBrakingDelta(render_step_size / braking_time)
 
 driver.Initialize()
-
-# ---------------
-# Simulation loop
-# ---------------
 
 # output vehicle mass
 print( "VEHICLE MASS: ",  vehicle.GetVehicle().GetMass())

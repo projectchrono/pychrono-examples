@@ -144,7 +144,6 @@ while vis.Run() :
     terrain.Advance(step_size)
     vehicle.Advance(step_size)
     vis.Advance(step_size)
-
     # Increment frame number
     step_number += 1
 

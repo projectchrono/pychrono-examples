@@ -3,9 +3,7 @@ import pychrono.irrlicht as irr
 import pychrono.vehicle as veh
 import math
 
-"""
-!!!! Set this path before running the demo!
-"""
+
 chrono.SetChronoDataPath(chrono.GetChronoDataPath())
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 
@@ -102,31 +100,25 @@ driver.SetBrakingDelta(render_step_size / braking_time)
 
 driver.Initialize()
 
-# ---------------
-# Simulation loop
-# ---------------
-
 # output vehicle mass
 print( "VEHICLE MASS: ",  vehicle.GetVehicle().GetMass())
 
 # Number of simulation steps between miscellaneous events
 render_steps = math.ceil(render_step_size / step_size)
 
-# Initialize simulation frame counter s
+# Initialize simulation frame counter
 realtime_timer = chrono.ChRealtimeStepTimer()
 step_number = 0
 render_frame = 0
 
 while vis.Run() :
     time = vehicle.GetSystem().GetChTime()
-
     # Render scene and output POV-Ray data
     if (step_number % render_steps == 0) :
         vis.BeginScene()
         vis.Render()
         vis.EndScene()
         render_frame += 1
-
     # Get driver inputs
     driver_inputs = driver.GetInputs()
 
