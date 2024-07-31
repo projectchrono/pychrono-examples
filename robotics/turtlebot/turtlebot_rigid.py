@@ -12,7 +12,7 @@ system.SetGravitationalAcceleration(chrono.ChVector3d(0, 0, -9.81))
 chrono.ChCollisionModel.SetDefaultSuggestedEnvelope(0.0025)
 chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.0025)
 
-# Create ground body
+# Create ground body as terrain plane that robot will drive on
 ground_mat = chrono.ChContactMaterialNSC()
 ground = chrono.ChBodyEasyBox(20, 20, 1, 1000, True, True, ground_mat)
 ground.SetPos(chrono.ChVector3d(0, 0, -1))
@@ -21,8 +21,9 @@ ground.GetVisualShape(0).SetTexture(chrono.GetChronoDataFile("textures/concrete.
 system.Add(ground)
 
 # Create Turtlebot Robot
-robot = turtlebot.TurtleBot(system, chrono.ChVector3d(
-    0, 0, -0.45), chrono.ChQuaterniond(1, 0, 0, 0))
+init_pos = chrono.ChVector3d(0,0.2,0)
+init_rot = chrono.ChQuaterniond(1, 0, 0, 0)
+robot = turtlebot.TurtleBot(system, init_pos, init_rot)
 robot.Initialize()
 
 # Create run-time visualization

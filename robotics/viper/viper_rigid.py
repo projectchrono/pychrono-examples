@@ -1,14 +1,9 @@
-# Demo to show Viper Rover operated on Rigid Terrain
-#
-# =============================================================================
-
 import os
 import math
 import numpy as np
 import pychrono as chrono
 import pychrono.robot as viper
 from pychrono import irrlicht as chronoirr
-
 
 # Chreate Chrono system
 system = chrono.ChSystemNSC()
@@ -22,15 +17,18 @@ ground_mat = chrono.ChContactMaterialNSC()
 ground = chrono.ChBodyEasyBox(20, 20, 1, 1000, True, True, ground_mat)
 ground.SetPos(chrono.ChVector3d(0, 0, -1))
 ground.SetFixed(True)
+# set ground texture for visualization
 ground.GetVisualShape(0).SetTexture(chrono.GetChronoDataFile("textures/concrete.jpg"))
 system.Add(ground)
 
 # Create Viper rover
-driver = viper.ViperDCMotorControl()
 rover = viper.Viper(system)
+driver = viper.ViperDCMotorControl()
 rover.SetDriver(driver)
-rover.Initialize(chrono.ChFramed(chrono.ChVector3d(0, -0.2, 0), chrono.ChQuaterniond(1, 0, 0, 0)))
-
+# Initailized rover position
+init_pos = chrono.ChVector3d(0,0.2,0)
+init_rot = chrono.ChQuaterniond(1, 0, 0, 0)
+rover.Initialize(chrono.ChFramed(init_pos, init_rot))
 # Create run-time visualization
 vis = chronoirr.ChVisualSystemIrrlicht()
 vis.AttachSystem(system)

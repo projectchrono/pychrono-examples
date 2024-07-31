@@ -21,11 +21,14 @@ ground.GetVisualShape(0).SetTexture(chrono.GetChronoDataFile("textures/concrete.
 system.Add(ground)
 
 # Create Curiosity rover
-driver = robot.CuriosityDCMotorControl()
 rover = robot.Curiosity(system)
-
+# Create driver for rover
+driver = robot.CuriosityDCMotorControl()
 rover.SetDriver(driver)
-rover.Initialize(chrono.ChFramed(chrono.ChVector3d(0, 0.2, 0), chrono.ChQuaterniond(1, 0, 0, 0)))
+# Initailized rover position
+init_pos = chrono.ChVector3d(0,0.2,0)
+init_rot = chrono.ChQuaterniond(1, 0, 0, 0)
+rover.Initialize(chrono.ChFramed(init_pos, init_rot))
 
 # Create the Irrlicht visualization
 vis = chronoirr.ChVisualSystemIrrlicht()
