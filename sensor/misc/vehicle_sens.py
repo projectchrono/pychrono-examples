@@ -5,9 +5,11 @@ import pychrono.sensor as sens
 import math
 import os
 
+# Set the data path for Chrono assets
 veh.SetDataPath(chrono.GetChronoDataPath() + 'vehicle/')
 
 print(chrono.GetChronoDataPath() + 'vehicle/')
+
 # Initial vehicle location and orientation
 initLoc = chrono.ChVector3d(0, 0, 0.4)
 initRot = chrono.ChQuaterniond(1, 0, 0, 0)
@@ -19,7 +21,7 @@ steering_vis_type = veh.VisualizationType_PRIMITIVES
 wheel_vis_type = veh.VisualizationType_NONE
 tire_vis_type = veh.VisualizationType_MESH
 
-# Poon chassis tracked by the camera
+# Point on the chassis tracked by the camera
 trackPoint = chrono.ChVector3d(0.0, 0.0, 1.75)
 
 # Simulation step sizes
@@ -32,12 +34,13 @@ tend = 1000
 # Time interval between two render frames
 render_step_size = 1.0 / 50  # FPS = 50
 
-noise_model="NONE"              # No noise model
+# Noise model for the sensors
+noise_model = "NONE"  # No noise model
 
-# Update rate in Hz
+# Update rate in Hz for the sensors
 update_rate = 30
 
-# Image width and height
+# Image width and height for cameras
 image_width = 1280
 image_height = 720
 
@@ -47,13 +50,11 @@ fov = 1.408
 # Lag (in seconds) between sensing and when data becomes accessible
 lag = 0
 
-# Exposure (in seconds) of each image
+# Exposure time (in seconds) for each image
 exposure_time = 0
 
-
-# view camera images
+# View camera images
 vis = True
-
 
 # Create the vehicle, set parameters, and initialize
 gator = veh.Gator()
@@ -72,19 +73,19 @@ gator.SetSteeringVisualizationType(steering_vis_type)
 gator.SetWheelVisualizationType(wheel_vis_type)
 gator.SetTireVisualizationType(tire_vis_type)
 
+# Print vehicle information
 print("Vehicle mass:   " + str(gator.GetVehicle().GetMass()))
 print("Driveline type: " + gator.GetVehicle().GetDriveline().GetTemplateName())
 print("Brake type:     " + gator.GetVehicle().GetBrake(1, veh.LEFT).GetTemplateName())
 print("Tire type:      " + gator.GetVehicle().GetTire(1, veh.LEFT).GetTemplateName())
 print("\n")
 
+# Set collision system type
 gator.GetSystem().SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)
-
 
 # ------------------
 # Create the terrain
 # ------------------
-
 terrain = veh.RigidTerrain(gator.GetSystem())
 patch_mat = chrono.ChContactMaterialNSC()
 patch_mat.SetFriction(0.9)
@@ -98,7 +99,6 @@ terrain.Initialize()
 # Create the vehicle Irrlicht interface
 # Create the driver system
 # -------------------------------------
-
 vis = veh.ChWheeledVehicleVisualSystemIrrlicht()
 vis.SetWindowTitle('Gator')
 vis.SetWindowSize(1280, 1024)
@@ -112,7 +112,7 @@ vis.AttachVehicle(gator.GetVehicle())
 # Create the interactive driver system
 driver = veh.ChInteractiveDriverIRR(vis)
 
-# Set the time response for steering and throttle keyboard inputs.
+# Set the time response for steering and throttle keyboard inputs
 steering_time = 1.0  # time to go from 0 to +1 (or from 0 to -1)
 throttle_time = 1.0  # time to go from 0 to +1
 braking_time = 0.3   # time to go from 0 to +1
@@ -129,9 +129,7 @@ manager = sens.ChSensorManager(gator.GetSystem())
 intensity = 1.0
 manager.scene.AddPointLight(chrono.ChVector3f(2, 2.5, 100), chrono.ChColor(intensity, intensity, intensity), 500.0)
 
-
-# Create two camera and add it to the sensor manager
-
+# Create two cameras and add them to the sensor manager
 offset_pose = chrono.ChFramed(chrono.ChVector3d(.1, 0, 1.45), chrono.QuatFromAngleAxis(.2, chrono.ChVector3d(0, 1, 0)))
 cam = sens.ChCameraSensor(
     gator.GetChassisBody(),
@@ -156,7 +154,6 @@ cam1 = sens.ChCameraSensor(
     fov
 )
 cam1.SetName("Third Person POV")
-
 # Renders the image at current point in the filter graph
 cam1.PushFilter(sens.ChFilterVisualize(image_width, image_height, "Before Grayscale Filter"))
 manager.AddSensor(cam1)
@@ -170,11 +167,10 @@ depth_cam = sens.ChDepthCamera(
     image_height,           # image height
     fov                    # camera's horizontal field of view
 )
-
 depth_cam.SetName("Depth Camera Sensor")
 depth_cam.SetLag(lag)
 depth_cam.SetCollectionWindow(exposure_time)
-depth_cam.SetMaxDepth(30)# Set the maximum depth the camera can see
+depth_cam.SetMaxDepth(30)  # Set the maximum depth the camera can see
 depth_cam.PushFilter(sens.ChFilterVisualize(image_width, image_height, "Depth Map"))
 
 manager.AddSensor(depth_cam)
@@ -186,7 +182,7 @@ orbit_radius = 15
 orbit_rate = 1
 
 realtime_timer = chrono.ChRealtimeStepTimer()
-while vis.Run() :
+while vis.Run():
     time = gator.GetSystem().GetChTime()
 
     # Render scene
@@ -204,9 +200,16 @@ while vis.Run() :
     vis.Synchronize(time, driver_inputs)
 
     # Update sensor manager
-    cam1.SetOffsetPose(chrono.ChFramed(
-        chrono.ChVector3d(-orbit_radius * math.cos(time * orbit_rate), -orbit_radius * math.sin(time * orbit_rate), 1),
-        chrono.QuatFromAngleAxis(time * orbit_rate, chrono.ChVector3d(0, 0, 1))))
+    cam1.SetOffsetPose(
+        chrono.ChFramed(
+            chrono.ChVector3d(
+                -orbit_radius * math.cos(time * orbit_rate),
+                -orbit_radius * math.sin(time * orbit_rate),
+                1
+            ),
+            chrono.QuatFromAngleAxis(time * orbit_rate, chrono.ChVector3d(0, 0, 1))
+        )
+    )
     manager.Update()
 
     # Advance simulation for one timestep for all modules
