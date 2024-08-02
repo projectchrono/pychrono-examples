@@ -5,28 +5,30 @@ import pychrono as chrono
 import pychrono.robot as robot
 from pychrono import irrlicht as chronoirr
 
-# Chreate Chrono system
+# Create Chrono system
 system = chrono.ChSystemNSC()
 system.SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)
 system.SetGravitationalAcceleration(chrono.ChVector3d(0, 0, -9.81))
 chrono.ChCollisionModel.SetDefaultSuggestedEnvelope(0.0025)
 chrono.ChCollisionModel.SetDefaultSuggestedMargin(0.0025)
 
-# Create ground body
+# Create ground body with contact material and add it to the system
 ground_mat = chrono.ChContactMaterialNSC()
 ground = chrono.ChBodyEasyBox(20, 20, 1, 1000, True, True, ground_mat)
-ground.SetPos(chrono.ChVector3d(0, 0, -0.5))
-ground.SetFixed(True)
+ground.SetPos(chrono.ChVector3d(0, 0, -0.5))  # Position the ground slightly below the origin
+ground.SetFixed(True)  # Fix the ground in place
 ground.GetVisualShape(0).SetTexture(chrono.GetChronoDataFile("textures/concrete.jpg"))
 system.Add(ground)
 
-# Create Curiosity rover
+# Create Curiosity rover and add it to the system
 rover = robot.Curiosity(system)
+
 # Create driver for rover
 driver = robot.CuriosityDCMotorControl()
 rover.SetDriver(driver)
-# Initailized rover position
-init_pos = chrono.ChVector3d(0,0.2,0)
+
+# Initialize rover position and orientation
+init_pos = chrono.ChVector3d(0, 0.2, 0)
 init_rot = chrono.ChQuaterniond(1, 0, 0, 0)
 rover.Initialize(chrono.ChFramed(init_pos, init_rot))
 
@@ -43,23 +45,30 @@ vis.AddCamera(chrono.ChVector3d(0, 3, 3), chrono.ChVector3d(0, 0, 0))
 vis.AddTypicalLights()
 vis.AddLightWithShadow(chrono.ChVector3d(1.5, -2.5, 5.5), chrono.ChVector3d(0, 0, 0), 3, 4, 10, 40, 512)
 
-####vis.EnableShadows()
+# Enable shadows (commented out to improve performance)
+# vis.EnableShadows()
 
+# Set the simulation time step
 time_step = 1e-3
 
 # Simulation loop
 time = 0
-while (vis.Run()) :
-    time = time + time_step
+while vis.Run():
+    time += time_step
+
+    # Set steering input for the rover after 1 second
     steering = 0
-    if (time >= 1):
-       steering = (time - 1) * 0.2
+    if time >= 1:
+        steering = (time - 1) * 0.2
     driver.SetSteering(steering)
 
+    # Update rover dynamics
     rover.Update()
 
+    # Render the scene
     vis.BeginScene()
     vis.Render()
     vis.EndScene()
-    system.DoStepDynamics(time_step)
 
+    # Advance simulation by one time step
+    system.DoStepDynamics(time_step)

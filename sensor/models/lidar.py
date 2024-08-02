@@ -1,22 +1,3 @@
-# =============================================================================
-# PROJECT CHRONO - http://projectchrono.org
-#
-# Copyright (c) 2019 projectchrono.org
-# All rights reserved.
-#
-# Use of this source code is governed by a BSD-style license that can be found
-# in the LICENSE file at the top level of the distribution and at
-# http://projectchrono.org/license-chrono.txt.
-#
-# =============================================================================
-# Authors: Asher Elmquist
-# =============================================================================
-#
-# Chrono demonstration of a lidar sensor
-# Simple demonstration of certain filters and the visualization of a static mesh
-#
-# =============================================================================
-
 import pychrono.core as chrono
 import pychrono.sensor as sens
 
@@ -26,26 +7,26 @@ import math
 
 
 def main():
-
     # -----------------
     # Create the system
     # -----------------
     mphysicalSystem = chrono.ChSystemNSC()
 
     # ----------------------------------
-    # add a mesh to be sensed by a lidar
+    # Add a mesh to be sensed by a lidar
     # ----------------------------------
     mmesh = chrono.ChTriangleMeshConnected()
-    mmesh.LoadWavefrontMesh(chrono.GetChronoDataFile(
-        "vehicle/hmmwv/hmmwv_chassis.obj"), False, True)
-    # scale to a different size
+    mmesh.LoadWavefrontMesh(chrono.GetChronoDataFile("vehicle/hmmwv/hmmwv_chassis.obj"), False, True)
+    # Scale the mesh to a different size
     mmesh.Transform(chrono.ChVector3d(0, 0, 0), chrono.ChMatrix33d(2))
 
+    # Create a visual representation of the mesh
     trimesh_shape = chrono.ChVisualShapeTriangleMesh()
     trimesh_shape.SetMesh(mmesh)
     trimesh_shape.SetName("HMMWV Chassis Mesh")
     trimesh_shape.SetMutable(False)
 
+    # Create a body to hold the mesh
     mesh_body = chrono.ChBody()
     mesh_body.SetPos(chrono.ChVector3d(0, 0, 0))
     mesh_body.AddVisualShape(trimesh_shape)
@@ -56,26 +37,28 @@ def main():
     # Create a sensor manager
     # -----------------------
     manager = sens.ChSensorManager(mphysicalSystem)
+
     # ------------------------------------------------
     # Create a lidar and add it to the sensor manager
     # ------------------------------------------------
     offset_pose = chrono.ChFramed(
-        chrono.ChVector3d(-12, 0, 1), chrono.QuatFromAngleAxis(0, chrono.ChVector3d(0, 1, 0)))
+        chrono.ChVector3d(-12, 0, 1), chrono.QuatFromAngleAxis(0, chrono.ChVector3d(0, 1, 0))
+    )
     lidar = sens.ChLidarSensor(
-        mesh_body,              # body lidar is attached to
-        update_rate,            # scanning rate in Hz
-        offset_pose,            # offset pose
-        horizontal_samples,     # number of horizontal samples
-        vertical_samples,       # number of vertical channels
-        horizontal_fov,         # horizontal field of view
-        max_vert_angle,         # vertical field of view
-        min_vert_angle,
-        100.0,                  # max lidar range
-        sens.LidarBeamShape_RECTANGULAR,
-        sample_radius,          # sample radius
-        divergence_angle,       # divergence angle
-        divergence_angle,       # divergence angle
-        return_mode            # return mode for the lidar
+        mesh_body,              # Body lidar is attached to
+        update_rate,            # Scanning rate in Hz
+        offset_pose,            # Offset pose
+        horizontal_samples,     # Number of horizontal samples
+        vertical_samples,       # Number of vertical channels
+        horizontal_fov,         # Horizontal field of view
+        max_vert_angle,         # Maximum vertical field of view
+        min_vert_angle,         # Minimum vertical field of view
+        100.0,                  # Maximum lidar range
+        sens.LidarBeamShape_RECTANGULAR,  # Shape of the lidar beam
+        sample_radius,          # Sample radius
+        divergence_angle,       # Divergence angle
+        divergence_angle,       # Divergence angle (again, typically same value)
+        return_mode             # Return mode for the lidar
     )
     lidar.SetName("Lidar Sensor")
     lidar.SetLag(lag)
@@ -92,19 +75,17 @@ def main():
 
     if vis:
         # Visualize the raw lidar data
-        lidar.PushFilter(sens.ChFilterVisualize(
-            horizontal_samples, vertical_samples, "Raw Lidar Depth Data"))
+        lidar.PushFilter(sens.ChFilterVisualize(horizontal_samples, vertical_samples, "Raw Lidar Depth Data"))
 
-    # Provides the host access to the Depth,Intensity data
+    # Provides the host access to the Depth, Intensity data
     lidar.PushFilter(sens.ChFilterDIAccess())
 
-    # Convert Depth,Intensity data to XYZI point cloud data
+    # Convert Depth, Intensity data to XYZI point cloud data
     lidar.PushFilter(sens.ChFilterPCfromDepth())
 
     if vis:
         # Visualize the point cloud
-        lidar.PushFilter(sens.ChFilterVisualizePointCloud(
-            640, 480, 1.0, "Lidar Point Cloud"))
+        lidar.PushFilter(sens.ChFilterVisualizePointCloud(640, 480, 1.0, "Lidar Point Cloud"))
 
     # Provides the host access to the XYZI data
     lidar.PushFilter(sens.ChFilterXYZIAccess())
@@ -120,25 +101,29 @@ def main():
     ch_time = 0.0
 
     render_time = 0
-
     t1 = time.time()
 
-    while (ch_time < end_time):
-        lidar.SetOffsetPose(chrono.ChFramed(
-            chrono.ChVector3d(-orbit_radius * math.cos(ch_time * orbit_rate), -
-                             orbit_radius * math.sin(ch_time * orbit_rate), 1),
-            chrono.QuatFromAngleAxis(ch_time * orbit_rate, chrono.ChVector3d(0, 0, 1))))
+    while ch_time < end_time:
+        # Set lidar to orbit around the mesh body
+        lidar.SetOffsetPose(
+            chrono.ChFramed(
+                chrono.ChVector3d(
+                    -orbit_radius * math.cos(ch_time * orbit_rate),
+                    -orbit_radius * math.sin(ch_time * orbit_rate),
+                    1
+                ),
+                chrono.QuatFromAngleAxis(ch_time * orbit_rate, chrono.ChVector3d(0, 0, 1))
+            )
+        )
 
         # Access the XYZI buffer from lidar
         xyzi_buffer = lidar.GetMostRecentXYZIBuffer()
         if xyzi_buffer.HasData():
             xyzi_data = xyzi_buffer.GetXYZIData()
-            print('XYZI buffer recieved from lidar. Lidar resolution: {0}x{1}'
-                  .format(xyzi_buffer.Width, xyzi_buffer.Height))
+            print('XYZI buffer received from lidar. Lidar resolution: {0}x{1}'.format(xyzi_buffer.Width, xyzi_buffer.Height))
             print('Max Value: {0}'.format(np.max(xyzi_data)))
 
-        # Update sensor manager
-        # Will render/save/filter automatically
+        # Update sensor manager (will render/save/filter automatically)
         manager.Update()
 
         # Perform step of dynamics
@@ -147,17 +132,17 @@ def main():
         # Get the current time of the simulation
         ch_time = mphysicalSystem.GetChTime()
 
-    print("Sim time:", end_time, "Wall time:", time.time()-t1)
+    print("Sim time:", end_time, "Wall time:", time.time() - t1)
+
 
 # -----------------
 # Lidar parameters
 # -----------------
 
-
 # Noise model attached to the sensor
 # TODO: Noise models haven't been implemented in python
-# noise_model="CONST_NORMAL_XYZI"   # Gaussian noise with constant mean and standard deviation
-noise_model = "NONE"                  # No noise model
+# noise_model = "CONST_NORMAL_XYZI"  # Gaussian noise with constant mean and standard deviation
+noise_model = "NONE"  # No noise model
 
 # Lidar return mode
 return_mode = sens.LidarReturnMode_STRONGEST_RETURN
@@ -183,7 +168,7 @@ lag = 0
 # Collection window for the lidar
 collection_time = 1. / update_rate  # typically 1/update rate
 
-# Radius of samples to use, 1->1 sample,2->9 samples, 3->25 samples...
+# Radius of samples to use, 1->1 sample, 2->9 samples, 3->25 samples...
 sample_radius = 2
 
 # 3mm radius (as cited by velodyne)
