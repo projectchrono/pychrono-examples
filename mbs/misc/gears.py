@@ -1,3 +1,17 @@
+# =============================================================================
+# PROJECT CHRONO - http://projectchrono.org
+#
+# Copyright (c) 2024 projectchrono.org
+# All right reserved.
+#
+# Use of this source code is governed by a BSD-style license that can be found
+# in the LICENSE file at the top level of the distribution and at
+# http://projectchrono.org/license-chrono.txt.
+#
+# =============================================================================
+# Authors: Simulation Based Engineering Lab, University of Wisconsin-Madison
+# =============================================================================
+
 # Demonstration of the gear constraint (ChLinkLockGear) as a method to impose a
 # transmission ratio between two shafts as they were connected by gears,
 # without the need of performing collision detection between gear teeth
