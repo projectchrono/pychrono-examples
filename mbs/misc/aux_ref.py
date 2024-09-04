@@ -33,7 +33,6 @@ ground.AddVisualShape(cyl_2, chrono.ChFramed(chrono.ChVector3d(0, 0, -1)))
 
 
 # Create a pendulum modeled using ChBody
-
 pend_1 =  chrono.ChBody()
 sys.AddBody(pend_1)
 pend_1.SetFixed(False)
@@ -47,7 +46,6 @@ pend_1.SetInertiaXX(chrono.ChVector3d(0.2, 1, 1))
 cyl_1 = chrono.ChVisualShapeCylinder(0.2, 2)
 cyl_1.SetColor(chrono.ChColor(0.6, 0, 0))
 pend_1.AddVisualShape(cyl_1, chrono.ChFramed(chrono.VNULL, chrono.QuatFromAngleY(chrono.CH_PI_2)))
-
 
 # Specify the intial position of the pendulum (horizontal, pointing towards
 # positive X). In this case, we set the absolute position of its center of 
@@ -74,7 +72,6 @@ pend_2.SetInertiaXX(chrono.ChVector3d(0.2, 1, 1))
 cyl_2 = chrono.ChVisualShapeCylinder(0.2, 2)
 cyl_2.SetColor(chrono.ChColor(0, 0, 0.6))
 pend_2.AddVisualShape(cyl_2, chrono.ChFramed(chrono.ChVector3d(1, 0, 0), chrono.QuatFromAngleY(chrono.CH_PI_2)))
-
 
 # In this case, we must specify the centroidal frame, relative to the body
 # reference frame
@@ -138,7 +135,7 @@ while vis.Run():
         pos_2 = frame_2.GetPos()
 
 
-        #OK, what about velocities? Here again, GetPosDt() returns the linear
+        # OK, what about velocities? Here again, GetPosDt() returns the linear
         # velocity of the body COG (expressed in the global frame) for both
         # pendulums
         lin_vel_1 = pend_1.GetPosDt()
