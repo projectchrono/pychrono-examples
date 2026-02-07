@@ -345,12 +345,12 @@ if (bench3):
 # Such triangle mesh can be rendered by Irrlicht or POVray or whatever
 # postprocessor that can handle a colored ChVisualShapeTriangleMesh).
 
-mvisualizeshellA = chrono.ChVisualShapeFEA(mesh)
+mvisualizeshellA = chrono.ChVisualShapeFEA()
 mvisualizeshellA.SetSmoothFaces(True)
 mvisualizeshellA.SetWireframe(True)
 mesh.AddVisualShapeFEA(mvisualizeshellA)
 
-mvisualizeshellC = chrono.ChVisualShapeFEA(mesh)
+mvisualizeshellC = chrono.ChVisualShapeFEA()
 mvisualizeshellC.SetFEMdataType(chrono.ChVisualShapeFEA.DataType_NONE)
 mvisualizeshellC.SetFEMglyphType(chrono.ChVisualShapeFEA.GlyphType_NODE_CSYS)
 mvisualizeshellC.SetSymbolsThickness(0.05)
@@ -383,7 +383,7 @@ ts.SetAbsTolerances(1e-12, 1e-12)
 
 timestep = 0.1
 sys.Setup()
-sys.Update()
+sys.Update(True)
 
 rec_X = []
 rec_Y = []

@@ -114,7 +114,7 @@ if (False):  # set as 'true' to execute this
     
     # TEST
     sys.Setup()
-    sys.Update()
+    sys.Update(True)
     print( "BST initial: \n"
     	+ "Area: " + str(melement.area) + "\n"
     	+ "l0: " + str(melement.l0) + "\n"
@@ -124,7 +124,7 @@ if (False):  # set as 'true' to execute this
     
     mnode1.SetPos(mnode1.GetPos() + chrono.ChVector3d(0.1, 0, 0))
     
-    sys.Update()
+    sys.Update(True)
     Fi = chrono.ChVectorDynamicd(melement.GetNumCoordsPosLevel())
     melement.ComputeInternalForces(Fi)
     print( "BST updated: \n" 
@@ -281,14 +281,14 @@ if (False) :
 # postprocessor that can handle a colored ChVisualShapeTriangleMesh).
 
 
-mvisualizeshellA = chrono.ChVisualShapeFEA(mesh)
+mvisualizeshellA = chrono.ChVisualShapeFEA()
 #mvisualizeshellA.SetSmoothFaces(True)
 #mvisualizeshellA.SetWireframe(True)
 mvisualizeshellA.SetShellResolution(2)
 #mvisualizeshellA.SetBackfaceCull(True)
 mesh.AddVisualShapeFEA(mvisualizeshellA)
 
-mvisualizeshellB = chrono.ChVisualShapeFEA(mesh)
+mvisualizeshellB = chrono.ChVisualShapeFEA()
 mvisualizeshellB.SetFEMdataType(chrono.ChVisualShapeFEA.DataType_NONE)
 mvisualizeshellB.SetFEMglyphType(chrono.ChVisualShapeFEA.GlyphType_NODE_DOT_POS)
 mvisualizeshellB.SetSymbolsThickness(0.006)
@@ -318,7 +318,7 @@ sys.SetSolver(mkl_solver)
 
 timestep = 0.005
 sys.Setup()
-sys.Update()
+sys.Update(True)
 
 rec_X = chrono.ChFunctionInterp()
 rec_Y = chrono.ChFunctionInterp()
