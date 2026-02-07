@@ -1,7 +1,7 @@
 # =============================================================================
 # PROJECT CHRONO - http://projectchrono.org
 #
-# Copyright (c) 2014 projectchrono.org
+# Copyright (c) 2026 projectchrono.org
 # All rights reserved.
 #
 # Use of this source code is governed by a BSD-style license that can be found
@@ -23,7 +23,7 @@ import pychrono.irrlicht as chronoirr
 import math
 
 
-#print(["Copyright (c) 2017 projectchrono.org\nChrono version: ", chrono.CHRONO_VERSION , "\n\n"])
+print("Copyright (c) 2026 projectchrono.org")
 
 def CastNode(nb):
 
@@ -36,8 +36,6 @@ def CastNode(nb):
 # is automatically set, relative to the default location of this demo.
 # If running from a different directory, you must change the path to the data directory with: 
 #chrono.SetChronoDataPath('path/to/data')
-
-time_step = 1e-3
 
 sys = chrono.ChSystemSMC()
 sys.SetGravitationalAcceleration(chrono.ChVector3d(0, 0, -9.8))
