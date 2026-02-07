@@ -1,7 +1,7 @@
 # =============================================================================
 # PROJECT CHRONO - http://projectchrono.org
 #
-# Copyright (c) 2024 projectchrono.org
+# Copyright (c) 2026 projectchrono.org
 # All right reserved.
 #
 # Use of this source code is governed by a BSD-style license that can be found
@@ -20,7 +20,7 @@ import os
 import copy
 
 out_dir = chrono.GetChronoOutputPath() + "FEA_LOADS"  # Output directory
-print("Copyright (c) 2017 projectchrono.org ")
+print("Copyright (c) 2026 projectchrono.org ")
 # Create (if needed) output directory
 try:
     os.mkdir(out_dir)
@@ -64,7 +64,7 @@ ground = chrono.ChBody()
 ground.SetFixed(True)
 sys.Add(ground)
 
-# Create a constraint the end of the beam
+# Create a constraint at the end of the beam
 constrA = chrono.ChLinkMateGeneric()
 constrA.Initialize(nodeA, ground, False, nodeA.Frame(), nodeA.Frame())
 sys.Add(constrA)
@@ -75,11 +75,12 @@ constrA.SetConstrainedCoords(True, True, True,   # x, y, z
 load_container = chrono.ChLoadContainer()
 sys.Add(load_container)
 
-# Create a custom load with stiff force, acting on a single node, but
-# this time we inherit directly from ChLoadCustom, i.e. a load that does not require ChLoader features.
-# This is mostly used in case one does not need the automatic surface/volume quadrature of ChLoader.
-# As a stiff load, this will automatically generate a jacobian (tangent stiffness matrix K)
-# that will be used in statics, implicit integrators, etc.
+# Create a custom load with stiff force, acting on a single node, but this
+# time we inherit directly from ChLoadCustom, i.e. a load that does not
+# require ChLoader features. This is mostly used in case one does not need
+# the automatic surface/volume quadrature of ChLoader. As a stiff load, this
+# will automatically generate a jacobian (tangent stiffness matrix K) that
+# will be used in statics, implicit integrators, etc.
 
 print("   Custom load with stiff force, acting on a single node.")
 
@@ -97,7 +98,7 @@ class MyLoadCustom(chrono.ChLoadCustom):
 
     # Compute Q=Q(x,v)
     # This is the function that you have to implement. It should return the generalized Q load
-    # (i.e.the force in generalized lagrangian coordinates).
+    # (i.e.the force in generalized Lagrangian coordinates).
     # For ChNodeFEAxyz, Q loads are expected as 3-rows vectors, containing absolute force x,y,z.
     # As this is a stiff force field, dependency from state_x and state_y must be considered.
     def ComputeQ(self,         #

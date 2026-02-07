@@ -1,7 +1,7 @@
 # =============================================================================
 # PROJECT CHRONO - http://projectchrono.org
 #
-# Copyright (c) 2014 projectchrono.org
+# Copyright (c) 2026 projectchrono.org
 # All rights reserved.
 #
 # Use of this source code is governed by a BSD-style license that can be found
@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 # Output directory
 out_dir = chrono.GetChronoOutputPath() + "FEA_SHELLS"
 
-print( "Copyright (c) 2017 projectchrono.org")
+print( "Copyright (c) 2026 projectchrono.org")
 
 # Create (if needed) output directory
 try:
@@ -56,9 +56,36 @@ ref_Y = chrono.ChFunctionInterp()
 load_torque = chrono.ChVector3d()
 load_force = chrono.ChVector3d()
 
-bench1 = False
-bench2 = True
-bench3 = False
+# Display available benchmarks
+print("\n" + "="*60)
+print("Available Shell FEA Benchmarks:")
+print("="*60)
+print("  1. EANS Shell Cantilever")
+print("  2. Slit Annular Plate")
+print("  3. Clamped Half Cylinder")
+print("="*60)
+
+# Get user input
+while True:
+    try:
+        choice = input("\nSelect benchmark (1-3): ").strip()
+        benchmark = int(choice)
+        if benchmark in [1, 2, 3]:
+            break
+        else:
+            print("Please enter 1, 2, or 3")
+    except ValueError:
+        print("Please enter a valid number")
+    except (EOFError, KeyboardInterrupt):
+        print("\nExiting...")
+        exit(0)
+
+bench1 = (benchmark == 1)
+bench2 = (benchmark == 2)
+bench3 = (benchmark == 3)
+
+print(f"\nRunning Benchmark {benchmark}...\n")
+
 #
 # BENCHMARK n.1
 #
