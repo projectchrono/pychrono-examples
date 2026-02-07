@@ -133,7 +133,7 @@ for i in range(4) :
 mcontactsurf = fea.ChContactSurfaceMesh(mysurfmaterial)
 mesh.AddContactSurface(mcontactsurf)
 
-mcontactsurf.AddFacesFromBoundary(sphere_swept_thickness)  # do this after my_meshAddContactSurface
+mcontactsurf.AddFacesFromBoundary(mesh, sphere_swept_thickness)  # do this after my_meshAddContactSurface
 
 
 # Remember to add the mesh to the system!
@@ -169,7 +169,7 @@ builder.BuildBeam(my_mesh_beams,             # the mesh where to put the created
 mcontactcloud = fea.ChContactSurfaceNodeCloud(mysurfmaterial)
 my_mesh_beams.AddContactSurface(mcontactcloud)
 
-mcontactcloud.AddAllNodes(0.025)  # use larger posize to match beam section radius
+mcontactcloud.AddAllNodes(my_mesh_beams, 0.025)  # use larger posize to match beam section radius
 
 
 # Remember to add the mesh to the system!
@@ -186,25 +186,25 @@ sys.Add(my_mesh_beams)
 # Such triangle mesh can be rendered by Irrlicht or POVray or whatever
 # postprocessor that can handle a colored ChVisualShapeTriangleMesh).
 
-mvisualizemesh = chrono.ChVisualShapeFEA(mesh)
+mvisualizemesh = chrono.ChVisualShapeFEA()
 mvisualizemesh.SetFEMdataType(chrono.ChVisualShapeFEA.DataType_NODE_SPEED_NORM)
-mvisualizemesh.SetColorscaleMinMax(0.0, 5.50)
+mvisualizemesh.SetColormapRange(0.0, 5.50)
 mvisualizemesh.SetSmoothFaces(True)
 mesh.AddVisualShapeFEA(mvisualizemesh)
 
-mvisualizemeshcoll = chrono.ChVisualShapeFEA(mesh)
+mvisualizemeshcoll = chrono.ChVisualShapeFEA()
 mvisualizemeshcoll.SetFEMdataType(chrono.ChVisualShapeFEA.DataType_CONTACTSURFACES)
 mvisualizemeshcoll.SetWireframe(True)
 mvisualizemeshcoll.SetDefaultMeshColor(chrono.ChColor(1, 0.5, 0))
 mesh.AddVisualShapeFEA(mvisualizemeshcoll)
 
-mvisualizemeshbeam = chrono.ChVisualShapeFEA(my_mesh_beams)
+mvisualizemeshbeam = chrono.ChVisualShapeFEA()
 mvisualizemeshbeam.SetFEMdataType(chrono.ChVisualShapeFEA.DataType_NODE_SPEED_NORM)
-mvisualizemeshbeam.SetColorscaleMinMax(0.0, 5.50)
+mvisualizemeshbeam.SetColormapRange(0.0, 5.50)
 mvisualizemeshbeam.SetSmoothFaces(True)
 mesh.AddVisualShapeFEA(mvisualizemeshbeam)
 
-mvisualizemeshbeamnodes = chrono.ChVisualShapeFEA(my_mesh_beams)
+mvisualizemeshbeamnodes = chrono.ChVisualShapeFEA()
 mvisualizemeshbeamnodes.SetFEMglyphType(chrono.ChVisualShapeFEA.GlyphType_NODE_DOT_POS)
 mvisualizemeshbeamnodes.SetFEMdataType(chrono.ChVisualShapeFEA.DataType_NONE)
 mvisualizemeshbeamnodes.SetSymbolsThickness(0.008)
